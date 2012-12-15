@@ -42,21 +42,15 @@ void Player::Update() {
 
 
     if (input->getKeyDown(InputEng::PLAYER_ACTION)) {
-
         GameReg* gameReg = GameReg::getInstance();
-
-        gameReg->eventQueue.push(new EventPlayerAction());
+	gameReg->eventQueue.push(new EventPlayerAction());
 
     }
-
-
 }
 
 void Player::Draw() {
 
     mySpr.setPosition(m_position);
-
     App->draw(mySpr);
-
 
 }

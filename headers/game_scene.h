@@ -17,39 +17,39 @@
 
 class GameScene : public Scene {
 public:
-    GameScene();
-    ~GameScene();
+	GameScene();
+	~GameScene();
 
-    bool Init();
-    void Update();
-    void Draw();
-    void Destroy();
+	bool Init();
+	void Update();
+	void Draw();
+	void Destroy();
 
 private:
-    void initThread();
-    bool initThreadDone;
-    sf::Text loadingText;
-    void HandleEvents();
-    void HandleCamInput();
+	void initThread();
+	bool initThreadDone;
+	sf::Text loadingText;
+	void HandleEvents();
+	void HandleCamInput();
 
-    //Map map;
-    void spawnNewPerson();
-    void spawnNewPolice();
-
-
-    //Registry
-    GameReg* gameReg;
-
-    //Statics
-    sf::View camera;
-    Player player;
-    City city;
+	//Map map;
+	void spawnNewPerson();
+	void spawnNewPolice();
 
 
+	//Registry
+	GameReg* gameReg;
 
-    //Managers
-    std::list<Person> personList;
-    std::list<Police> policeList;
+	//Statics
+	sf::View camera;
+	Player player;
+	City city;
+
+
+
+	//Managers
+	std::list<Person> personList;
+	std::list<Police> policeList;
 };
 
 #endif // GAMESCENE_H

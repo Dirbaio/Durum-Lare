@@ -16,86 +16,86 @@ sf::Time global_frametime;
 
 bool Game::Init() {
 
-    App = new sf::RenderWindow();
+	App = new sf::RenderWindow();
 
-    input = InputEng::getInstance();
+	input = InputEng::getInstance();
 
-    graphics = GraphEng::getInstance();
-    graphics->init();
+	graphics = GraphEng::getInstance();
+	graphics->init();
 
-    scene = new GameScene();
+	scene = new GameScene();
 
-    frames = 0;
+	frames = 0;
 
-    return true;
+	return true;
 
 }
 
 void Game::Go() {
 
-    sf::Clock clock1;
-    sf::Clock clock2;
+	sf::Clock clock1;
+	sf::Clock clock2;
 
-    float framerate = 0.0f;
+	float framerate = 0.0f;
 
-    while (App->isOpen() && scene != NULL && scene != EXIT_SCN) {
-        scene->Init();
+	while (App->isOpen() && scene != NULL && scene != EXIT_SCN) {
+		scene->Init();
 
-                sf::Clock sceneTimeElapsed;
+		sf::Clock sceneTimeElapsed;
 
-                clock1.restart();
+		clock1.restart();
 
-        while(App->isOpen() && scene->nextScene == NULL) {
+		while(App->isOpen() && scene->nextScene == NULL) {
 
-                        global_frametime = clock1.getElapsedTime();
-                        clock1.restart();
+			global_frametime = clock1.getElapsedTime();
+			clock1.restart();
 
-            //Framerate
-                        if (clock2.getElapsedTime().asMilliseconds() > 100) {
-                                framerate = (float(frames) / clock2.getElapsedTime().asMilliseconds())*1000;
-                                clock2.restart();
-                frames = 0;
-            }
-            std::stringstream ss(std::stringstream::in | std::stringstream::out);
-            framerate*=100;
-            framerate=(int)framerate;
-            framerate/=100;
-            ss << "FPS: " << framerate;
-            sf::Text fpsText(ss.str());
-            fpsText.setPosition(10, 10);
-            fpsText.setColor(sf::Color::Red);
+			//Framerate
+			if (clock2.getElapsedTime().asMilliseconds() > 100) {
+				framerate = (float(frames) / clock2.getElapsedTime().asMilliseconds())*1000;
+				clock2.restart();
+				frames = 0;
+			}
+			std::stringstream ss(std::stringstream::in | std::stringstream::out);
+			framerate*=100;
+			framerate=(int)framerate;
+			framerate/=100;
+			ss << "FPS: " << framerate;
+			sf::Text fpsText(ss.str());
+			fpsText.setPosition(10, 10);
+			fpsText.setColor(sf::Color::Red);
 
-            std::stringstream ss2(std::stringstream::in | std::stringstream::out);
-            ss2 << static_cast<int>(sceneTimeElapsed.getElapsedTime().asSeconds()/60) << " : " <<
-                   (((int)sceneTimeElapsed.getElapsedTime().asSeconds())%60) << " . " <<
-                   sceneTimeElapsed.getElapsedTime().asMilliseconds()%1000;
-            sf::Text timeText(ss2.str());
-                        timeText.setPosition(App->getSize().x*0.8f, 10);
-                        timeText.setColor(sf::Color::White);
+			std::stringstream ss2(std::stringstream::in | std::stringstream::out);
+			ss2 << static_cast<int>(sceneTimeElapsed.getElapsedTime().asSeconds()/60) << " : " <<
+			       (((int)sceneTimeElapsed.getElapsedTime().asSeconds())%60) << " . " <<
+			       sceneTimeElapsed.getElapsedTime().asMilliseconds()%1000;
+			sf::Text timeText(ss2.str());
+			timeText.setPosition(App->getSize().x*0.8f, 10);
+			timeText.setColor(sf::Color::White);
 
 
-            //Input
-            input->Update();
-            if (input->getKeyDown(InputEng::EXIT)) scene->nextScene = EXIT_SCN;
+			//Input
+			input->Update();
+			if (input->getKeyDown(InputEng::EXIT)) scene->nextScene = EXIT_SCN;
 
-            //Logic
-            scene->Update();
+			//Logic
+			scene->Update();
 
-            //Draw
-            App->clear(sf::Color(12, 12, 12));
+			//Draw
+			App->clear(sf::Color(12, 12, 12));
 
-            scene->Draw();
+			scene->Draw();
 
-            App->draw(fpsText);
-            App->draw(timeText);
-            App->display();
+			App->draw(fpsText);
+			App->draw(timeText);
+			App->display();
 
-            frames++;
-        }
+			frames++;
+		}
 
-        Scene* aux_scn = scene;
-        scene = scene->nextScene;
-        aux_scn->Destroy();
-        delete aux_scn;
-    }
+		Scene* aux_scn = scene;
+		scene = scene->nextScene;
+		aux_scn->Destroy();
+		delete aux_scn;
+	}
 }

@@ -10,6 +10,8 @@ class Person : public Npc {
     void Init();
     void Update();
 
+    void Draw();
+
   private:
 
     sf::Sprite deadSpr;

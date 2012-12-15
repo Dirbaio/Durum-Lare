@@ -7,50 +7,50 @@
 class InputEng
 {
 public:
-        enum Key
-        {
-                PLAYER_UP, PLAYER_DOWN, PLAYER_LEFT, PLAYER_RIGHT,
-                PLAYER_ACTION,
-                CAM_UP, CAM_DOWN, CAM_LEFT, CAM_RIGHT,
-                EXIT, NEW_SCENE,
-                K_SIZE
-        };
+	enum Key
+	{
+		PLAYER_UP, PLAYER_DOWN, PLAYER_LEFT, PLAYER_RIGHT,
+		PLAYER_ACTION,
+		CAM_UP, CAM_DOWN, CAM_LEFT, CAM_RIGHT,
+		EXIT, NEW_SCENE,
+		K_SIZE
+	};
 
-        static InputEng* getInstance();
-        InputEng();
-        ~InputEng();
+	static InputEng* getInstance();
+	InputEng();
+	~InputEng();
 
-        void Update();
+	void Update();
 
-        bool getKeyState(int key);
-        bool getKeyUp(int key);
-        bool getKeyDown(int key);
+	bool getKeyState(int key);
+	bool getKeyUp(int key);
+	bool getKeyDown(int key);
 
-        bool isKeyDown(int key);
+	bool isKeyDown(int key);
 
-        bool getMouseDown(sf::Mouse::Button button);
-        bool getMouseUp(sf::Mouse::Button button);
-        sf::Vector2f getMousePos();
-                sf::Vector2f getGlobalMousePos();
-                void setGlobalMousePos(const sf::Vector2f& pos);
+	bool getMouseDown(sf::Mouse::Button button);
+	bool getMouseUp(sf::Mouse::Button button);
+	sf::Vector2f getMousePos();
+	sf::Vector2f getGlobalMousePos();
+	void setGlobalMousePos(const sf::Vector2f& pos);
 
-        sf::Time getFrameTime();
+	sf::Time getFrameTime();
 
 
 private:
-        static InputEng *m_pInstance;
+	static InputEng *m_pInstance;
 
-        bool KeyState[K_SIZE];
-        bool KeyUp[K_SIZE];
-        bool KeyDown[K_SIZE];
-        sf::Keyboard::Key KeyMap[K_SIZE];
+	bool KeyState[K_SIZE];
+	bool KeyUp[K_SIZE];
+	bool KeyDown[K_SIZE];
+	sf::Keyboard::Key KeyMap[K_SIZE];
 
-        bool MouseUp[sf::Mouse::ButtonCount];
-        bool MouseDown[sf::Mouse::ButtonCount];
-        bool MouseState[sf::Mouse::ButtonCount];
+	bool MouseUp[sf::Mouse::ButtonCount];
+	bool MouseDown[sf::Mouse::ButtonCount];
+	bool MouseState[sf::Mouse::ButtonCount];
 
-        sf::Vector2i MousePos; //Window coords
-                sf::Vector2f globalMousePos; //World coords
+	sf::Vector2i MousePos; //Window coords
+	sf::Vector2f globalMousePos; //World coords
 };
 
 #endif // INPUTENGINE_H
