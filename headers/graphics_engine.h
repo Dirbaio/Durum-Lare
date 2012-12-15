@@ -43,8 +43,8 @@ public:
 
                 void DrawAll();
 
-                void Draw(sf::Sprite* drawable);
-                void Draw(sf::Sprite* drawable, int layer);
+                void Draw(sf::Sprite& drawable);
+                void Draw(sf::Sprite& drawable, int layer);
 
                 void Draw(sf::Text text);
                 void Draw(sf::Text text, int layer);
@@ -73,7 +73,7 @@ private:
 
         std::map<std::string, sf::Texture*> imgMap;
 
-                std::map<int, std::queue<sf::Sprite*> > drawQueue;
+                std::map<int, std::queue<sf::Sprite> > drawQueue;
                 std::map<int, std::queue<sf::Text> > textQueue;
 
                 sf::Font myFont;

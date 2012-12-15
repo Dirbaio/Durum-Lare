@@ -81,8 +81,8 @@ sf::Texture* GraphEng::getTexture(std::string path) {
 
 }
 
-void GraphEng::Draw(sf::Sprite* drawable) {
-        Draw(drawable, GraphEng::GRAPH_LAYER_STANDARD);
+void GraphEng::Draw(sf::Sprite& drawable) {
+    Draw(drawable, GraphEng::GRAPH_LAYER_STANDARD);
 }
 
 void GraphEng::Draw(sf::Text text) {
@@ -93,7 +93,7 @@ void GraphEng::Draw(sf::Text text, int layer) {
         textQueue[layer].push(text);
 }
 
-void GraphEng::Draw(sf::Sprite* drawable, int layer) {
+void GraphEng::Draw(sf::Sprite& drawable, int layer) {
 
         if (layer == GRAPH_LAYER_TILE) instaDraw(drawable);
 
