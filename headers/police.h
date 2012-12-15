@@ -1,19 +1,17 @@
 #ifndef POLICE_H
 #define POLICE_H
 
-#include "object.h"
+#include "npc.h"
 
-class Police : public Object {
+class Police : public Npc {
   public:
     Police() {}
 
     void Init();
     void Update();
-    void Draw();
 
   private:
 
-    sf::Sprite mySpr;
 
 };
 

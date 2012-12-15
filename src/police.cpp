@@ -16,12 +16,3 @@ void Police::Update() {
     //TO DO
 
 }
-
-void Police::Draw() {
-
-    mySpr.setPosition(m_position);
-
-    App->draw(mySpr);
-
-}
-

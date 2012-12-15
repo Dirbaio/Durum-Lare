@@ -23,6 +23,8 @@ InputEng::InputEng()
 
     KeyMap[NEW_SCENE] = sf::Keyboard::Return;
 
+    KeyMap[PLAYER_ACTION] = sf::Keyboard::Space;
+
     KeyMap[EXIT] = sf::Keyboard::Escape;
 
 }

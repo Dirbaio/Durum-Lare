@@ -3,6 +3,7 @@
 #include "graphics_engine.h"
 #include "defines.h"
 #include "input_engine.h"
+#include "game_reg.h"
 
 void Player::Init() {
 
@@ -30,6 +31,17 @@ void Player::Update() {
         m_position.x -= myVel.x*input->getFrameTime().asSeconds();
     if (input->getKeyState(InputEng::PLAYER_RIGHT))
         m_position.x += myVel.x*input->getFrameTime().asSeconds();
+
+
+    if (input->getKeyDown(InputEng::PLAYER_ACTION)) {
+
+        GameReg* gameReg = GameReg::getInstance();
+
+        gameReg->eventQueue.push(new EventPlayerAction());
+
+    }
+
+
 }
 
 void Player::Draw() {
