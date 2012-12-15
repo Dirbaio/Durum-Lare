@@ -67,7 +67,7 @@ bool GameScene::Init() {
 
     sf::Clock timer;
     timer.restart();
-
+/*
     sf::Thread thr_init(&GameScene::initThread, this);
     thr_init.launch();
     while (!initThreadDone) {
@@ -84,7 +84,9 @@ bool GameScene::Init() {
         graphics->Draw(loadingText);
         graphics->DrawAll();
         App->display();
-    }
+    }*/
+
+    initThread();
 
     return true;
 }
