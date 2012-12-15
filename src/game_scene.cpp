@@ -9,7 +9,7 @@
 #include "game_reg.h"
 #include "graphics_engine.h"
 #include "generator.h"
-
+#include <SFML/Audio.hpp>
 #include "player.h"
 #include "person.h"
 #include "police.h"
@@ -20,7 +20,7 @@ GameScene::GameScene() {
 }
 
 GameScene::~GameScene() {
-
+    bg_music.stop();
 }
 
 void GameScene::initThread() {
@@ -46,6 +46,12 @@ void GameScene::initThread() {
 
 	camera.setCenter(sf::Vector2f(0, 0));
 	camera.zoom(0.5f);
+
+        bg_music.openFromFile("audio/surrounding.ogg");
+
+        bg_music.setLoop(true);
+        bg_music.play();
+
 	initThreadDone = true;
 }
 
@@ -68,7 +74,9 @@ bool GameScene::Init() {
 
 	sf::Clock timer;
 	timer.restart();
-	/*
+
+
+      /*
 	sf::Thread thr_init(&GameScene::initThread, this);
 	thr_init.launch();
 	while (!initThreadDone) {
@@ -136,7 +144,6 @@ void GameScene::Update() {
 	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
 		it->Update();
 	}
-
 
 	HandleCamInput();
 	HandleEvents();

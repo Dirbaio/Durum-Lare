@@ -4,6 +4,7 @@
 #include "defines.h"
 #include "input_engine.h"
 #include "game_reg.h"
+#include "utils.h"
 
 void Person::Init() {
 
@@ -27,8 +28,11 @@ void Person::Update() {
             GameReg* gameReg = GameReg::getInstance();
             gameReg->eventQueue.push(new EventDeletePerson(this));
         }
-
+        return;
     }
+
+    m_position.x += input->getFrameTime().asSeconds()*400.0f*Utils::randomInt(-1, 1);
+    m_position.y += input->getFrameTime().asSeconds()*400.0f*Utils::randomInt(-1, 1);
 
 }
 

@@ -15,6 +15,8 @@
 #include "person.h"
 #include "police.h"
 
+#include <SFML/Audio.hpp>
+
 class GameScene : public Scene {
 public:
 	GameScene();
@@ -50,6 +52,9 @@ private:
 	//Managers
 	std::list<Person> personList;
 	std::list<Police> policeList;
+
+
+        sf::Music bg_music;
 };
 
 #endif // GAMESCENE_H

@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
 
-LIBS += -lsfml-system -lsfml-window -lsfml-graphics
+LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
 
 SOURCES += src/main.cpp \
     src/game.cpp \
