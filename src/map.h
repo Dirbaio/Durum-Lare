@@ -3,8 +3,12 @@
 
 #include<vector>
 #include<cstdlib>
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 using namespace std;
+using namespace sf;
 
 class Tile
 {
@@ -21,6 +25,7 @@ public:
 class Map
 {
 public:
+    Texture tex;
     vector<vector<Tile> > m;
     int tx, ty; //Tamaño x, y en tiles
 

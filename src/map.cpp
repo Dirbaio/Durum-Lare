@@ -22,6 +22,8 @@ static Tile tiles[] = {
 
 Map::Map(vector<vector<bool> > v)
 {
+    tex.loadFromFile("img/tiles.png");
+
     tx = v.size();
     ty = v[0].size();
 
@@ -48,11 +50,45 @@ Map::Map(vector<vector<bool> > v)
             }
         }
 
-    //TODO: Añadir pasocebras.
+    //Poner pasocebras! Toguays.
+    for(int x = 0; x < tx; x++)
+        for(int y = 0; y < ty; y++)
+        {
+            if(m[x][y].tileNum == 0)
+            {
+                if(m[x][y].rot == 0) //Horizontal
+                {
+                    if(m[x-1][y].tileNum != 0)
+                        m[x][y] = Tile(1, 2);
+                    else if(m[x+1][y].tileNum != 0)
+                        m[x][y] = Tile(1, 0);
+                }
+                else //Vertical
+                {
+                    if(m[x][y-1].tileNum != 0)
+                        m[x][y] = Tile(1, 3);
+                    else if(m[x][y+1].tileNum != 0)
+                        m[x][y] = Tile(1, 1);
+                }
+            }
+        }
 }
 
+const int TILESIZE = 64;
 
 void Map::render()
 {
-    for(int y = 0; y < )
+    Sprite s;
+    s.setTexture(tex);
+
+    for(int x = 0; x < tx; x++)
+        for(int y = 0; y < ty; y++)
+        {
+            int ttx = m[x][y].tileNum % 4;
+            int tty = m[x][y].tileNum / 4;
+            s.setTextureRect(IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
+            s.setPosition(x*TILESIZE, y*TILESIZE);
+            s.setRotation(m[x][y].rot*90);
+            s.draw();
+        }
 }
