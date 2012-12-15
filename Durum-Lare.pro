@@ -11,7 +11,8 @@ SOURCES += src/main.cpp \
     src/scene.cpp \
     src/game_scene.cpp \
     src/game_reg.cpp \
-    src/map.cpp
+    src/map.cpp \
+    src/person.cpp
 
 HEADERS += headers/game.h \
     headers/game_states.h \
@@ -24,6 +25,7 @@ HEADERS += headers/game.h \
     headers/event.h \
     headers/game_reg.h \
     headers/utils.h \
+    headers/person.h \
     src/map.h
 
 INCLUDEPATH += src \
