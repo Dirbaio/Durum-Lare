@@ -290,7 +290,7 @@ void GameScene::HandleEvents() {
 				if (!it->is_alive()) continue;
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
-					it->set_alive(false);
+                                    it->doDeath();
 				}
 			}
 
