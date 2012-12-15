@@ -8,13 +8,14 @@
 #include <SFML/Graphics.hpp>
 
 using namespace std;
-using namespace sf;
 
 class Tile
 {
 public:
     int tileNum;
     int rot;
+    sf::Sprite s;
+
     Tile() {}
     Tile(int a, int b)
     {
@@ -26,13 +27,14 @@ public:
 class Map
 {
 public:
-    Texture tex;
+    sf::Texture tex;
     vector<vector<Tile> > m;
     int tx, ty; //Tamaño x, y en tiles
 
     //Crea el mapa
     //Obtiene el vector de bools del generador de balaghi!
-    Map(vector<vector<bool> > v);
+    Map(){}
+    void load(vector<vector<bool> > v);
 
     void render();
 };

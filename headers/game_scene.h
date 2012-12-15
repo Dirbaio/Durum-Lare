@@ -7,7 +7,7 @@
 #include <SFML/Graphics.hpp>
 #include "event.h"
 #include "game_reg.h"
-
+#include "map.h"
 
 class GameScene : public Scene {
 public:
@@ -20,20 +20,21 @@ public:
     void Destroy();
 
 private:
-        void initThread();
-        bool initThreadDone;
-        sf::Text loadingText;
-        void HandleEvents();
-        void HandleCamInput();
+    void initThread();
+    bool initThreadDone;
+    sf::Text loadingText;
+    void HandleEvents();
+    void HandleCamInput();
 
+    Map map;
 
-        //Registry
-        GameReg* gameReg;
+    //Registry
+    GameReg* gameReg;
 
-        //Statics
-        sf::View camera;
+    //Statics
+    sf::View camera;
 
-        //Managers
+    //Managers
 
 };
 

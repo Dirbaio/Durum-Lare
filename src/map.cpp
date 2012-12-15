@@ -1,6 +1,6 @@
 #include "map.h"
 #include "graphics_engine.h"
-
+#include "defines.h"
 
 static Tile tiles[] = {
     //                 URDL
@@ -22,7 +22,9 @@ static Tile tiles[] = {
     Tile(3, 0),     // 1111
 };
 
-Map::Map(vector<vector<bool> > v)
+const int TILESIZE = 64;
+
+void Map::load(vector<vector<bool> > v)
 {
     tex.loadFromFile("img/tiles.png");
 
@@ -42,13 +44,19 @@ Map::Map(vector<vector<bool> > v)
             }
             else //Calle!
             {
-                bool up = v[x][y-1];
-                bool down = v[x][y+1];
-                bool left = v[x-1][y];
-                bool right = v[x+1][y];
+                bool up = !v[x][y-1];
+                bool down = !v[x][y+1];
+                bool left = !v[x-1][y];
+                bool right = !v[x+1][y];
 
                 int idx = left + down*2 + right*4 + up*8;
                 m[x][y] = tiles[idx];
+                if(m[x][y].tileNum == 0 && rand()%30 == 0)
+                {
+                    m[x][y].tileNum = 1;
+                    if(rand()%2 == 0)
+                        m[x][y].rot += 2;
+                }
             }
         }
 
@@ -60,42 +68,44 @@ Map::Map(vector<vector<bool> > v)
             {
                 if(m[x][y].rot == 0) //Horizontal
                 {
-                    if(m[x-1][y].tileNum != 0)
+                    if(m[x-1][y].tileNum >= 2)
                         m[x][y] = Tile(1, 2);
-                    else if(m[x+1][y].tileNum != 0)
+                    else if(m[x+1][y].tileNum >= 2)
                         m[x][y] = Tile(1, 0);
                 }
                 else //Vertical
                 {
-                    if(m[x][y-1].tileNum != 0)
+                    if(m[x][y-1].tileNum >= 2)
                         m[x][y] = Tile(1, 3);
-                    else if(m[x][y+1].tileNum != 0)
+                    else if(m[x][y+1].tileNum >= 2)
                         m[x][y] = Tile(1, 1);
                 }
             }
         }
-}
-
-const int TILESIZE = 64;
-
-void Map::render()
-{
-
-    GraphEng* graphics = GraphEng::getInstance();
-
-
-
-    Sprite s;
-    s.setTexture(tex);
 
     for(int x = 0; x < tx; x++)
         for(int y = 0; y < ty; y++)
         {
-            int ttx = m[x][y].tileNum % 4;
-            int tty = m[x][y].tileNum / 4;
-            s.setTextureRect(IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
-            s.setPosition(x*TILESIZE, y*TILESIZE);
-            s.setRotation(m[x][y].rot*90);
-//            s.draw();
+            Tile& t = m[x][y];
+            t.s.setTexture(tex);
+            int ttx = t.tileNum % 4;
+            int tty = t.tileNum / 4;
+            t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
+            t.s.setRotation(t.rot*90);
+            t.s.setOrigin(TILESIZE/2, TILESIZE/2);
+            t.s.setPosition(x*TILESIZE, y*TILESIZE);
         }
+}
+
+
+void Map::render()
+{
+    GraphEng* graphics = GraphEng::getInstance();
+
+    for(int x = 0; x < tx; x++)
+        for(int y = 0; y < ty; y++)
+        {
+            App->draw(m[x][y].s);
+        }
+//            graphics->Draw(&m[x][y].s);
 }

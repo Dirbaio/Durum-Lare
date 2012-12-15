@@ -8,8 +8,8 @@
 #include "utils.h"
 #include "game_reg.h"
 #include "graphics_engine.h"
-
-GameScene::GameScene(){
+#include "generator.h"
+GameScene::GameScene() {
 
 }
 
@@ -18,51 +18,49 @@ GameScene::~GameScene() {
 }
 
 void GameScene::initThread() {
-
-        gameReg = GameReg::getInstance();
-
-        initThreadDone = true;
+    gameReg = GameReg::getInstance();
+    vector<vector<bool> > v = generateMap();
+    map.load(v);
+    initThreadDone = true;
 }
 
 bool GameScene::Init() {
-        initThreadDone = false;
+    initThreadDone = false;
 
-        GraphEng* graphics = graphics->getInstance();
-        sf::Sprite loadScene;
-        loadScene.setTexture(*graphics->getTexture("img/loading.png"));
-        loadScene.setPosition(App->getView().getSize().x*0.5f - loadScene.getTexture()->getSize().x*0.5f,
-                                                  App->getView().getSize().y*0.5f - loadScene.getTexture()->getSize().y*0.5f);
+    GraphEng* graphics = graphics->getInstance();
+    sf::Sprite loadScene;
+    loadScene.setTexture(*graphics->getTexture("img/loading.png"));
+    loadScene.setPosition(App->getView().getSize().x*0.5f - loadScene.getTexture()->getSize().x*0.5f,
+                          App->getView().getSize().y*0.5f - loadScene.getTexture()->getSize().y*0.5f);
+    loadingText = sf::Text("Loading...");
 
+    sf::Text titleText;
+    titleText.setColor(sf::Color::Yellow);
+    titleText.setStyle(sf::Text::Bold);
+    titleText.setString("DURUM, DALE");
+    titleText.setScale(3, 3);
+    titleText.setPosition(App->getSize().x*0.25f, App->getSize().y*0.1f);
 
-        loadingText = sf::Text("Loading...");
+    sf::Clock timer;
+    timer.restart();
 
-        sf::Text titleText;
-        titleText.setColor(sf::Color::Yellow);
-        titleText.setStyle(sf::Text::Bold);
-        titleText.setString("DURUM, DALE");
-        titleText.setScale(3, 3);
-        titleText.setPosition(App->getSize().x*0.25f, App->getSize().y*0.1f);
-
-        sf::Clock timer;
-        timer.restart();
-
-        sf::Thread thr_init(&GameScene::initThread, this);
-        thr_init.launch();
-        while (!initThreadDone) {
-                loadingText.setPosition(App->getSize().x*0.35f, App->getSize().y*0.75f);
-                loadingText.setColor(sf::Color::Red);
-                if (timer.getElapsedTime().asSeconds() > 2) {
-                        loadingText.setString(loadingText.getString()+".");
-                        timer.restart();
-                }
-
-                App->clear(sf::Color(255,255,255));
-                graphics->Draw(&loadScene, GraphEng::GRAPH_LAYER_HUD);
-                graphics->Draw(titleText);
-                graphics->Draw(loadingText);
-                graphics->DrawAll();
-                App->display();
+    sf::Thread thr_init(&GameScene::initThread, this);
+    thr_init.launch();
+    while (!initThreadDone) {
+        loadingText.setPosition(App->getSize().x*0.35f, App->getSize().y*0.75f);
+        loadingText.setColor(sf::Color::Red);
+        if (timer.getElapsedTime().asSeconds() > 2) {
+            loadingText.setString(loadingText.getString()+".");
+            timer.restart();
         }
+
+        App->clear(sf::Color(255,255,255));
+        graphics->Draw(&loadScene, GraphEng::GRAPH_LAYER_HUD);
+        graphics->Draw(titleText);
+        graphics->Draw(loadingText);
+        graphics->DrawAll();
+        App->display();
+    }
 
     return true;
 }
@@ -73,11 +71,11 @@ void GameScene::Update() {
 
 
     input->setGlobalMousePos(App->convertCoords(sf::Vector2i(
-        input->getMousePos().x,
-        input->getMousePos().y),
-        camera));
+                                                    input->getMousePos().x,
+                                                    input->getMousePos().y),
+                                                camera));
 
-   // HandleCamInput();
+    // HandleCamInput();
 
 
     HandleEvents();
@@ -90,13 +88,13 @@ void GameScene::Draw() {
 
     GraphEng* graphics = GraphEng::getInstance();
 
-    //camera.setCenter(gameReg->player->getPosition());
+//    camera.setCenter(sf::Vector2f(0, 0));
 
-    App->setView(camera);
-
+ //   App->setView(camera);
+    map.render();
     InputEng* input = InputEng::getInstance();
 
-        /*
+    /*
 
         //Display mouse position
 
@@ -111,7 +109,7 @@ void GameScene::Draw() {
         //App->draw(str_mousePos);
 
         */
-
+    graphics->DrawAll();
 }
 
 void GameScene::Destroy() {
@@ -190,10 +188,10 @@ void GameScene::HandleCamInput() {
 
 
 void GameScene::HandleEvents() {
-        InputEng* input = InputEng::getInstance();
-        GraphEng* graphics = GraphEng::getInstance();
+    InputEng* input = InputEng::getInstance();
+    GraphEng* graphics = GraphEng::getInstance();
 
-        while (!gameReg->eventQueue.empty()) {
+    while (!gameReg->eventQueue.empty()) {
         Event* e = gameReg->eventQueue.front();
         gameReg->eventQueue.pop();
         switch(e->type) {
