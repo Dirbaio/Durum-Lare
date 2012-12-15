@@ -5,11 +5,15 @@
 #include <SFML/Graphics.hpp>
 #include <set>
 
+class Person;
+
 enum EventType {
 
     EVENT_MOVE,
 
     EVENT_PLAYER_ACTION,
+
+    EVENT_DELETE_PERSON,
 
 
     //Total events number
@@ -24,6 +28,12 @@ struct Event {
 
 struct EventPlayerAction : public Event {
     EventPlayerAction() : Event(EVENT_PLAYER_ACTION) {}
+};
+
+struct EventDeletePerson : public Event {
+    EventDeletePerson(Person* _person) : Event(EVENT_DELETE_PERSON), person(_person) {}
+
+    Person* person;
 };
 
 /*

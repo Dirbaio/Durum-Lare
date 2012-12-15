@@ -3,6 +3,8 @@
 
 #include "npc.h"
 
+#define DISSAPPEAR_TIME 2.0f
+
 class Person : public Npc {
   public:
     Person() {}
@@ -12,7 +14,12 @@ class Person : public Npc {
 
     void Draw();
 
+    void doDeath();
+
   private:
+
+
+    float deathTimer;
 
     sf::Sprite deadSpr;
 };
