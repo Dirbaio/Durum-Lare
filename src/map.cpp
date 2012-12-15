@@ -2,6 +2,9 @@
 #include "graphics_engine.h"
 #include "defines.h"
 
+
+#include <iostream>
+
 static Tile tiles[] = {
     //                 URDL
     Tile(0, 0),     // 0000 Should never happen?
@@ -26,7 +29,11 @@ const int TILESIZE = 64;
 
 void Map::load(vector<vector<bool> > v)
 {
+
+    boolMatrix = v;
+
     tex.loadFromFile("img/tiles.png");
+
 
     tx = v.size();
     ty = v[0].size();
@@ -90,10 +97,10 @@ void Map::load(vector<vector<bool> > v)
             t.s.setTexture(tex);
             int ttx = t.tileNum % 4;
             int tty = t.tileNum / 4;
-            t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
+	    t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
+	    t.s.setOrigin(TILESIZE/2, TILESIZE/2);
             t.s.setRotation(t.rot*90);
-            t.s.setOrigin(TILESIZE/2, TILESIZE/2);
-            t.s.setPosition(x*TILESIZE, y*TILESIZE);
+	    t.s.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE/2);
         }
 }
 
@@ -107,5 +114,5 @@ void Map::render()
         {
             App->draw(m[x][y].s);
         }
-//            graphics->Draw(&m[x][y].s);
+//graphics->Draw(&m[x][y].s);
 }

@@ -46,9 +46,9 @@ void GraphEng::init() {
         //App->Create(m_videoModes[0], "Durum dale");
         App->create(m_videoModes[0], "Durum dale", sf::Style::Resize | sf::Style::Close);
 
-        worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
-        whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
-        whiteTex.clear(sf::Color::White);
+        //worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
+       // whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
+       // whiteTex.clear(sf::Color::White);
 
         //Activate separators
         drawQueue[GRAPH_LAYER_WWSEP].push(NULL);
@@ -101,8 +101,9 @@ void GraphEng::Draw(sf::Sprite* drawable, int layer) {
 }
 
 void GraphEng::instaDraw(sf::Sprite* spr) {
-        worldRendTex.setView(App->getView());
-        worldRendTex.draw(*spr);
+    App->draw(*spr);
+        //worldRendTex.setView(App->getView());
+        //worldRendTex.draw(*spr);
 }
 
 bool sortfuncspr(sf::Sprite* i, sf::Sprite* j) {
@@ -149,9 +150,9 @@ void GraphEng::DrawAll() {
 
                 //World map rendering
                 else {
-                        worldRendTex.setView(App->getView());
+                      //  worldRendTex.setView(App->getView());
                         for (int i = 0; i < drawVec.size(); ++i) {
-                                        worldRendTex.draw(*drawVec[i]);
+                                   //     worldRendTex.draw(*drawVec[i]);
                         }
                 }
 

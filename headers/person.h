@@ -1,15 +1,20 @@
 #ifndef PERSON_H
 #define PERSON_H
 
-class Person {
+#include "npc.h"
+
+class Person : public Npc {
   public:
-    Person(int x, int y);
-    virtual void update()=0;
-    void draw();
-  protected:
-    void update_pos();
+    Person() {}
+
+    void Init();
+    void Update();
+
+    void Draw();
+
   private:
-    int x, y, vx, vy;
+
+    sf::Sprite deadSpr;
 };
 
 #endif // PERSON_H

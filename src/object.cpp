@@ -17,6 +17,9 @@ Object::Object() {
         m_rotation = 0.0f;
         m_scale = sf::Vector2f(1.0f, 1.0f);
 
+        m_boundbox.width = 16;
+        m_boundbox.height = 16;
+
         //m_anim = NULL;
 }
 

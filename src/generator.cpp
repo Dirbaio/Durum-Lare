@@ -18,13 +18,13 @@ vector<vector<bool> > generateMap()
 	int tx, ty;
 	tx = rand()%30 + 30;
 	ty = tx + rand()%11 - 5;
-    tx-=(tx%4);
-    ty-=(ty%4);
+    //tx-=(tx%4);
+    //ty-=(ty%4);
 	vector<vector<bool> > v (ty+2, vector<bool> (tx+2, true));
 	int ctv = 1;
 	int cth = 1;
-	int hsize = tx/2 + rand()%9 - 4;
-	int vsize = ty/2 + rand()%9 - 4;
+    int hsize = tx/3 + rand()%9 - 4;
+    int vsize = ty/3 + rand()%9 - 4;
 	int midx = tx/2;
     midx-=(midx%4);
 	int midy = ty/2;
@@ -33,8 +33,7 @@ vector<vector<bool> > generateMap()
 	
 	while (cth <= hsize && ctv <= vsize) {
 		Calle ant;
-        int l1, l2, p, rnd, d, x, y, rnd2;
-        bool done;
+        int l1, l2, p, rnd, d, x, y;
 
 		ant = callesV[ctv-1];						// HORIZONTALES
 		l1 = ant.y1;
@@ -43,25 +42,17 @@ vector<vector<bool> > generateMap()
 		rnd = rand()%(l2-l1) + l1;
         rnd-=(rnd%4);
 		x = y = p;
-        d = rand()%8 + 8;
-        rnd2 = rand()%500;
-        done = false;
-        if (rnd2%7 != 0) {
-            done = true;
-            for (int i = 0; i < d; i++) {
-                int pos = x-1;
-                if (pos < 0) break;
-                x = pos;
-            }
+        d = rand()%9 + 9;
+        for (int i = 0; i < d; i++) {
+            int pos = x-1;
+            if (pos < 0) break;
+            x = pos;
         }
-        d = rand()%8 + 8;
-        rnd2 = rand()%500;
-        if (rnd2%7 != 0 || !done) {
-            for (int i = 0; i < d; i++) {
-                int pos = y+1;
-                if (pos >= tx) break;
-                y = pos;
-            }
+        d = rand()%9 + 9;
+        for (int i = 0; i < d; i++) {
+            int pos = y+1;
+            if (pos >= tx) break;
+            y = pos;
         }
 		callesH.push_back(Calle(x, y, rnd, rnd));
 		
@@ -72,25 +63,17 @@ vector<vector<bool> > generateMap()
 		rnd = rand()%(l2-l1) + l1;
         rnd-=(rnd%4);
 		x = y = p;
-        d = rand()%8 + 8;
-        rnd2 = rand()%500;
-        done = false;
-        if (rnd2%7 != 0) {
-            done = true;
-            for (int i = 0; i < d; i++) {
-                int pos = x-1;
-                if (pos < 0) break;
-                x = pos;
-            }
+        d = rand()%9 + 9;
+        for (int i = 0; i < d; i++) {
+            int pos = x-1;
+            if (pos < 0) break;
+            x = pos;
         }
-        d = rand()%8 + 8;
-        rnd2 = rand()%500;
-        if (rnd2%7 != 0 || !done) {
-            for (int i = 0; i < d; i++) {
-                int pos = y+1;
-                if (pos >= ty) break;
-                y = pos;
-            }
+        d = rand()%9 + 9;
+        for (int i = 0; i < d; i++) {
+            int pos = y+1;
+            if (pos >= ty) break;
+            y = pos;
         }
 		callesV.push_back(Calle(rnd, rnd, x, y));
 		
@@ -108,13 +91,4 @@ vector<vector<bool> > generateMap()
 	}
 	
     return v;
-
-/*	cout << ty << " " << tx << endl << endl;
-	for (int i = 0; i < ty; i++) {
-		for (int j = 0; j < tx; j++) {
-			if (v[i][j]) cout << 'X';
-			else cout << ' ';
-		}
-		cout << endl;
-    }*/
 }

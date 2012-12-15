@@ -9,6 +9,8 @@ enum EventType {
 
     EVENT_MOVE,
 
+    EVENT_PLAYER_ACTION,
+
 
     //Total events number
     EVENT_TYPE_SIZE
@@ -18,6 +20,12 @@ struct Event {
     int type;
     Event(int _type) : type(_type){}
 };
+
+
+struct EventPlayerAction : public Event {
+    EventPlayerAction() : Event(EVENT_PLAYER_ACTION) {}
+};
+
 /*
 //A object changes his position (not residing in map world IE quadtree)
 struct EventMove : public Event {

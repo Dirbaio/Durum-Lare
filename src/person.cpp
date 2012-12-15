@@ -1,7 +1,31 @@
 #include "person.h"
+#include "graphics_engine.h"
+#include "npc.h"
+#include "defines.h"
 
+void Person::Init() {
 
-Person::Person(int _x, int _y) {
-    x = _x;
-    y = _y;
+    GraphEng* graphics = GraphEng::getInstance();
+
+    mySpr.setTexture(*graphics->getTexture("img/person.png"));
+    deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
+}
+
+void Person::Update() {
+
+    Npc::Update();
+
+    //TO DO
+
+}
+
+void Person::Draw() {
+
+    if (alive) {
+        Npc::Draw();
+    }
+    else {
+        deadSpr.setPosition(m_position);
+        App->draw(deadSpr);
+    }
 }

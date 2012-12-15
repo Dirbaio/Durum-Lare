@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include<vector>
+#include<iostream>
 #include<cstdlib>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -22,6 +23,10 @@ public:
         tileNum = a;
         rot = b;
     }
+    bool transitable() {
+        std::cerr << "tilenum" << tileNum << std::endl;
+        return tileNum != 4;
+    }
 };
 
 class Map
@@ -29,6 +34,9 @@ class Map
 public:
     sf::Texture tex;
     vector<vector<Tile> > m;
+
+    vector< vector<bool> > boolMatrix;
+
     int tx, ty; //Tamaño x, y en tiles
 
     //Crea el mapa
