@@ -5,6 +5,9 @@
 #include "input_engine.h"
 #include "game_reg.h"
 
+#include <GL/gl.h>
+
+
 void Player::Init() {
 
     GraphEng* graphics = GraphEng::getInstance();
@@ -17,9 +20,14 @@ void Player::Init() {
     myVel.x = 64*3;
     myVel.y = 64*3;
 
+    m_boundbox.height = 16;
+    m_boundbox.width = 16;
+
 }
 
 void Player::Update() {
+
+    updateBBox();
 
     InputEng* input = InputEng::getInstance();
 
@@ -47,6 +55,8 @@ void Player::Update() {
 void Player::Draw() {
 
     mySpr.setPosition(m_position);
+
     App->draw(mySpr);
+
 
 }

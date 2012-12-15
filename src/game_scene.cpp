@@ -298,8 +298,8 @@ void GameScene::HandleEvents() {
 
                 if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox()))
                     it->set_alive(false);
-            }
 
+            }
 
 
 

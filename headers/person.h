@@ -12,7 +12,7 @@ class Person : public Npc {
 
   private:
 
-
+    sf::Sprite deadSpr;
 };
 
 #endif // PERSON_H
