@@ -10,6 +10,10 @@
 #include "map.h"
 #include "player.h"
 
+#include <list>
+#include "person.h"
+#include "police.h"
+
 class GameScene : public Scene {
 public:
     GameScene();
@@ -38,7 +42,8 @@ private:
 
 
     //Managers
-
+    std::list<Person> personList;
+    std::list<Police> policeList;
 };
 
 #endif // GAMESCENE_H

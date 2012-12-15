@@ -11,6 +11,9 @@
 #include "generator.h"
 
 #include "player.h"
+#include "person.h"
+#include "police.h"
+#include <list>
 
 GameScene::GameScene() {
 
@@ -98,9 +101,22 @@ void GameScene::Update() {
                                                 camera));
 
 
+    //Player update
     player.Update();
 
-     HandleCamInput();
+    //Persons update
+    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+        it->Update();
+
+    }
+
+    //Police update
+    for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
+        it->Update();
+    }
+
+
+    HandleCamInput();
 
 
     HandleEvents();
