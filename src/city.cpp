@@ -55,7 +55,9 @@ sf::Vector2f City::getRandomStreet() {
 	pos.y = Utils::randomInt(0, sizeY-1);
     }
 
-    return sf::Vector2f(pos.x*64 + 32, pos.y*64 + 32);
+    int dX = Utils::randomInt(-12, 28);
+    int dY = Utils::randomInt(-12, 28);
+    return sf::Vector2f(pos.x*64 + dX, pos.y*64 + dY);
 
 
 

@@ -2,6 +2,8 @@
 #include "graphics_engine.h"
 #include "npc.h"
 #include "defines.h"
+#include "input_engine.h"
+#include "game_reg.h"
 
 void Person::Init() {
 
@@ -13,9 +15,24 @@ void Person::Init() {
 
 void Person::Update() {
 
+    InputEng* input = InputEng::getInstance();
+
     Npc::Update();
 
-    //TO DO
+    if (!alive) {
+        deathTimer -= input->getFrameTime().asSeconds();
+        if (deathTimer < 0) {
+            GameReg* gameReg = GameReg::getInstance();
+            gameReg->eventQueue.push(new EventDeletePerson(this));
+        }
+
+    }
+
+}
+
+void Person::doDeath() {
+
+    deathTimer = DISSAPPEAR_TIME;
 
 }
 

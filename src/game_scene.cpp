@@ -39,7 +39,7 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-	for (int i = 0; i < 50; ++i) spawnNewPerson();
+        for (int i = 0; i < 1000; ++i) spawnNewPerson();
 	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
 
@@ -295,6 +295,19 @@ void GameScene::HandleEvents() {
 
 			break;
 		}
+
+                case EVENT_DELETE_PERSON: {
+                    EventDeletePerson* ev = (EventDeletePerson*)e;
+
+                    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+                        if (&(*it) == ev->person) {
+                            it = personList.erase(it);
+                            break;
+                        }
+                    }
+
+                    break;
+                }
 
 			/*
 		case EVENT_MOVE: {
