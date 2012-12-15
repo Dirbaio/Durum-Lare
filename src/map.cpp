@@ -2,6 +2,9 @@
 #include "graphics_engine.h"
 #include "defines.h"
 
+
+#include <iostream>
+
 static Tile tiles[] = {
     //                 URDL
     Tile(0, 0),     // 0000 Should never happen?

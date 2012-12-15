@@ -2,14 +2,24 @@
 
 #include "generator.h"
 
-City::City(int w, int h, int _tw, int _th) {
+bool City::init(int w, int h, int _tw, int _th) {
+
     tw = _tw;
     th = _th;
+
+    vector<vector<bool> > v = generateMap();
+    map.load(v);
+
+
+    return true;
 }
 
-void City::render() {map.render();}
-int City::getW() {return map[0].size();}
-int City::getH() {return map.size();}
+void City::render() {
+    map.render();
+}
+
+int City::getW() {return map.m[0].size();}
+int City::getH() {return map.m.size();}
 int City::getTW() {return tw;}
 int City::getTH() {return th;}
 bool City::occupedXY(int x, int y) {
@@ -17,7 +27,7 @@ bool City::occupedXY(int x, int y) {
 }
 
 bool City::occupedIJ(int i, int j) {
-    return map[i][j];
+    return map.m[i][j].transitable();
 }
 
 bool City::occupedRect(sf::IntRect rect) {
