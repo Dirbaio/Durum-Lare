@@ -29,9 +29,6 @@ void GameScene::initThread() {
 
     //Init map
     city.init(99,99, 64,64);
-    //vector<vector<bool> > v = generateMap();
-    //map.load(v);
-
     //Init player
     player.Init();
 
@@ -70,7 +67,7 @@ bool GameScene::Init() {
 
     sf::Clock timer;
     timer.restart();
-
+/*
     sf::Thread thr_init(&GameScene::initThread, this);
     thr_init.launch();
     while (!initThreadDone) {
@@ -87,7 +84,9 @@ bool GameScene::Init() {
         graphics->Draw(loadingText);
         graphics->DrawAll();
         App->display();
-    }
+    }*/
+
+    initThread();
 
     return true;
 }
@@ -297,7 +296,8 @@ void GameScene::HandleEvents() {
             for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
                 if (!it->is_alive()) continue;
 
-                if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) it->set_alive(false);
+                if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox()))
+                    it->set_alive(false);
             }
 
 

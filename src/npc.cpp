@@ -15,6 +15,8 @@ void Npc::Update() {
 
 void Npc::Draw() {
 
+    if (!alive) return;
+
     mySpr.setPosition(m_position);
     App->draw(mySpr);
 
