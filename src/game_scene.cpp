@@ -297,7 +297,8 @@ void GameScene::HandleEvents() {
             for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
                 if (!it->is_alive()) continue;
 
-                if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) it->set_alive(false);
+                if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox()))
+                    it->set_alive(false);
             }
 
 
