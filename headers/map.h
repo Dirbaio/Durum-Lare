@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include<vector>
+#include<iostream>
 #include<cstdlib>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
@@ -23,6 +24,7 @@ public:
         rot = b;
     }
     bool transitable() {
+        //std::cerr << "tilenum" << tileNum << std::endl;
         return tileNum != 5;
     }
 };
