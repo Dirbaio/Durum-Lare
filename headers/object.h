@@ -9,7 +9,7 @@
 //#include "Transition.h"
 
 enum eObjDir {
-	FACE_UP, FACE_DOWN, FACE_LEFT, FACE_RIGHT
+	FACE_UP = 0, FACE_DOWN, FACE_LEFT, FACE_RIGHT, FACE_SIZE
 };
 
 enum eObjType {

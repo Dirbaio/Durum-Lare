@@ -1,9 +1,9 @@
 #ifndef NPC_H
 #define NPC_H
 
-#include "object.h"
+#include "character.h"
 
-class Npc : public Object {
+class Npc : public Character {
   public:
     Npc() {alive = true;}
 
