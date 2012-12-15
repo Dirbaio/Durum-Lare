@@ -13,10 +13,7 @@ enum eObjDir {
 
 enum eObjType {
 
-        OBJ_PROP, OBJ_ITEM,
-
-        OBJ_MOBSPAWNER,
-
+        OBJ_PROP,
         //Total size
         OBJ_TOTAL_TYPE_SIZE
 };

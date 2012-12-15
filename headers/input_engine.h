@@ -10,6 +10,7 @@ public:
         enum Key
         {
                 PLAYER_UP, PLAYER_DOWN, PLAYER_LEFT, PLAYER_RIGHT,
+                CAM_UP, CAM_DOWN, CAM_LEFT, CAM_RIGHT,
                 EXIT,
                 K_SIZE
         };

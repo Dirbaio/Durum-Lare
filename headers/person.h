@@ -3,11 +3,13 @@
 
 class Person {
   public:
-    Person(int x, int y);
+    Person() {}
     virtual void update()=0;
     void draw();
+
   protected:
-    void update_pos();
+    //void update_pos();
+
   private:
     int x, y, vx, vy;
 };

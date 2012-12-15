@@ -15,6 +15,12 @@ InputEng::InputEng()
     KeyMap[PLAYER_DOWN] = sf::Keyboard::S;
     KeyMap[PLAYER_LEFT] = sf::Keyboard::A;
     KeyMap[PLAYER_RIGHT] = sf::Keyboard::D;
+
+    KeyMap[CAM_UP] = sf::Keyboard::Up;
+    KeyMap[CAM_DOWN] = sf::Keyboard::Down;
+    KeyMap[CAM_LEFT] = sf::Keyboard::Left;
+    KeyMap[CAM_RIGHT] = sf::Keyboard::Right;
+
     KeyMap[EXIT] = sf::Keyboard::Escape;
 
 }

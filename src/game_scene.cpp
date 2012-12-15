@@ -19,8 +19,21 @@ GameScene::~GameScene() {
 
 void GameScene::initThread() {
     gameReg = GameReg::getInstance();
+    GraphEng* graphics = GraphEng::getInstance();
+
+    //Init map
     vector<vector<bool> > v = generateMap();
     map.load(v);
+
+    //Init camera
+    camera.reset(sf::FloatRect(0, 0,
+        graphics->getCurrentVideoMode().width,
+        graphics->getCurrentVideoMode().height));
+
+    camera.setCenter(sf::Vector2f(0, 0));
+
+    camera.zoom(4.0f);
+
     initThreadDone = true;
 }
 
@@ -75,7 +88,7 @@ void GameScene::Update() {
                                                     input->getMousePos().y),
                                                 camera));
 
-    // HandleCamInput();
+     HandleCamInput();
 
 
     HandleEvents();
@@ -85,14 +98,16 @@ void GameScene::Update() {
 
 
 void GameScene::Draw() {
-
+    InputEng* input = InputEng::getInstance();
     GraphEng* graphics = GraphEng::getInstance();
 
-//    camera.setCenter(sf::Vector2f(0, 0));
-
- //   App->setView(camera);
+    App->setView(camera);
     map.render();
-    InputEng* input = InputEng::getInstance();
+
+
+    graphics->DrawAll();
+
+    App->setView(App->getDefaultView());
 
     /*
 
@@ -109,17 +124,27 @@ void GameScene::Draw() {
         //App->draw(str_mousePos);
 
         */
-    graphics->DrawAll();
+
 }
 
 void GameScene::Destroy() {
 
 }
 
-/*
+
 void GameScene::HandleCamInput() {
         InputEng* input = InputEng::getInstance();
 
+        if (input->getKeyState(InputEng::CAM_UP))
+            camera.move(0, -input->getFrameTime().asSeconds()*2000);
+        if (input->getKeyState(InputEng::CAM_DOWN))
+            camera.move(0, input->getFrameTime().asSeconds()*2000);
+        if (input->getKeyState(InputEng::CAM_LEFT))
+            camera.move(-input->getFrameTime().asSeconds()*2000, 0);
+        if (input->getKeyState(InputEng::CAM_RIGHT))
+            camera.move(input->getFrameTime().asSeconds()*2000, 0);
+
+/*
         if (input->getKeyDown(InputEng::F5)) {
                 if (camTrans.x != NULL) {
                         camera.setSize(sf::Vector2f(camTrans.x->getGoPos(), camera.getSize().y));
@@ -181,8 +206,8 @@ void GameScene::HandleCamInput() {
                         delete camTrans.y;
                         camTrans.y = NULL;
                 }
-        }
-}*/
+        }*/
+}
 
 
 

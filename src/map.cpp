@@ -107,5 +107,5 @@ void Map::render()
         {
             App->draw(m[x][y].s);
         }
-//            graphics->Draw(&m[x][y].s);
+//graphics->Draw(&m[x][y].s);
 }
