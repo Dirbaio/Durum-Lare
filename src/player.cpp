@@ -155,6 +155,9 @@ horz_exit:
 	if (input->getKeyDown(InputEng::PLAYER_ACTION)) {
 		gameReg->eventQueue.push(new EventPlayerAction());
 	}
+
+
+        m_anim->Update(input->getFrameTime().asSeconds());
 }
 
 void Player::Draw() {
@@ -164,7 +167,7 @@ void Player::Draw() {
         if (spr == NULL) return;
 
         spr->setPosition(m_position);
-        //App->draw(*spr);
+        App->draw(*spr);
 
 }
 
