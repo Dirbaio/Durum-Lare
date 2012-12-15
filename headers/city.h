@@ -11,6 +11,7 @@ class City {
 
     bool init(int w, int h, int tw, int th);
     void render();
+    void renderTop();
 
     int getW();
     int getH();

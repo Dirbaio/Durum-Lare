@@ -166,7 +166,10 @@ void GameScene::Draw() {
 		it->Draw();
 	}
 
-	graphics->DrawAll();
+    //Map draw
+    city.renderTop();
+
+    graphics->DrawAll();
 	App->setView(App->getDefaultView());
 
 	/*

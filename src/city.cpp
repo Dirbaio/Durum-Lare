@@ -18,6 +18,9 @@ bool City::init(int w, int h, int _tw, int _th) {
 void City::render() {
     map.render();
 }
+void City::renderTop() {
+    map.renderTop();
+}
 
 int City::getW() {return map.m[0].size();}
 int City::getH() {return map.m.size();}

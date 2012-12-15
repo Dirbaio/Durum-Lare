@@ -16,6 +16,7 @@ public:
     int tileNum;
     int rot;
     sf::Sprite s;
+    sf::Sprite s2;
 
     Tile() {}
     Tile(int a, int b)
@@ -45,6 +46,7 @@ public:
     void load(vector<vector<bool> > v);
 
     void render();
+    void renderTop();
 };
 
 #endif // MAP_H

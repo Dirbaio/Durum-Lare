@@ -47,7 +47,7 @@ void Map::load(vector<vector<bool> > v)
         {
             if(v[x][y]) //Casa!
             {
-                m[x][y] = Tile(12, rand()%4);
+                m[x][y] = Tile(4, 0);
             }
             else //Calle!
             {
@@ -90,6 +90,24 @@ void Map::load(vector<vector<bool> > v)
             }
         }
 
+    //Poner casas!!11!!!11!
+    for(int x = 0; x < tx; x++)
+        for(int y = 0; y < ty; y++)
+        {
+            Tile& t = m[x][y];
+            if(t.tileNum == 4)
+            {
+                if(x != tx-1 && m[x+1][y].tileNum == 4 && rand()%4 == 0)
+                {
+                    t.tileNum = 9;
+                    m[x+1][y].tileNum = 10;
+                }
+                else if(rand()%3 == 0)
+                    t.tileNum = 8;
+                else if(rand()%3 == 0)
+                    t.tileNum = 5;
+            }
+        }
     for(int x = 0; x < tx; x++)
         for(int y = 0; y < ty; y++)
         {
@@ -97,10 +115,16 @@ void Map::load(vector<vector<bool> > v)
             t.s.setTexture(tex);
             int ttx = t.tileNum % 4;
             int tty = t.tileNum / 4;
-	    t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
-	    t.s.setOrigin(TILESIZE/2, TILESIZE/2);
+            t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE*3/2+TILESIZE/2, TILESIZE, TILESIZE));
+            t.s.setOrigin(TILESIZE/2, TILESIZE/2);
             t.s.setRotation(t.rot*90);
-	    t.s.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE/2);
+            t.s.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE/2);
+
+            t.s2.setTexture(tex);
+            t.s2.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE*3/2, TILESIZE, TILESIZE/2));
+            t.s2.setOrigin(TILESIZE/2, TILESIZE/2);
+            t.s2.setRotation(t.rot*90);
+            t.s2.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE);
         }
 }
 
@@ -111,8 +135,16 @@ void Map::render()
 
     for(int x = 0; x < tx; x++)
         for(int y = 0; y < ty; y++)
-        {
             App->draw(m[x][y].s);
-        }
-//graphics->Draw(&m[x][y].s);
+}
+
+void Map::renderTop()
+{
+    GraphEng* graphics = GraphEng::getInstance();
+
+    for(int x = 0; x < tx; x++)
+        for(int y = 0; y < ty; y++)
+            if(m[x][y].tileNum >= 8)
+                App->draw(m[x][y].s2);
+
 }
