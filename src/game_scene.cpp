@@ -39,6 +39,12 @@ void GameScene::initThread() {
         graphics->getCurrentVideoMode().width,
         graphics->getCurrentVideoMode().height));
 
+    //Init NPCS
+    for (int i = 0; i < 20; ++i)
+        spawnNewPerson();
+    for (int i = 0; i < 5; ++i)
+        spawnNewPolice();
+
     camera.setCenter(sf::Vector2f(0, 0));
 
     camera.zoom(0.5f);
@@ -87,6 +93,25 @@ bool GameScene::Init() {
     return true;
 }
 
+void GameScene::spawnNewPerson() {
+
+    Person p;
+    p.Init();
+    p.setPosition(sf::Vector2f(Utils::randomInt(0, 64*5), Utils::randomInt(0, 64*5)));
+
+    personList.push_back(p);
+
+}
+
+void GameScene::spawnNewPolice() {
+
+    Police p;
+    p.Init();
+    p.setPosition(sf::Vector2f(Utils::randomInt(0, 64*5), Utils::randomInt(0, 64*5)));
+
+    policeList.push_back(p);
+}
+
 void GameScene::Update() {
 
     InputEng* input = InputEng::getInstance();
@@ -132,9 +157,23 @@ void GameScene::Draw() {
     camera.setCenter(player.getPosition());
 
     App->setView(camera);
+
+    //Map draw
     map.render();
 
+    //Player draw
     player.Draw();
+
+    //Persons draw
+    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+        it->Draw();
+    }
+
+    //Police draw
+    for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
+        it->Draw();
+    }
+
 
 
     graphics->DrawAll();

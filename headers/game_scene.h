@@ -31,6 +31,9 @@ private:
     void HandleEvents();
     void HandleCamInput();
 
+    void spawnNewPerson();
+    void spawnNewPolice();
+
     Map map;
 
     //Registry
