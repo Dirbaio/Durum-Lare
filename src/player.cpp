@@ -43,8 +43,8 @@ void Player::Update() {
 	if (input->getKeyState(InputEng::PLAYER_RIGHT))
 		posf.x += myVel.x*input->getFrameTime().asSeconds();
 
-	sf::Vector2f sizs = sf::Vector2f(8, 8);
-	sf::Vector2f cens = sf::Vector2f(4, 4);
+	sf::Vector2f sizs = sf::Vector2f(10, 5);
+	sf::Vector2f cens = sf::Vector2f(5, 4);
 
 	sf::Vector2f scen = sizs-cens;
 	sf::Vector2f direction = posf - m_position;

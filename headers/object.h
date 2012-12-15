@@ -76,6 +76,7 @@ protected:
 	sf::Vector2f m_position;
 	sf::Vector2f m_origin;
 	sf::Vector2f m_scale;
+	sf::Vector2f m_center;
 	float m_rotation;
 
 	sf::FloatRect m_boundbox;

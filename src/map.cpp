@@ -167,7 +167,7 @@ void Map::render()
     GraphEng* graphics = GraphEng::getInstance();
 
     for(int x = 0; x < tx; x++)
-        for(int y = 0; y < ty; y++)
+	for(int y = 0; y < ty; y++)
             App->draw(m[x][y].s);
 }
 
