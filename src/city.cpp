@@ -1,7 +1,7 @@
 
 
-#include "map_generator.h"
-
+#include "generator.h"
+/*
 City(int w, int h, int _tw, int _th) {
     tw = _tw;
     th = _th;
@@ -25,3 +25,4 @@ bool occupedRect(sf::Rect rect) {
            occupedXY(rect.left+rect.width, rect.top+rect.height) ||
            occupedXY(rect.left           , rect.top+rect.height);
 }
+*/
