@@ -24,10 +24,7 @@ public:
         tileNum = a;
         rot = b;
     }
-    bool transitable() {
-        std::cerr << "tilenum" << tileNum << std::endl;
-        return tileNum != 4;
-    }
+
 };
 
 class Map

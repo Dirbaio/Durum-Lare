@@ -3,7 +3,15 @@
 #include "graphics_engine.h"
 #include "utils.h"
 
-Object::Object() {
+Object::Object() :
+	m_center(sf::Vector2f(0,0)),
+	m_rotation(0),
+	m_scale(sf::Vector2f(1.0f, 1.0f)),
+	m_canCollide(false),
+	m_isTakeable(false),
+	m_isUsable(false),
+	m_isTaken(false)
+{
         //uniqueID = Utils::getNewUniqueID();
 
         m_isTakeable = false;
@@ -13,9 +21,6 @@ Object::Object() {
 
         //myTransitionX = NULL;
         //myTransitionY = NULL;
-
-        m_rotation = 0.0f;
-        m_scale = sf::Vector2f(1.0f, 1.0f);
 
         m_boundbox.width = 16;
         m_boundbox.height = 16;

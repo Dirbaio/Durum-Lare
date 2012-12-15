@@ -34,7 +34,7 @@ bool City::occupedIJ(int i, int j) {
 	//std::cerr << "IJ: " << i << " " << j << " - " << !map.m[i][j].transitable() << std::endl;
 	if (i < 0 || i >= map.tx ) return true;
 	if (j < 0 || j >= map.ty ) return true;
-	return !map.m[i][j].transitable();
+	return map.boolMatrix[i][j];
 }
 
 bool City::occupedRect(sf::IntRect rect) {
