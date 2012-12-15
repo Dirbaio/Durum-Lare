@@ -151,7 +151,7 @@ void Map::load(vector<vector<bool> > v)
         q.pop();
         if(x < 0 || x >= tx) continue;
         if(y < 0 || y >= ty) continue;
-        if(m[x][y].tileNum > 8) continue;
+        if(m[x][y].tileNum >= 8) continue;
         if(!boolMatrix[x][y]) continue;
         boolMatrix[x][y] = false;
         q.push(pair<int, int>(x+1, y));
@@ -173,6 +173,8 @@ void Map::render()
 
 void Map::renderTop()
 {
+    return;
+
     GraphEng* graphics = GraphEng::getInstance();
 
     for(int x = 0; x < tx; x++)
