@@ -9,6 +9,7 @@
 #include "game_reg.h"
 #include "map.h"
 #include "player.h"
+#include "city.h"
 
 #include <list>
 #include "person.h"
@@ -31,10 +32,10 @@ private:
     void HandleEvents();
     void HandleCamInput();
 
+    //Map map;
     void spawnNewPerson();
     void spawnNewPolice();
 
-    Map map;
 
     //Registry
     GameReg* gameReg;
@@ -42,6 +43,8 @@ private:
     //Statics
     sf::View camera;
     Player player;
+    City city;
+
 
 
     //Managers

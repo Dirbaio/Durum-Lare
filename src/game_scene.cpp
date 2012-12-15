@@ -28,8 +28,9 @@ void GameScene::initThread() {
     GraphEng* graphics = GraphEng::getInstance();
 
     //Init map
-    vector<vector<bool> > v = generateMap();
-    map.load(v);
+    city.init(99,99,64,64);
+    //vector<vector<bool> > v = generateMap();
+    //map.load(v);
 
     //Init player
     player.Init();
@@ -157,7 +158,7 @@ void GameScene::Draw() {
     App->setView(camera);
 
     //Map draw
-    map.render();
+    city.render();
 
     //Player draw
     player.Draw();
