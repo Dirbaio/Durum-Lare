@@ -30,10 +30,7 @@ const int TILESIZE = 64;
 void Map::load(vector<vector<bool> > v)
 {
 
-    boolMatrix = v;
-
     tex.loadFromFile("img/tiles.png");
-
 
     tx = v.size();
     ty = v[0].size();
@@ -97,17 +94,27 @@ void Map::load(vector<vector<bool> > v)
             Tile& t = m[x][y];
             if(t.tileNum == 4)
             {
-                if(x != tx-1 && m[x+1][y].tileNum == 4 && rand()%4 == 0)
+                bool border = false;
+                if(x == 0 || x == tx-1) border = true;
+                if(y == 0 || y == ty-1) border = true;
+
+                if(y != ty-1 && m[x][y+1].tileNum == 4 && rand()%6 == 0)
+                {
+                    t.tileNum = 12;
+                    m[x][y+1].tileNum = 16;
+                }
+                else if(x != tx-1 && m[x+1][y].tileNum == 4 && rand()%4 == 0)
                 {
                     t.tileNum = 9;
                     m[x+1][y].tileNum = 10;
                 }
-                else if(rand()%3 == 0)
+                else if(rand()%3 == 0 || border)
                     t.tileNum = 8;
                 else if(rand()%3 == 0)
                     t.tileNum = 5;
             }
         }
+
     for(int x = 0; x < tx; x++)
         for(int y = 0; y < ty; y++)
         {
@@ -126,6 +133,32 @@ void Map::load(vector<vector<bool> > v)
             t.s2.setRotation(t.rot*90);
             t.s2.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE);
         }
+
+    boolMatrix = vector<vector<bool> > (tx, vector<bool> (ty, true));
+
+    queue<pair<int, int> > q;
+
+    //Calcular insolidificaciciones...
+    //Con un befeese.
+    for(int x = 0; x < tx; x++)
+        for(int y = 0; y < ty; y++)
+            if(!v[x][y]) q.push(pair<int, int> (x, y));
+
+    while(!q.empty())
+    {
+        int x = q.front().first;
+        int y = q.front().second;
+        q.pop();
+        if(x < 0 || x >= tx) continue;
+        if(y < 0 || y >= ty) continue;
+        if(m[x][y].tileNum > 8) continue;
+        if(!boolMatrix[x][y]) continue;
+        boolMatrix[x][y] = false;
+        q.push(pair<int, int>(x+1, y));
+        q.push(pair<int, int>(x-1, y));
+        q.push(pair<int, int>(x, y+1));
+        q.push(pair<int, int>(x, y-1));
+    }
 }
 
 
