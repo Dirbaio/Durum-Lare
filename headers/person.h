@@ -3,8 +3,6 @@
 
 #include "npc.h"
 
-#define DISSAPPEAR_TIME 2.0f
-
 class Person : public Npc {
   public:
     Person() {}
@@ -18,6 +16,7 @@ class Person : public Npc {
 
   private:
 
+    float DISSAPPEAR_TIME;
 
     float deathTimer;
 

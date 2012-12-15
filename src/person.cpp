@@ -11,6 +11,8 @@ void Person::Init() {
 
     mySpr.setTexture(*graphics->getTexture("img/person.png"));
     deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
+
+    DISSAPPEAR_TIME = 3.0f;
 }
 
 void Person::Update() {
@@ -33,7 +35,7 @@ void Person::Update() {
 void Person::doDeath() {
 
     deathTimer = DISSAPPEAR_TIME;
-
+    alive = false;
 }
 
 void Person::Draw() {
