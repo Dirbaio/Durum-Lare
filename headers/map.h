@@ -16,6 +16,7 @@ public:
     int tileNum;
     int rot;
     sf::Sprite s;
+    sf::Sprite s2;
 
     Tile() {}
     Tile(int a, int b)
@@ -24,8 +25,8 @@ public:
         rot = b;
     }
     bool transitable() {
-        //std::cerr << "tilenum" << tileNum << std::endl;
-        return tileNum != 5;
+        std::cerr << "tilenum" << tileNum << std::endl;
+        return tileNum != 4;
     }
 };
 
@@ -34,6 +35,9 @@ class Map
 public:
     sf::Texture tex;
     vector<vector<Tile> > m;
+
+    vector< vector<bool> > boolMatrix;
+
     int tx, ty; //Tamaño x, y en tiles
 
     //Crea el mapa
@@ -42,6 +46,7 @@ public:
     void load(vector<vector<bool> > v);
 
     void render();
+    void renderTop();
 };
 
 #endif // MAP_H

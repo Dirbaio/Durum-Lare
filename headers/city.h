@@ -11,6 +11,7 @@ public:
 
 	bool init(int w, int h, int tw, int th);
 	void render();
+	void renderTop();
 
 	int getW();
 	int getH();
@@ -33,7 +34,6 @@ public:
 private:
 	int tw, th;
 	Map map;
-
 };
 
 #endif // CITY_H

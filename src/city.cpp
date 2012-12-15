@@ -1,5 +1,5 @@
 #include "city.h"
-
+#include "utils.h"
 #include "generator.h"
 
 #include <cmath>
@@ -11,14 +11,14 @@ bool City::init(int w, int h, int _tw, int _th) {
 
 	vector<vector<bool> > v = generateMap();
 	map.load(v);
-
-
-	//sf::Vector2f coso = getRandomStreet();
 	return true;
 }
 
 void City::render() {
 	map.render();
+}
+void City::renderTop() {
+	map.renderTop();
 }
 
 int City::getW() {return map.m[0].size();}
@@ -27,11 +27,11 @@ int City::getTW() {return tw;}
 int City::getTH() {return th;}
 bool City::occupedXY(int x, int y) {
 	//std::cerr << "XY: " << x << " " << y << std::endl;
-	return occupedIJ(y/th, x/tw);
+	return occupedIJ(x/tw, y/th);
 }
 
 bool City::occupedIJ(int i, int j) {
-	//std::cerr << "IJ: " << i << " " << j << std::endl;
+	//std::cerr << "IJ: " << i << " " << j << " - " << !map.m[i][j].transitable() << std::endl;
 	if (i < 0 || i >= map.tx ) return true;
 	if (j < 0 || j >= map.ty ) return true;
 	return !map.m[i][j].transitable();
@@ -45,7 +45,7 @@ bool City::occupedRect(sf::IntRect rect) {
 }
 
 sf::Vector2f City::getRandomStreet() {
-	while(1) {
+			while(1) {
 		int x = rand()%(map.m[0].size()*32);
 		int y = rand()%(map.m.size()*32);
 		int w=32, h=32;

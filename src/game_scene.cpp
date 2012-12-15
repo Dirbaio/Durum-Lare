@@ -33,6 +33,7 @@ void GameScene::initThread() {
 	city.init(99,99, 64,64);
 	//Init player
 	player.Init();
+	player.setPosition(city.getRandomStreet());
 
 	//Init camera
 	camera.reset(sf::FloatRect(0, 0,
@@ -40,13 +41,11 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-	for (int i = 0; i < 100; ++i) spawnNewPerson();
-	for (int i = 0; i < 5; ++i) spawnNewPolice();
+	for (int i = 0; i < 50; ++i) spawnNewPerson();
+	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
 	camera.setCenter(sf::Vector2f(0, 0));
-
 	camera.zoom(0.5f);
-
 	initThreadDone = true;
 }
 
@@ -70,14 +69,14 @@ bool GameScene::Init() {
 	sf::Clock timer;
 	timer.restart();
 	/*
-    sf::Thread thr_init(&GameScene::initThread, this);
-    thr_init.launch();
-    while (!initThreadDone) {
+	sf::Thread thr_init(&GameScene::initThread, this);
+	thr_init.launch();
+	while (!initThreadDone) {
 	loadingText.setPosition(App->getSize().x*0.35f, App->getSize().y*0.75f);
 	loadingText.setColor(sf::Color::Red);
 	if (timer.getElapsedTime().asSeconds() > 2) {
-	    loadingText.setString(loadingText.getString()+".");
-	    timer.restart();
+	loadingText.setString(loadingText.getString()+".");
+		timer.restart();
 	}
 
 	App->clear(sf::Color(255,255,255));
@@ -97,7 +96,7 @@ void GameScene::spawnNewPerson() {
 
 	Person p;
 	p.Init();
-	p.setPosition(sf::Vector2f(Utils::randomInt(0, 64*5), Utils::randomInt(0, 64*5)));
+	p.setPosition(city.getRandomStreet());
 
 	personList.push_back(p);
 
@@ -107,7 +106,7 @@ void GameScene::spawnNewPolice() {
 
 	Police p;
 	p.Init();
-	p.setPosition(sf::Vector2f(Utils::randomInt(0, 64*5), Utils::randomInt(0, 64*5)));
+	p.setPosition(city.getRandomStreet());
 
 	policeList.push_back(p);
 }
@@ -121,10 +120,9 @@ void GameScene::Update() {
 		this->nextScene = new GameScene();
 
 	input->setGlobalMousePos(
-				App->convertCoords(sf::Vector2i(
-							   input->getMousePos().x,
-							   input->getMousePos().y),camera));
-
+		App->convertCoords(sf::Vector2i(
+			input->getMousePos().x,
+			input->getMousePos().y),camera));
 
 	//Player update
 	player.Update();
@@ -132,7 +130,6 @@ void GameScene::Update() {
 	//Persons update
 	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
 		it->Update();
-
 	}
 
 	//Police update
@@ -142,10 +139,7 @@ void GameScene::Update() {
 
 
 	HandleCamInput();
-
-
 	HandleEvents();
-
 }
 
 
@@ -155,7 +149,6 @@ void GameScene::Draw() {
 	GraphEng* graphics = GraphEng::getInstance();
 
 	camera.setCenter(player.getPosition());
-
 	App->setView(camera);
 
 	//Map draw
@@ -174,14 +167,13 @@ void GameScene::Draw() {
 		it->Draw();
 	}
 
+    //Map draw
+    city.renderTop();
 
-
-	graphics->DrawAll();
-
+    graphics->DrawAll();
 	App->setView(App->getDefaultView());
 
 	/*
-
 	//Display mouse position
 
 	std::stringstream ss2(std::stringstream::in | std::stringstream::out);
@@ -195,7 +187,6 @@ void GameScene::Draw() {
 	//App->draw(str_mousePos);
 
 	*/
-
 }
 
 void GameScene::Destroy() {
@@ -301,15 +292,12 @@ void GameScene::HandleEvents() {
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
 					it->set_alive(false);
 				}
-
 			}
-
-
 
 			break;
 		}
 
-		/*
+			/*
 		case EVENT_MOVE: {
 			EventMove* ev = (EventMove*)e;
 
