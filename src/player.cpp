@@ -24,7 +24,7 @@ void Player::Init() {
 	m_boundbox.width = 16;
 
         LoadAnims();
-        ensureAnim("WalkingDown");
+        ensureAnim("IdleDown");
 }
 
 void Player::LoadAnims() {
@@ -47,14 +47,39 @@ void Player::Update() {
 	const sf::Vector2f &pos0 = m_position;
 	sf::Vector2f posf = m_position;
 
-	if (input->getKeyState(InputEng::PLAYER_UP))
+        bool hasMoved = false;
+
+        if (input->getKeyState(InputEng::PLAYER_UP) && !input->getKeyState(InputEng::PLAYER_DOWN)) {
 		posf.y -= myVel.y*input->getFrameTime().asSeconds();
-	if (input->getKeyState(InputEng::PLAYER_DOWN))
+                ensureAnim("WalkingDown");
+                m_faceDir = FACE_UP;
+                hasMoved = true;
+        }
+        if (input->getKeyState(InputEng::PLAYER_DOWN) && !input->getKeyState(InputEng::PLAYER_UP)) {
 		posf.y += myVel.y*input->getFrameTime().asSeconds();
-	if (input->getKeyState(InputEng::PLAYER_LEFT))
+                ensureAnim("WalkingDown");
+                m_faceDir = FACE_DOWN;
+                hasMoved = true;
+        }
+        if (input->getKeyState(InputEng::PLAYER_LEFT) && !input->getKeyState(InputEng::PLAYER_RIGHT)) {
 		posf.x -= myVel.x*input->getFrameTime().asSeconds();
-	if (input->getKeyState(InputEng::PLAYER_RIGHT))
+                ensureAnim("WalkingDown");
+                m_faceDir = FACE_LEFT;
+                hasMoved = true;
+        }
+        if (input->getKeyState(InputEng::PLAYER_RIGHT) && !input->getKeyState(InputEng::PLAYER_LEFT)) {
 		posf.x += myVel.x*input->getFrameTime().asSeconds();
+                ensureAnim("WalkingDown");
+                m_faceDir = FACE_RIGHT;
+                hasMoved = true;
+        }
+
+        if (!hasMoved) {
+            if (m_faceDir == FACE_UP)  ensureAnim("IdleUp");
+            if (m_faceDir == FACE_DOWN)  ensureAnim("IdleDown");
+            if (m_faceDir == FACE_LEFT)  ensureAnim("IdleLeft");
+            if (m_faceDir == FACE_RIGHT)  ensureAnim("IdleRight");
+        }
 
 	sf::Vector2f sizs = sf::Vector2f(10, 5);
 	sf::Vector2f cens = sf::Vector2f(5, 4);
