@@ -4,7 +4,6 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 #include <set>
-#include "person.h"
 
 class Person;
 

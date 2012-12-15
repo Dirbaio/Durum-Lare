@@ -7,9 +7,9 @@ class Npc : public Object {
   public:
     Npc() {alive = true;}
 
-    void Init();
-    void Update();
-    void Draw();
+    virtual void Init();
+    virtual void Update();
+    virtual void Draw();
 
     bool is_alive() {return alive;}
     void set_alive(bool b) {alive = b;}
