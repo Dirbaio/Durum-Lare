@@ -24,8 +24,8 @@ public:
         rot = b;
     }
     bool transitable() {
-        //std::cerr << "tilenum" << tileNum << std::endl;
-        return tileNum != 5;
+        std::cerr << "tilenum" << tileNum << std::endl;
+        return tileNum != 4;
     }
 };
 

@@ -11,7 +11,7 @@ bool City::init(int w, int h, int _tw, int _th) {
     map.load(v);
 
 
-    //sf::Vector2f coso = getRandomStreet();
+    sf::Vector2f coso = getRandomStreet();
     return true;
 }
 
@@ -29,7 +29,7 @@ bool City::occupedXY(int x, int y) {
 }
 
 bool City::occupedIJ(int i, int j) {
-    //std::cerr << "IJ: " << i << " " << j << std::endl;
+    //std::cerr << "IJ: " << i << " " << j << " - " << !map.m[i][j].transitable() << std::endl;
     return !map.m[i][j].transitable();
 }
 
@@ -42,12 +42,12 @@ bool City::occupedRect(sf::IntRect rect) {
 
 sf::Vector2f City::getRandomStreet() {
     while(1) {
-        int x = rand()%(map.m[0].size()*32);
-        int y = rand()%(map.m.size()*32);
+        int x = rand()%(map.m[0].size()*64);
+        int y = rand()%(map.m.size()*64);
         int w=32, h=32;
         sf::IntRect rect(x, y, w, h);
-        //std::cerr << x << " " << y << " " << w << " " << h << std::endl;
+        std::cerr << x << " " << y << " " << w << " " << h << std::endl;
         if (!occupedRect(rect))
-            return sf::Vector2f(x+w/2., y+h/2.);
+            return sf::Vector2f(x+w/2., 0*(y+h/2.));
     }
 }

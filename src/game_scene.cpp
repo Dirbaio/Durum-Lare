@@ -95,7 +95,7 @@ void GameScene::spawnNewPerson() {
 
     Person p;
     p.Init();
-    p.setPosition(sf::Vector2f(Utils::randomInt(0, 64*5), Utils::randomInt(0, 64*5)));
+    p.setPosition(city.getRandomStreet());
 
     personList.push_back(p);
 
@@ -105,7 +105,7 @@ void GameScene::spawnNewPolice() {
 
     Police p;
     p.Init();
-    p.setPosition(sf::Vector2f(Utils::randomInt(0, 64*5), Utils::randomInt(0, 64*5)));
+    p.setPosition(city.getRandomStreet());
 
     policeList.push_back(p);
 }
