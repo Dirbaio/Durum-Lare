@@ -9,6 +9,7 @@
 #include "game_reg.h"
 #include "map.h"
 #include "player.h"
+#include "city.h"
 
 class GameScene : public Scene {
 public:
@@ -27,7 +28,7 @@ private:
     void HandleEvents();
     void HandleCamInput();
 
-    Map map;
+    //Map map;
 
     //Registry
     GameReg* gameReg;
@@ -35,6 +36,8 @@ private:
     //Statics
     sf::View camera;
     Player player;
+    City city;
+
 
 
     //Managers
