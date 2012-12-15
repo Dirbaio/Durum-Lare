@@ -14,6 +14,7 @@ void Person::Init() {
     deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
 
     DISSAPPEAR_TIME = 3.0f;
+    m_walkingTime = 0.0f;
 }
 
 void Person::Update() {
@@ -31,8 +32,34 @@ void Person::Update() {
         return;
     }
 
-    m_position.x += input->getFrameTime().asSeconds()*400.0f*Utils::randomInt(-1, 1);
-    m_position.y += input->getFrameTime().asSeconds()*400.0f*Utils::randomInt(-1, 1);
+    float delta = input->getFrameTime().asSeconds();
+
+    m_walkingTime -= delta;
+
+    if (m_walkingTime < 0) {
+	    m_faceDir = Utils::randomInt(0, FACE_SIZE-1);
+	    m_walkingTime = Utils::randomInt(0, 2000)/1000.0f;
+    }
+
+    sf::Vector2f pos = m_position;
+    m_vel = 16.0f;
+
+    switch (m_faceDir) {
+    case FACE_UP:
+	    pos.y -= delta * m_vel;
+	    break;
+    case FACE_DOWN:
+	    pos.y += delta * m_vel;
+	    break;
+    case FACE_LEFT:
+	    pos.x -= delta * m_vel;
+	    break;
+    case FACE_RIGHT:
+	    pos.x += delta * m_vel;
+	    break;
+    }
+
+    Character::move(pos);
 
 }
 
