@@ -54,8 +54,6 @@ public:
 private:
                 void instaDraw(sf::Sprite* spr);
 
-                void drawDayEffect();
-                void drawFogOfWar();
 
                 sf::RenderTexture worldRendTex;
 

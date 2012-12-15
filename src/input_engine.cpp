@@ -15,6 +15,7 @@ InputEng::InputEng()
     KeyMap[PLAYER_DOWN] = sf::Keyboard::S;
     KeyMap[PLAYER_LEFT] = sf::Keyboard::A;
     KeyMap[PLAYER_RIGHT] = sf::Keyboard::D;
+    KeyMap[EXIT] = sf::Keyboard::Escape;
 
 }
 
@@ -148,6 +149,6 @@ void InputEng::setGlobalMousePos(const sf::Vector2f& pos) {
 }
 
 
-float InputEng::getFrameTime() {
+sf::Time InputEng::getFrameTime() {
         return global_frametime;
 }

@@ -1,61 +1,101 @@
 #include "game.h"
-#include "game_states.h"
-#include "input.h"
-#include "graphic.h"
+#include "defines.h"
+#include <SFML/Window.hpp>
 
-Game::Game() {
-    input = Input::pGetInstance();
-    graphic = Graphic::pGetInstance();
-    audio = Audio::pGetInstance();
-    language_manager = LanguageManager::pGetInstance();
-}
+#include "input_engine.h"
+#include "graphics_engine.h"
 
-Game::~Game() {
-    graphic->quit();
-}
+#include "scene.h"
+#include "game_scene.h"
 
-bool Game::init() {
-    if (!graphic->init()) {std::cerr << "[ERROR] En graphics\n";return false;}
-    if (!input->init()) {std::cerr << "[ERROR] En input\n";return false;}
-    m_state = GAMESTATE_GAME;
-    input->clear_keys();
+#include <iostream>
+#include <sstream>
+
+sf::RenderWindow* App;
+sf::Time global_frametime;
+
+bool Game::Init() {
+
+    App = new sf::RenderWindow();
+
+    input = InputEng::getInstance();
+
+    graphics = GraphEng::getInstance();
+    graphics->init();
+
+    scene = new GameScene();
+
+    frames = 0;
+
     return true;
+
 }
 
-void Game::update() {
-    float now = input->get_global_time();
-    bool exit = false;
-    while (!exit) {
-        input->update();
-        if (input->exit()) {
-            save_state();
-            Settings* sett = Settings::pGetInstance();
-            sett->restore = true;
-            m_state = GAMESTATE_EXIT;
+void Game::Go() {
+
+    sf::Clock clock1;
+    sf::Clock clock2;
+
+    float framerate = 0.0f;
+
+    while (App->isOpen() && scene != NULL && scene != EXIT_SCN) {
+        scene->Init();
+
+                sf::Clock sceneTimeElapsed;
+
+                clock1.restart();
+
+        while(App->isOpen() && scene->nextScene == NULL) {
+
+                        global_frametime = clock1.getElapsedTime();
+                        clock1.restart();
+
+            //Framerate
+                        if (clock2.getElapsedTime().asMilliseconds() > 100) {
+                                framerate = (float(frames) / clock2.getElapsedTime().asMilliseconds())*1000;
+                                clock2.restart();
+                frames = 0;
+            }
+            std::stringstream ss(std::stringstream::in | std::stringstream::out);
+            framerate*=100;
+            framerate=(int)framerate;
+            framerate/=100;
+            ss << "FPS: " << framerate;
+            sf::Text fpsText(ss.str());
+            fpsText.setPosition(10, 10);
+            fpsText.setColor(sf::Color::Red);
+
+            std::stringstream ss2(std::stringstream::in | std::stringstream::out);
+            ss2 << static_cast<int>(sceneTimeElapsed.getElapsedTime().asSeconds()/60) << " : " <<
+                   (((int)sceneTimeElapsed.getElapsedTime().asSeconds())%60) << " . " <<
+                   sceneTimeElapsed.getElapsedTime().asMilliseconds()%1000;
+            sf::Text timeText(ss2.str());
+                        timeText.setPosition(App->getSize().x*0.8f, 10);
+                        timeText.setColor(sf::Color::White);
+
+
+            //Input
+            input->Update();
+            if (input->getKeyDown(InputEng::EXIT)) scene->nextScene = EXIT_SCN;
+
+            //Logic
+            scene->Update();
+
+            //Draw
+            App->clear(sf::Color(12, 12, 12));
+
+            scene->Draw();
+
+            App->draw(fpsText);
+            App->draw(timeText);
+            App->display();
+
+            frames++;
         }
 
-        float interval = now;
-        now = input->get_global_time();
-        interval = now - interval;
-
-        graphic->clear();
-
-        switch (m_state) {
-        case GAMESTATE_GAME:
-            m_state = state_splash_primary.update(interval);
-                      state_splash_primary.draw();
-            break;
-        case GAMESTATE_EXIT:
-            exit = true;
-            break;
-        default:
-            std::cerr << "No State" << std::endl;
-            exit = true;
-        }
-        graphic->flip();
+        Scene* aux_scn = scene;
+        scene = scene->nextScene;
+        aux_scn->Destroy();
+        delete aux_scn;
     }
-    //EXIT
-    Settings* sett = Settings::pGetInstance();
-    sett->save("data/settings.sv");
 }
-

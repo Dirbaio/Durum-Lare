@@ -10,7 +10,7 @@ public:
         enum Key
         {
                 PLAYER_UP, PLAYER_DOWN, PLAYER_LEFT, PLAYER_RIGHT,
-
+                EXIT,
                 K_SIZE
         };
 
@@ -32,7 +32,7 @@ public:
                 sf::Vector2f getGlobalMousePos();
                 void setGlobalMousePos(const sf::Vector2f& pos);
 
-        float getFrameTime();
+        sf::Time getFrameTime();
 
 
 private:

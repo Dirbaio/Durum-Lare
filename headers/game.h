@@ -1,24 +1,27 @@
-#ifndef _GAME_H_
-#define _GAME_H_
+#ifndef GAME_H
+#define GAME_H
 
-#include "game_states.h"
-#include "input.h"
-#include "engine.h"
-#include "graphic.h"
+#include "scene.h"
+
+#include "input_engine.h"
+#include "graphics_engine.h"
 
 class Game {
-    public:
-        Game();
-        ~Game();
 
-        bool init();
-        void update();
+public:
+    Game() {}
 
-    private:
-        LanguageManager* language_manager;
+    bool Init();
+    void Go();
 
-        EGameState m_state;
-        Engine state_engine;
+private:
+    Scene* scene;
+
+    InputEng* input;
+    GraphEng* graphics;
+
+    int frames; //For framerate calc purpose
+
 };
 
-#endif
+#endif // GAME_H

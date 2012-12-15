@@ -1,13 +1,13 @@
 #include "defines.h"
 #include <SFML/Graphics.hpp>
-#include "graphicsengine.h"
+#include "graphics_engine.h"
 #include <SFML/Window.hpp>
 #include <map>
 #include <string>
 #include <iostream>
 #include <algorithm>
 
-#include "GameReg.h"
+#include "game_reg.h"
 
 GraphEng* GraphEng::m_pInstance = 0;
 bool GraphEng::m_bInstanced = false;
@@ -49,10 +49,6 @@ void GraphEng::init() {
         worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
         whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
         whiteTex.clear(sf::Color::White);
-
-        //Load Shaders
-        dayCycleFX.loadFromFile("data/daycycfx.sha", sf::Shader::Type::Fragment);
-        fogOfWarFX.loadFromFile("data/fogofwarfx.sha", sf::Shader::Type::Fragment);
 
         //Activate separators
         drawQueue[GRAPH_LAYER_WWSEP].push(NULL);
@@ -136,8 +132,8 @@ void GraphEng::DrawAll() {
 
                 //Display effects
                 if (sprIt->first == GRAPH_LAYER_WWSEP) {
-                        drawFogOfWar();
-                        drawDayEffect();
+                        //drawFogOfWar();
+                        //drawDayEffect();
                 }
 
                 //Hud rendering
@@ -185,7 +181,7 @@ void GraphEng::DrawAll() {
         }
 
 }
-
+/*
 void GraphEng::drawDayEffect() {
         //if (dayCycleFX.IsAvailable())
 
@@ -210,7 +206,9 @@ void GraphEng::drawDayEffect() {
 
         worldRendTex.clear();
 }
+*/
 
+/*
 void GraphEng::drawFogOfWar() {
         return;
         //if (dayCycleFX.IsAvailable())
@@ -238,4 +236,4 @@ void GraphEng::drawFogOfWar() {
         App->setView(old_view);
 
         worldRendTex.clear();
-}
+}*/

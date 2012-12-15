@@ -7,8 +7,8 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     Game game;
-    if (!game.init()) std::cerr << "Error: Juego no iniciado" << std::endl;
-    else game.update();
+    if (!game.Init()) std::cerr << "Error: Juego no iniciado" << std::endl;
+    else game.Go();
 
     return 0;
 }
