@@ -1,25 +1,27 @@
-#include "person.h"
+#include "police.h"
 #include "graphics_engine.h"
 
 #include "defines.h"
 
-void Person::Init() {
+void Police::Init() {
 
     GraphEng* graphics = GraphEng::getInstance();
 
-    mySpr.setTexture(*graphics->getTexture("img/person.png"));
+    mySpr.setTexture(*graphics->getTexture("img/police.png"));
 
 }
 
-void Person::Update() {
+void Police::Update() {
 
     //TO DO
 
 }
 
-void Person::Draw() {
+void Police::Draw() {
 
     mySpr.setPosition(m_position);
+
     App->draw(&mySpr);
 
 }
+

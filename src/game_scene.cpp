@@ -90,6 +90,9 @@ void GameScene::Update() {
     InputEng* input = InputEng::getInstance();
 
 
+    if (input->getKeyDown(InputEng::NEW_SCENE))
+        this->nextScene = new GameScene();
+
     input->setGlobalMousePos(App->convertCoords(sf::Vector2i(
                                                     input->getMousePos().x,
                                                     input->getMousePos().y),
