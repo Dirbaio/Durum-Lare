@@ -11,6 +11,10 @@
 #include "player.h"
 #include "city.h"
 
+#include <list>
+#include "person.h"
+#include "police.h"
+
 class GameScene : public Scene {
 public:
     GameScene();
@@ -29,6 +33,9 @@ private:
     void HandleCamInput();
 
     //Map map;
+    void spawnNewPerson();
+    void spawnNewPolice();
+
 
     //Registry
     GameReg* gameReg;
@@ -41,7 +48,8 @@ private:
 
 
     //Managers
-
+    std::list<Person> personList;
+    std::list<Police> policeList;
 };
 
 #endif // GAMESCENE_H

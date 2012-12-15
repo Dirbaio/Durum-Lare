@@ -3,13 +3,13 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
-
-typedef std::vector<bool> VB;
-typedef std::vector<VB> Map;
+#include "map.h"
 
 class City {
   public:
-    City(int w, int h, int tw, int th);
+    City() {}
+    void init(int w, int h, int tw, int th);
+    void render();
     int getW();
     int getH();
     int getTW();

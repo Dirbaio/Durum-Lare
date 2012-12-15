@@ -7,6 +7,7 @@ City::City(int w, int h, int _tw, int _th) {
     th = _th;
 }
 
+void City::render() {map.render();}
 int City::getW() {return map[0].size();}
 int City::getH() {return map.size();}
 int City::getTW() {return tw;}
@@ -25,4 +26,5 @@ bool City::occupedRect(sf::IntRect rect) {
            occupedXY(rect.left+rect.width, rect.top+rect.height) ||
            occupedXY(rect.left           , rect.top+rect.height);
 }
+
 

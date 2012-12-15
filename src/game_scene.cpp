@@ -11,6 +11,9 @@
 #include "generator.h"
 
 #include "player.h"
+#include "person.h"
+#include "police.h"
+#include <list>
 
 GameScene::GameScene() {
 
@@ -25,7 +28,7 @@ void GameScene::initThread() {
     GraphEng* graphics = GraphEng::getInstance();
 
     //Init map
-    city = City(99,99,64,64);
+    city.init(99,99,64,64);
     //vector<vector<bool> > v = generateMap();
     //map.load(v);
 
@@ -36,6 +39,12 @@ void GameScene::initThread() {
     camera.reset(sf::FloatRect(0, 0,
         graphics->getCurrentVideoMode().width,
         graphics->getCurrentVideoMode().height));
+
+    //Init NPCS
+    for (int i = 0; i < 20; ++i)
+        spawnNewPerson();
+    for (int i = 0; i < 5; ++i)
+        spawnNewPolice();
 
     camera.setCenter(sf::Vector2f(0, 0));
 
@@ -85,6 +94,25 @@ bool GameScene::Init() {
     return true;
 }
 
+void GameScene::spawnNewPerson() {
+
+    Person p;
+    p.Init();
+    p.setPosition(sf::Vector2f(Utils::randomInt(0, 64*5), Utils::randomInt(0, 64*5)));
+
+    personList.push_back(p);
+
+}
+
+void GameScene::spawnNewPolice() {
+
+    Police p;
+    p.Init();
+    p.setPosition(sf::Vector2f(Utils::randomInt(0, 64*5), Utils::randomInt(0, 64*5)));
+
+    policeList.push_back(p);
+}
+
 void GameScene::Update() {
 
     InputEng* input = InputEng::getInstance();
@@ -99,9 +127,22 @@ void GameScene::Update() {
                                                 camera));
 
 
+    //Player update
     player.Update();
 
-     HandleCamInput();
+    //Persons update
+    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+        it->Update();
+
+    }
+
+    //Police update
+    for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
+        it->Update();
+    }
+
+
+    HandleCamInput();
 
 
     HandleEvents();
@@ -117,9 +158,23 @@ void GameScene::Draw() {
     camera.setCenter(player.getPosition());
 
     App->setView(camera);
-    map.render();
 
+    //Map draw
+    city.render();
+
+    //Player draw
     player.Draw();
+
+    //Persons draw
+    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+        it->Draw();
+    }
+
+    //Police draw
+    for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
+        it->Draw();
+    }
+
 
 
     graphics->DrawAll();
