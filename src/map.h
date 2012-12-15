@@ -15,6 +15,7 @@ class Tile
 public:
     int tileNum;
     int rot;
+    Tile() {}
     Tile(int a, int b)
     {
         tileNum = a;

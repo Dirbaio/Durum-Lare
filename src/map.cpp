@@ -1,4 +1,6 @@
 #include "map.h"
+#include "graphics_engine.h"
+
 
 static Tile tiles[] = {
     //                 URDL
@@ -78,6 +80,11 @@ const int TILESIZE = 64;
 
 void Map::render()
 {
+
+    GraphEng* graphics = GraphEng::getInstance();
+
+
+
     Sprite s;
     s.setTexture(tex);
 
@@ -89,6 +96,6 @@ void Map::render()
             s.setTextureRect(IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
             s.setPosition(x*TILESIZE, y*TILESIZE);
             s.setRotation(m[x][y].rot*90);
-            s.draw();
+//            s.draw();
         }
 }

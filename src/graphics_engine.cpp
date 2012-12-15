@@ -43,8 +43,8 @@ void GraphEng::init() {
         m_videoModes = sf::VideoMode::getFullscreenModes();
         m_currentVideoMode = 0;
 
-        //App->Create(m_videoModes[0], "Secrets of Islaea -- alpha");
-        App->create(m_videoModes[0], "Secrets of Islaea -- alpha", sf::Style::Fullscreen);
+        //App->Create(m_videoModes[0], "Durum dale");
+        App->create(m_videoModes[0], "Durum dale", sf::Style::Resize);
 
         worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
         whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
