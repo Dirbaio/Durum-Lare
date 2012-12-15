@@ -1,6 +1,6 @@
 #include "person.h"
 #include "graphics_engine.h"
-
+#include "npc.h"
 #include "defines.h"
 
 void Person::Init() {
@@ -18,7 +18,7 @@ void Person::Update() {
     //TO DO
 
 }
-
+/*
 void Person::Draw() {
 
     if (alive) {
@@ -28,4 +28,4 @@ void Person::Draw() {
         deadSpr.setPosition(m_position);
         App->draw(deadSpr);
     }
-}
+}*/

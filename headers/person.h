@@ -9,6 +9,7 @@ class Person : public Npc {
 
     void Init();
     void Update();
+    //void Draw();
 
   private:
 
