@@ -29,7 +29,11 @@ const int TILESIZE = 64;
 
 void Map::load(vector<vector<bool> > v)
 {
+
+    boolMatrix = v;
+
     tex.loadFromFile("img/tiles.png");
+
 
     tx = v.size();
     ty = v[0].size();
@@ -96,7 +100,7 @@ void Map::load(vector<vector<bool> > v)
             t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
             t.s.setRotation(t.rot*90);
             t.s.setOrigin(TILESIZE/2, TILESIZE/2);
-            t.s.setPosition(x*TILESIZE, y*TILESIZE);
+            t.s.setPosition(x*TILESIZE, (y+1)*TILESIZE);
         }
 }
 

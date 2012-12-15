@@ -34,6 +34,9 @@ class Map
 public:
     sf::Texture tex;
     vector<vector<Tile> > m;
+
+    vector< vector<bool> > boolMatrix;
+
     int tx, ty; //Tamaño x, y en tiles
 
     //Crea el mapa
