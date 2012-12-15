@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <queue>
 #include "event.h"
+#include "animation.h"
 //#include "animation.h"
 //#include "Transition.h"
 
@@ -70,8 +71,8 @@ protected:
 
 	int m_type;
 
-	// Animation* m_anim;
-	sf::Sprite mySpr;
+        Animation* m_anim;
+        sf::Sprite mySpr;
 
 	sf::Vector2f m_position;
 	sf::Vector2f m_origin;

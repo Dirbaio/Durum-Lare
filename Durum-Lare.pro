@@ -18,7 +18,8 @@ SOURCES += src/main.cpp \
     src/city.cpp \
     src/player.cpp \
     src/police.cpp \
-    src/npc.cpp
+    src/npc.cpp \
+    src/animation.cpp
 
 HEADERS += headers/game.h \
     headers/game_states.h \
@@ -38,7 +39,8 @@ HEADERS += headers/game.h \
     headers/city.h \
     headers/player.h \
     headers/police.h \
-    headers/npc.h
+    headers/npc.h \
+    headers/animation.h
 
 INCLUDEPATH += src \
                headers

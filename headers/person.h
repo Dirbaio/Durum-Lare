@@ -21,6 +21,7 @@ class Person : public Npc {
     float deathTimer;
 
     sf::Sprite deadSpr;
+
 };
 
 #endif // PERSON_H

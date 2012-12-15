@@ -307,6 +307,9 @@ void GameScene::HandleEvents() {
                         }
                     }
 
+
+                    spawnNewPerson();
+
                     break;
                 }
 

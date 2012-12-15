@@ -1,5 +1,6 @@
 #include "npc.h"
 #include "defines.h"
+#include "animation.h"
 
 void Npc::Init() {
 
@@ -16,6 +17,8 @@ void Npc::Update() {
 void Npc::Draw() {
 
     if (!alive) return;
+
+    //sf::Sprite* spr = m_anim->getCurrentFrame();
 
     mySpr.setPosition(m_position);
     App->draw(mySpr);

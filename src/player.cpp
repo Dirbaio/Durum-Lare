@@ -4,7 +4,7 @@
 #include "defines.h"
 #include "input_engine.h"
 #include "game_reg.h"
-
+#include "animation.h"
 #include <GL/gl.h>
 
 
@@ -23,6 +23,19 @@ void Player::Init() {
 	m_boundbox.height = 16;
 	m_boundbox.width = 16;
 
+        LoadAnims();
+        ensureAnim("WalkingDown");
+}
+
+void Player::LoadAnims() {
+    AnimationData* ad = new AnimationData();
+    ad->Load("anim/takena.anim");
+    m_anim = new Animation();
+    m_anim->setAnimData(ad);
+
+
+    //mySpr.setOrigin(animations.getCurrentFrame()->getLocalBounds().width*0.5,
+    //                              animations.getCurrentFrame()->getLocalBounds().height*0.5);
 }
 
 void Player::Update() {
@@ -107,7 +120,7 @@ vert_exit:
 			{
 				if (city.occupedIJ(x,y) && onLeftCollision(x, y))
 				{
-					posf.x = city.tileRightPos(x) +cens.x;
+                                        posf.x = city.tileRightPos(x) +cens.x;
 					goto horz_exit;
 				}
 			}
@@ -146,7 +159,19 @@ horz_exit:
 
 void Player::Draw() {
 
-	mySpr.setPosition(m_position);
-	App->draw(mySpr);
+        sf::Sprite* spr = m_anim->getCurrentFrame();
+
+        if (spr == NULL) return;
+
+        spr->setPosition(m_position);
+        //App->draw(*spr);
+
+}
+
+void Player::ensureAnim(std::string anim) {
+    if (currentAnim != anim) {
+       m_anim->SelectAnim(anim);
+       currentAnim = anim;
+    }
 
 }

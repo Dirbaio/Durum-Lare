@@ -25,7 +25,7 @@ Object::Object() :
         m_boundbox.width = 16;
         m_boundbox.height = 16;
 
-        //m_anim = NULL;
+        m_anim = NULL;
 }
 
 
