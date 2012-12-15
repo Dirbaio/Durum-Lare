@@ -13,6 +13,8 @@ void Police::Init() {
 
 void Police::Update() {
 
+    Npc::Update();
+
     //TO DO
 
 }
