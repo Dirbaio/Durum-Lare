@@ -19,6 +19,7 @@ class City {
     bool occupedXY(int x, int y);
     bool occupedIJ(int i, int j);
     bool occupedRect(sf::IntRect rect);
+    sf::Vector2f getRandomStreet();
 
   private:
     int tw, th;
