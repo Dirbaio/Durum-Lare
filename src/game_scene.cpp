@@ -28,7 +28,7 @@ void GameScene::initThread() {
     GraphEng* graphics = GraphEng::getInstance();
 
     //Init map
-    city.init(99,99,64,64);
+    city.init(99,99, 64,64);
     //vector<vector<bool> > v = generateMap();
     //map.load(v);
 

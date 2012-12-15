@@ -22,6 +22,9 @@ public:
         tileNum = a;
         rot = b;
     }
+    bool transitable() {
+        return tileNum != 5;
+    }
 };
 
 class Map

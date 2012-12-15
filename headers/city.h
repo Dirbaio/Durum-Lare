@@ -8,8 +8,10 @@
 class City {
   public:
     City() {}
-    void init(int w, int h, int tw, int th);
+
+    bool init(int w, int h, int tw, int th);
     void render();
+
     int getW();
     int getH();
     int getTW();
@@ -17,6 +19,7 @@ class City {
     bool occupedXY(int x, int y);
     bool occupedIJ(int i, int j);
     bool occupedRect(sf::IntRect rect);
+
   private:
     int tw, th;
     Map map;
