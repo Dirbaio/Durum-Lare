@@ -1,4 +1,3 @@
-
 #include "game.h"
 #include "game_states.h"
 #include "input.h"
@@ -53,9 +52,6 @@ void Game::update() {
             std::cerr << "No State" << std::endl;
             exit = true;
         }
-
-
-        //CInputLibrary::waitvsync();
         graphic->flip();
     }
     //EXIT
