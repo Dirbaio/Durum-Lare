@@ -233,14 +233,14 @@ void GameScene::HandleEvents() {
                 if (!gameReg->scenario->isTilePassable(point)) canMove = false;
 
                 //Point vs Object Boxes Collision
-                                if (gameReg->objMan->isColliding(point) &&
-                                        gameReg->objMan->getColliding(point)->canCollide()) {
-                                                if (gameReg->objMan->isColliding(oldPos) &&
-                                                        gameReg->objMan->getColliding(oldPos)->canCollide()) {
-                                                                canMove = true;
-                                                }
-                                                else canMove = false;
-                                        }
+                 if (gameReg->objMan->isColliding(point) &&
+                     gameReg->objMan->getColliding(point)->canCollide()) {
+                        if (gameReg->objMan->isColliding(oldPos) &&
+                            gameReg->objMan->getColliding(oldPos)->canCollide()) {
+                                canMove = true;
+                             }
+                              else canMove = false;
+                       }
             //}
 
             //All right, officer?
