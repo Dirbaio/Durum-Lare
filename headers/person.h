@@ -11,6 +11,8 @@ class Person : public Npc {
     void Update();
     //void Draw();
 
+    void Draw();
+
   private:
 
     sf::Sprite deadSpr;

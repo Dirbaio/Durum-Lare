@@ -90,11 +90,11 @@ struct Utils {
 
         static bool rectCollision(sf::FloatRect r1, sf::FloatRect r2) {
 
-            if (r1.left > r2.left+r2.width) return false;
-            if (r1.left+r1.width < r2.left) return false;
+	    if (r1.left > (r2.left+r2.width)) return false;
+	    if ((r1.left+r1.width) < r2.left) return false;
 
-            if (r1.top < r2.top+r2.height) return false;
-            if (r1.top+r1.height > r2.top) return false;
+	    if (r1.top > (r2.top+r2.height)) return false;
+	    if ((r1.top+r1.height) < r2.top) return false;
 
             return true;
         }
