@@ -21,6 +21,8 @@ InputEng::InputEng()
     KeyMap[CAM_LEFT] = sf::Keyboard::Left;
     KeyMap[CAM_RIGHT] = sf::Keyboard::Right;
 
+    KeyMap[NEW_SCENE] = sf::Keyboard::Return;
+
     KeyMap[EXIT] = sf::Keyboard::Escape;
 
 }

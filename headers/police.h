@@ -1,11 +1,11 @@
-#ifndef PERSON_H
-#define PERSON_H
+#ifndef POLICE_H
+#define POLICE_H
 
 #include "object.h"
 
-class Person : public Object {
+class Police : public Object {
   public:
-    Person() {}
+    Police() {}
 
     void Init();
     void Update();
@@ -17,4 +17,4 @@ class Person : public Object {
 
 };
 
-#endif // PERSON_H
+#endif // POLICE_H

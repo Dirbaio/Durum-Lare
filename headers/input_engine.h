@@ -11,7 +11,7 @@ public:
         {
                 PLAYER_UP, PLAYER_DOWN, PLAYER_LEFT, PLAYER_RIGHT,
                 CAM_UP, CAM_DOWN, CAM_LEFT, CAM_RIGHT,
-                EXIT,
+                EXIT, NEW_SCENE,
                 K_SIZE
         };
 

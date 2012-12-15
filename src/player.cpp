@@ -34,9 +34,7 @@ void Player::Update() {
 
 void Player::Draw() {
 
-
     mySpr.setPosition(m_position);
-
     App->draw(mySpr);
 
 }
