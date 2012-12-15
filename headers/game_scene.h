@@ -8,6 +8,7 @@
 #include "event.h"
 #include "game_reg.h"
 #include "map.h"
+#include "player.h"
 
 class GameScene : public Scene {
 public:
@@ -33,6 +34,8 @@ private:
 
     //Statics
     sf::View camera;
+    Player player;
+
 
     //Managers
 

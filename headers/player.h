@@ -14,7 +14,7 @@ public:
 
 private:
     sf::Sprite mySpr;
-
+    sf::Vector2f myVel;
 
 };
 

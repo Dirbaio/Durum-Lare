@@ -9,6 +9,9 @@
 #include "game_reg.h"
 #include "graphics_engine.h"
 #include "generator.h"
+
+#include "player.h"
+
 GameScene::GameScene() {
 
 }
@@ -25,6 +28,9 @@ void GameScene::initThread() {
     vector<vector<bool> > v = generateMap();
     map.load(v);
 
+    //Init player
+    player.Init();
+
     //Init camera
     camera.reset(sf::FloatRect(0, 0,
         graphics->getCurrentVideoMode().width,
@@ -32,7 +38,7 @@ void GameScene::initThread() {
 
     camera.setCenter(sf::Vector2f(0, 0));
 
-    camera.zoom(4.0f);
+    camera.zoom(0.5f);
 
     initThreadDone = true;
 }
@@ -88,6 +94,9 @@ void GameScene::Update() {
                                                     input->getMousePos().y),
                                                 camera));
 
+
+    player.Update();
+
      HandleCamInput();
 
 
@@ -101,8 +110,12 @@ void GameScene::Draw() {
     InputEng* input = InputEng::getInstance();
     GraphEng* graphics = GraphEng::getInstance();
 
+    camera.setCenter(player.getPosition());
+
     App->setView(camera);
     map.render();
+
+    player.Draw();
 
 
     graphics->DrawAll();
