@@ -173,8 +173,6 @@ void Map::render()
 
 void Map::renderTop()
 {
-    return;
-
     GraphEng* graphics = GraphEng::getInstance();
 
     for(int x = 0; x < tx; x++)
