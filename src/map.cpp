@@ -97,10 +97,10 @@ void Map::load(vector<vector<bool> > v)
             t.s.setTexture(tex);
             int ttx = t.tileNum % 4;
             int tty = t.tileNum / 4;
-            t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
+	    t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE, TILESIZE, TILESIZE));
+	    t.s.setOrigin(TILESIZE/2, TILESIZE/2);
             t.s.setRotation(t.rot*90);
-            t.s.setOrigin(TILESIZE/2, TILESIZE/2);
-            t.s.setPosition(x*TILESIZE, (y+1)*TILESIZE);
+	    t.s.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE/2);
         }
 }
 

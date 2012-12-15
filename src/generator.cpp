@@ -18,8 +18,8 @@ vector<vector<bool> > generateMap()
 	int tx, ty;
 	tx = rand()%30 + 30;
 	ty = tx + rand()%11 - 5;
-    tx-=(tx%4);
-    ty-=(ty%4);
+    //tx-=(tx%4);
+    //ty-=(ty%4);
 	vector<vector<bool> > v (ty+2, vector<bool> (tx+2, true));
 	int ctv = 1;
 	int cth = 1;
