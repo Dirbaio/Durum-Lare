@@ -13,7 +13,7 @@ void Person::Init() {
     mySpr.setTexture(*graphics->getTexture("img/person.png"));
     deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
 
-    DISSAPPEAR_TIME = 3.0f;
+    DISSAPPEAR_TIME = 12.0f;
 }
 
 void Person::Update() {
