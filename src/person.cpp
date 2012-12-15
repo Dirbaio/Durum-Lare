@@ -18,7 +18,7 @@ void Person::Update() {
     //TO DO
 
 }
-/*
+
 void Person::Draw() {
 
     if (alive) {
@@ -28,4 +28,4 @@ void Person::Draw() {
         deadSpr.setPosition(m_position);
         App->draw(deadSpr);
     }
-}*/
+}
