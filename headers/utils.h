@@ -94,11 +94,11 @@ struct Utils {
         }
 
 
-        /*
+/*
         static int getNewUniqueID() {
                 return ++globalDef::_____IDCOUNT;
-        }*/
-
+        }
+*/
         //Returns unitary vector of direction (from) -> (to)
         static sf::Vector2f getDirection(const sf::Vector2f& from, const sf::Vector2f& to) {
                 sf::Vector2f direction = to - from;
