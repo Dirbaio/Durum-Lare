@@ -55,9 +55,9 @@ private:
                 void instaDraw(sf::Sprite* spr);
 
 
-                sf::RenderTexture worldRendTex;
+               // sf::RenderTexture worldRendTex;
 
-                sf::RenderTexture whiteTex; //To delete
+               // sf::RenderTexture whiteTex; //To delete
 
                 sf::Shader dayCycleFX;
                 sf::Shader fogOfWarFX;
