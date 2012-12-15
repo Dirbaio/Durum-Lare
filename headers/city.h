@@ -1,9 +1,11 @@
 #ifndef CITY_H
 #define CITY_H
 
+#include <vector>
+#include <SFML/Graphics.hpp>
 
-typedef vector<bool> VB;
-typedef vector<VB> Map;
+typedef std::vector<bool> VB;
+typedef std::vector<VB> Map;
 
 class City {
   public:
@@ -14,7 +16,7 @@ class City {
     int getTH();
     bool occupedXY(int x, int y);
     bool occupedIJ(int i, int j);
-    bool occupedRect(sf::Rect rect);
+    bool occupedRect(sf::IntRect rect);
   private:
     int tw, th;
     Map map;
