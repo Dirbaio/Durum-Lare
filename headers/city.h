@@ -6,24 +6,33 @@
 #include "map.h"
 
 class City {
-  public:
-    City() {}
+public:
+	City() {}
 
-    bool init(int w, int h, int tw, int th);
-    void render();
+	bool init(int w, int h, int tw, int th);
+	void render();
 
-    int getW();
-    int getH();
-    int getTW();
-    int getTH();
-    bool occupedXY(int x, int y);
-    bool occupedIJ(int i, int j);
-    bool occupedRect(sf::IntRect rect);
-    sf::Vector2f getRandomStreet();
+	int getW();
+	int getH();
+	int getTW();
+	int getTH();
+	bool occupedXY(int x, int y);
+	bool occupedIJ(int i, int j);
+	bool occupedRect(sf::IntRect rect);
+	sf::Vector2f getRandomStreet();
 
-  private:
-    int tw, th;
-    Map map;
+	sf::Vector2i absoluteToTilePos(const sf::Vector2f &pos);
+	int absoluteToTilePosX(float x);
+	int absoluteToTilePosY(float y);
+
+	float tileTopPos(int y);
+	float tileBottomPos(int y);
+	float tileLeftPos(int x);
+	float tileRightPos(int x);
+
+private:
+	int tw, th;
+	Map map;
 
 };
 

@@ -25,6 +25,8 @@ GameScene::~GameScene() {
 
 void GameScene::initThread() {
 	gameReg = GameReg::getInstance();
+	gameReg->city = &city;
+
 	GraphEng* graphics = GraphEng::getInstance();
 
 	//Init map
@@ -38,7 +40,7 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-	for (int i = 0; i < 1; ++i) spawnNewPerson();
+	for (int i = 0; i < 100; ++i) spawnNewPerson();
 	for (int i = 0; i < 5; ++i) spawnNewPolice();
 
 	camera.setCenter(sf::Vector2f(0, 0));
