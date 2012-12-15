@@ -44,7 +44,7 @@ void GraphEng::init() {
         m_currentVideoMode = 0;
 
         //App->Create(m_videoModes[0], "Durum dale");
-        App->create(m_videoModes[0], "Durum dale", sf::Style::Resize);
+        App->create(m_videoModes[0], "Durum dale", sf::Style::Resize | sf::Style::Close);
 
         worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
         whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
@@ -81,7 +81,7 @@ sf::Texture* GraphEng::getTexture(std::string path) {
 
 }
 
-void GraphEng::Draw(sf::Sprite& drawable) {
+void GraphEng::Draw(sf::Sprite* drawable) {
     Draw(drawable, GraphEng::GRAPH_LAYER_STANDARD);
 }
 
@@ -93,7 +93,7 @@ void GraphEng::Draw(sf::Text text, int layer) {
         textQueue[layer].push(text);
 }
 
-void GraphEng::Draw(sf::Sprite& drawable, int layer) {
+void GraphEng::Draw(sf::Sprite* drawable, int layer) {
 
         if (layer == GRAPH_LAYER_TILE) instaDraw(drawable);
 
