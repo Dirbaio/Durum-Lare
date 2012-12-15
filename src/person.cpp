@@ -16,10 +16,3 @@ void Person::Update() {
     //TO DO
 
 }
-
-void Person::Draw() {
-
-    mySpr.setPosition(m_position);
-    App->draw(mySpr);
-
-}

@@ -41,10 +41,8 @@ void GameScene::initThread() {
         graphics->getCurrentVideoMode().height));
 
     //Init NPCS
-    for (int i = 0; i < 20; ++i)
-        spawnNewPerson();
-    for (int i = 0; i < 5; ++i)
-        spawnNewPolice();
+    for (int i = 0; i < 20; ++i) spawnNewPerson();
+    for (int i = 0; i < 5; ++i) spawnNewPolice();
 
     camera.setCenter(sf::Vector2f(0, 0));
 
@@ -292,6 +290,22 @@ void GameScene::HandleEvents() {
         Event* e = gameReg->eventQueue.front();
         gameReg->eventQueue.pop();
         switch(e->type) {
+
+        case EVENT_PLAYER_ACTION: {
+            EventPlayerAction* ev = (EventPlayerAction*)e;
+
+            for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+                if (!it->is_alive()) continue;
+
+                if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) it->set_alive(false);
+            }
+
+
+
+
+            break;
+        }
+
 
         /*
 

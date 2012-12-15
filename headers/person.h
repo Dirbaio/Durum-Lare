@@ -1,19 +1,17 @@
 #ifndef PERSON_H
 #define PERSON_H
 
-#include "object.h"
+#include "npc.h"
 
-class Person : public Object {
+class Person : public Npc {
   public:
     Person() {}
 
     void Init();
     void Update();
-    void Draw();
 
   private:
 
-    sf::Sprite mySpr;
 
 };
 
