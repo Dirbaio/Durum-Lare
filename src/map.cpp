@@ -40,7 +40,7 @@ void Map::load(vector<vector<bool> > v)
         {
             if(v[x][y]) //Casa!
             {
-                m[x][y] = Tile(4, rand()%4);
+                m[x][y] = Tile(12, rand()%4);
             }
             else //Calle!
             {
