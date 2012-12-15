@@ -10,7 +10,7 @@ SOURCES += src/main.cpp \
     src/graphics_engine.cpp \
     src/scene.cpp \
     src/game_scene.cpp \
-    src/game_reg.cpp
+    src/game_reg.cpp \
     src/map.cpp
 
 HEADERS += headers/game.h \
