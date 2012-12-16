@@ -45,6 +45,8 @@ protected:
 
 	void setGoal(vec2 goal);
 	void moveTowardsGoal();
+    void moveInDir(vec2 dir);
+    bool canSee(vec2 pos);
 };
 
 #endif // CHARACTER_H
