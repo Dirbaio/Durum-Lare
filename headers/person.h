@@ -4,6 +4,8 @@
 #include "npc.h"
 #include "transition.h"
 
+#include <SFML/Audio.hpp>
+
 class Person : public Npc {
   public:
     Person() {}
@@ -23,11 +25,16 @@ class Person : public Npc {
 
     float deathTimer;
 
+    sf::SoundBuffer dieSoundBuff;
+    sf::Sound dieSound;
+
     sf::Sprite deadSpr;
     float m_walkingTime;
     float m_vel;
 
     TransitionLinear* transHit;
+
+    bool flag_draw_mirror;
 
 };
 

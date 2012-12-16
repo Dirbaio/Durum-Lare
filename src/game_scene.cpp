@@ -49,7 +49,7 @@ void GameScene::initThread() {
 
         bg_music.openFromFile("audio/surrounding.ogg");
 
-        bg_music.setLoop(true);
+        bg_music.setLoop(true);;
         bg_music.play();
 
 	initThreadDone = true;

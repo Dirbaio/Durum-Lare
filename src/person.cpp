@@ -7,15 +7,20 @@
 #include "utils.h"
 #include "animation.h"
 
+#include <SFML/Audio.hpp>
+
 void Person::Init() {
 
     GraphEng* graphics = GraphEng::getInstance();
+
 
     //mySpr.setTexture(*graphics->getTexture("img/person.png"));
     deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
     deadSpr.setOrigin(deadSpr.getTextureRect().width*0.5f,
                       deadSpr.getTextureRect().height*0.5f);
 
+
+    flag_draw_mirror = false;
 
     DISSAPPEAR_TIME = 12.0f;
     m_walkingTime = 0.0f;
@@ -32,6 +37,12 @@ void Person::Init() {
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
     m_anim->SelectAnim("Walking");
+
+    dieSoundBuff.loadFromFile("audio/wilhelmscream.ogg");
+    dieSound.setBuffer(dieSoundBuff);
+    dieSound.setLoop(false);
+    //dieSound.setPitch(1.5f);
+    dieSound.setVolume(100.0f);
 
 }
 
@@ -71,9 +82,11 @@ void Person::Update() {
 	    break;
     case FACE_LEFT:
 	    pos.x -= delta * m_vel;
+            flag_draw_mirror = true;
 	    break;
     case FACE_RIGHT:
 	    pos.x += delta * m_vel;
+            flag_draw_mirror = false;
 	    break;
     }
 
@@ -97,6 +110,8 @@ void Person::doDeath() {
 
 void Person::onHit() {
 
+    //dieSound.play();
+
     life--;
 
     if (life <= 0) doDeath();
@@ -117,6 +132,9 @@ void Person::Draw() {
         if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
         else spr->setScale(sf::Vector2f(1.0f, 1.0f));
         spr->setPosition(m_position);
+
+        if (flag_draw_mirror) spr->setScale(-1, 1);
+        else spr->setScale(1, 1);
         App->draw(*spr);
     }
     else {
