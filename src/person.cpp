@@ -49,7 +49,33 @@ void Person::Init() {
     //dieSound.setPitch(1.5f);
     dieSound.setVolume(10000.0f);
     m_vel = 16.0f*1.25f * Utils::randomInt(750, 2000)/1000.0f;
+    ix = Utils::randomInt(8, 56);
+    iy = Utils::randomInt(8, 56);
 }
+
+
+float getClosestMenace(vec2 pos, vec2& menacePos)
+{
+    City &city = *GameReg::getInstance()->city;
+    std::list<Person>* personList = GameReg::getInstance()->personList;
+
+    menacePos = GameReg::getInstance()->player->getPosition();
+    float d = Utils::distance(pos, menacePos)/2;
+
+    for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++)
+        if (!it->is_alive())
+        {
+            float d2 = Utils::distance(pos, it->getPosition());
+            if(d2 < d)
+            {
+                d = d2;
+                menacePos = it->getPosition();
+            }
+        }
+
+    return d;
+}
+
 
 void Person::Update() {
     Npc::Update();
@@ -84,35 +110,40 @@ void Person::Update() {
     case STATE_PANIC:
     {
         if (m_panicTime > 0) m_panicTime -= delta;
-        else m_state = STATE_WALKING;
+        else
+        {
+            m_state = STATE_WALKING;
+            m_hasGoal = false;
+        }
+
         m_mark = MARK_EXCLAMATION;
 
         vec2i now = city.absoluteToTilePos(m_position);
         vec2i best = now;
-        float bestd = 0;
-        for(int i = 0; i < 4; i++)
-        {
-            vec2i lol = now + dirInc[i];
-            if(city.occupedIJ(lol.x, lol.y)) continue;
+        vec2 menacePos;
+        float bestd = getClosestMenace(m_position, menacePos);
 
-            float d = Utils::distance(vec2(lol.x*64+32, lol.y*64+32), GameReg::getInstance()->player->getPosition())/2;
-
-            for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++)
-                if (!it->is_alive())
-                {
-                    float d2 = Utils::distance(vec2(lol.x*64+32, lol.y*64+32), it->m_position);
-                    d = min(d, d2);
-                }
-
-            if(d > bestd)
-            {
-                bestd = d;
-                best = lol;
-            }
-        }
         float velbak = m_vel;
         m_vel = 70;
-        moveInDir(vec2(best.x*64+32, best.y*64+32) - m_position);
+
+        if(bestd < 30)
+            moveInDir(vec2(m_position - menacePos));
+        else
+        {
+            for(int i = 0; i < 4; i++)
+            {
+                vec2i lol = now + dirInc[i];
+                if(city.occupedIJ(lol.x, lol.y)) continue;
+
+                float d = getClosestMenace(vec2(lol.x*64+32, lol.y*64+32), menacePos);
+                if(d > bestd)
+                {
+                    bestd = d;
+                    best = lol;
+                }
+            }
+            moveInDir(vec2(best.x*64+ix, best.y*64+iy) - m_position);
+        }
         m_vel = velbak;
     }
         break;
