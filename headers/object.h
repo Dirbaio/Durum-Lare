@@ -12,6 +12,8 @@ enum eObjDir {
 	FACE_UP = 0, FACE_DOWN, FACE_LEFT, FACE_RIGHT, FACE_SIZE
 };
 
+extern const sf::Vector2i dirInc[];
+
 enum eObjType {
 
 	OBJ_PROP,
