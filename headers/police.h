@@ -20,7 +20,8 @@ class Police : public Npc {
     enum State  {
 	    STATE_PATROL_MOVING,
 	    STATE_PATROL_WATCHING,
-	    STATE_ALERTED,
+	    STATE_ALERT,
+	    STATE_CONFUSE,
 	    STATE_CHASING_PLAYER
     };
 

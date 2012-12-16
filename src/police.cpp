@@ -13,15 +13,15 @@ void Police::Init() {
 	mySpr.setOrigin(mySpr.getTextureRect().width*0.5f,
 			mySpr.getTextureRect().height*0.5f);
 
-	m_vel = 16.0f*1.25f;
+	m_vel = 20.0f;
 	m_watchingTime = 0;
 	m_state = STATE_PATROL_WATCHING;
 
-    AnimationData* ad = new AnimationData();
-    ad->Load("anim/poli.anim");
-    if (m_anim == NULL) m_anim = new Animation();
-    m_anim->setAnimData(ad);
-    m_anim->SelectAnim("IdleDown");
+	AnimationData* ad = new AnimationData();
+	ad->Load("anim/poli.anim");
+	if (m_anim == NULL) m_anim = new Animation();
+	m_anim->setAnimData(ad);
+	m_anim->SelectAnim("IdleDown");
 }
 
 void Police::Update() {
@@ -30,9 +30,43 @@ void Police::Update() {
 	InputEng* input = InputEng::getInstance();
 	City &city = *GameReg::getInstance()->city;
 
+	std::list<Person>* personList = GameReg::getInstance()->personList;
+	for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++) {
+		Person &person = *it;
+		vec2 pos = person.getPosition();
+		vec2 dir_corpse = pos - m_position;
+		vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
+		Utils::normalize(dir_corpse);
+		Utils::normalize(dir_facing);
+		if (Utils::dot2(dir_corpse,dir_facing) >= 0.5f && city.visible(pos,m_position)) {
+			switch(person.getState())
+			{
+			case Person::STATE_PANIC:
+			{
+				if(m_state == STATE_PATROL_MOVING ||
+				   m_state == STATE_PATROL_WATCHING) {
+					m_state = STATE_CONFUSE;
+					setGoal(person.getPosition());
+				}
+				break;
+			}
+			case Person::STATE_DEAD:
+				if(m_state == STATE_PATROL_MOVING ||
+				   m_state == STATE_PATROL_WATCHING ||
+				   m_state == STATE_CONFUSE) {
+					m_state = STATE_ALERT;
+					setGoal(person.getPosition());
+				}
+				break;
+			}
+		}
+	}
+
 	switch(m_state)
 	{
 	case STATE_PATROL_MOVING:
+		m_mark = MARK_NONE;
+		m_vel = 20.0f;
 		if (!m_hasGoal) {
 			m_state = STATE_PATROL_WATCHING;
 			m_watchingTime = Utils::randomInt(2, 6);
@@ -43,6 +77,8 @@ void Police::Update() {
 		else moveTowardsGoal();
 		break;
 	case STATE_PATROL_WATCHING:
+		m_mark = MARK_NONE;
+		m_vel = 20.0f;
 		m_watchingTime -= input->getFrameTime().asSeconds();
 		m_watchingTimeFacing -= input->getFrameTime().asSeconds();
 
@@ -57,22 +93,39 @@ void Police::Update() {
 		}
 
 		break;
+	case STATE_ALERT:
+		m_vel = 60.0f;
+		m_mark = MARK_EXCLAMATION;
+		if (!m_hasGoal) {
+			setGoal(getNewGoal());
+		}
+		else moveTowardsGoal();
+		break;
+	case STATE_CONFUSE:
+		m_vel = 30.0f;
+		m_mark = MARK_QUESTION;
+		if (!m_hasGoal) {
+			setGoal(getNewGoal());
+			m_state = STATE_PATROL_MOVING;
+		}
+		else moveTowardsGoal();
+		break;
 	}
 
 
-    if (m_state == STATE_PATROL_WATCHING) {
-        if (m_faceDir == FACE_UP)  ensureAnim("IdleUp");
-        if (m_faceDir == FACE_DOWN)  ensureAnim("IdleDown");
-        if (m_faceDir == FACE_LEFT)  ensureAnim("IdleLeft");
-        if (m_faceDir == FACE_RIGHT)  ensureAnim("IdleRight");
-    }
+	if (m_state == STATE_PATROL_WATCHING) {
+		if (m_faceDir == FACE_UP)  ensureAnim("IdleUp");
+		if (m_faceDir == FACE_DOWN)  ensureAnim("IdleDown");
+		if (m_faceDir == FACE_LEFT)  ensureAnim("IdleLeft");
+		if (m_faceDir == FACE_RIGHT)  ensureAnim("IdleRight");
+	}
 
-    else {
-        if (m_faceDir == FACE_UP)  ensureAnim("WalkingUp");
-        if (m_faceDir == FACE_DOWN)  ensureAnim("WalkingDown");
-        if (m_faceDir == FACE_LEFT)  ensureAnim("WalkingLeft");
-        if (m_faceDir == FACE_RIGHT)  ensureAnim("WalkingRight");
-    }
+	else {
+		if (m_faceDir == FACE_UP)  ensureAnim("WalkingUp");
+		if (m_faceDir == FACE_DOWN)  ensureAnim("WalkingDown");
+		if (m_faceDir == FACE_LEFT)  ensureAnim("WalkingLeft");
+		if (m_faceDir == FACE_RIGHT)  ensureAnim("WalkingRight");
+	}
 
 
 }
@@ -132,9 +185,9 @@ void Police::lookAtRandomPlace()
 
 void Police::Draw() {
 
-    sf::Sprite* spr = m_anim->getCurrentFrame();
-    spr->setPosition(m_position);
-    App->draw(*spr);
+	sf::Sprite* spr = m_anim->getCurrentFrame();
+	spr->setPosition(m_position);
+	App->draw(*spr);
 
 }
 

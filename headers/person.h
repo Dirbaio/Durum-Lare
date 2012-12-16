@@ -22,6 +22,14 @@ class Person : public Npc {
 
     bool is_alive();
 
+    enum State {
+	STATE_WALKING,
+	STATE_PANIC,
+	STATE_DEAD
+    };
+
+    int getState() { return m_state; }
+
   private:
 
     float DISSAPPEAR_TIME;
@@ -32,12 +40,6 @@ class Person : public Npc {
     sf::Sound dieSound;
 
     float m_panicTime, m_startPanicTime;
-
-    enum State {
-        STATE_WALKING,
-        STATE_PANIC,
-        STATE_DEAD
-    };
 
     State m_state;
 
