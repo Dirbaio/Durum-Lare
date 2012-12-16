@@ -199,6 +199,12 @@ void Character::moveTowardsGoal()
 
     vec2 dir = to-m_position;
     Utils::normalize(dir);
+
+    if(dir.x < -0.5f) m_faceDir = FACE_LEFT;
+    if(dir.y < -0.5f) m_faceDir = FACE_UP;
+    if(dir.x >  0.5f) m_faceDir = FACE_RIGHT;
+    if(dir.y >  0.5f) m_faceDir = FACE_DOWN;
+
     float delta = input->getFrameTime().asSeconds();
     move(m_position + dir*delta*m_vel);
 }
