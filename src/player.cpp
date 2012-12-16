@@ -25,6 +25,7 @@ void Player::Init() {
 
         LoadAnims();
         ensureAnim("IdleDown");
+	m_actionDelay = 0;
 }
 
 void Player::LoadAnims() {
@@ -33,10 +34,13 @@ void Player::LoadAnims() {
     m_anim = new Animation();
     m_anim->setAnimData(ad);
 
-
-
     //mySpr.setOrigin(animations.getCurrentFrame()->getLocalBounds().width*0.5,
-    //                              animations.getCurrentFrame()->getLocalBounds().height*0.5);
+    // animations.getCurrentFrame()->getLocalBounds().height*0.5);
+}
+
+void Player::hitAction()
+{
+	m_actionDelay = 0.3f;
 }
 
 void Player::Update() {
@@ -81,7 +85,14 @@ void Player::Update() {
             if (m_faceDir == FACE_RIGHT)  ensureAnim("IdleRight");
         }
 
-	Character::move(posf);
+	if (m_actionDelay < 0)
+	{
+		Character::move(posf);
+	}
+	else
+	{
+		m_actionDelay -= input->getFrameTime().asSeconds();
+	}
 
 	if (input->getKeyDown(InputEng::PLAYER_ACTION)) {
 		GameReg* gameReg = GameReg::getInstance();

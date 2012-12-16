@@ -12,20 +12,21 @@ Object::Object() :
 	m_isUsable(false),
 	m_isTaken(false)
 {
-        //uniqueID = Utils::getNewUniqueID();
+    //uniqueID = Utils::getNewUniqueID();
 
-        m_isTakeable = false;
-        m_isUsable = false;
-        m_isTaken = false;
-        m_canCollide = false;
+    m_isTakeable = false;
+    m_isUsable = false;
+    m_isTaken = false;
+    m_canCollide = false;
 
-        //myTransitionX = NULL;
-        //myTransitionY = NULL;
+    //myTransitionX = NULL;
+    //myTransitionY = NULL;
 
-        m_boundbox.width = 16;
-        m_boundbox.height = 16;
+    m_boundbox.width = 16;
+    m_boundbox.height = 16;
 
-        m_anim = NULL;
+    m_anim = NULL;
+    m_prio = 0;
 }
 
 

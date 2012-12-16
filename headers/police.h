@@ -19,7 +19,7 @@ class Police : public Npc {
 	    STATE_PATROL_MOVING,
 	    STATE_PATROL_WATCHING,
 	    STATE_ALERTED,
-	    STATE_CHASING_PLAYER,
+	    STATE_CHASING_PLAYER
     };
 
     State m_state;

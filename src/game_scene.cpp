@@ -148,7 +148,7 @@ void GameScene::Update() {
 	}
 
 	//Police update
-	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
+    for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
 		it->Update();
 	}
 
@@ -156,7 +156,13 @@ void GameScene::Update() {
 	HandleEvents();
 }
 
-
+bool comp(Object* a, Object* b)
+{
+    if(a->m_prio == b->m_prio)
+        return a->getPosition().y < b->getPosition().y;
+    else
+        return a->m_prio < b->m_prio;
+}
 
 void GameScene::Draw() {
 	InputEng* input = InputEng::getInstance();
@@ -167,20 +173,20 @@ void GameScene::Draw() {
 
 	//Map draw
 	city.render();
+    graphics->DrawAll();
 
- graphics->DrawAll();
-	//Player draw
-	player.Draw();
+    vector<Object*> v;
 
-	//Persons draw
-	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
-		it->Draw();
-	}
+    v.push_back(&player);
 
-	//Police draw
-	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
-		it->Draw();
-	}
+    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
+        v.push_back(&*it);
+    for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
+        v.push_back(&*it);
+
+    sort(v.begin(), v.end(), comp);
+    for(int i = 0; i < v.size(); i++)
+        v[i]->Draw();
 
     //Map draw
     city.renderTop();
@@ -310,6 +316,7 @@ void GameScene::HandleEvents() {
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
                                     it->onHit();
+				    player.hitAction();
 				}
 			}
 
