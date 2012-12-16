@@ -315,7 +315,7 @@ void GameScene::HandleEvents() {
 				if (!it->is_alive()) continue;
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
-                                    it->onHit();
+                    it->onHit();
 				    player.hitAction();
 				}
 			}
