@@ -29,6 +29,9 @@ public:
 	void Draw();
 	void Destroy();
 
+    std::list<Person> getPersonList();
+    std::list<Police> getPoliceList();
+
 private:
 	void initThread();
 	bool initThreadDone;

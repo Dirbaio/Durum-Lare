@@ -3,8 +3,10 @@
 
 #include "npc.h"
 #include "transition.h"
+#include "game_scene.h"
 
 #include <SFML/Audio.hpp>
+#include <list>
 
 class Person : public Npc {
   public:
@@ -28,8 +30,17 @@ class Person : public Npc {
     sf::SoundBuffer dieSoundBuff;
     sf::Sound dieSound;
 
+    enum State {
+        STATE_WALKING,
+        STATE_PANIC,
+        STATE_DEAD
+    };
+
+    State m_state;
+
     sf::Sprite deadSpr;
     float m_walkingTime;
+
 
     TransitionLinear* transHit;
 

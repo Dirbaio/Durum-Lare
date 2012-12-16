@@ -398,3 +398,10 @@ void GameScene::HandleEvents() {
 	}
 }
 
+std::list<Person> GameScene::getPersonList() {
+    return personList;
+}
+
+std::list<Police> GameScene::getPoliceList() {
+    return policeList;
+}

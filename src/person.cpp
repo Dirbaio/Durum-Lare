@@ -25,6 +25,8 @@ void Person::Init() {
 
     life = 1;
 
+    m_state = STATE_WALKING;
+
     transHit = NULL;
 
     AnimationData* ad = new AnimationData();
@@ -61,6 +63,14 @@ void Person::Update() {
     }
 
     float delta = input->getFrameTime().asSeconds();
+
+    std::list<Person> personList = GameScene::getInstance()->getPersonList();
+
+    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); it++) {
+        Person person = *it;
+        if (person.alive) continue;
+        else m_state = STATE_PANIC;
+    }
 
     //LE OLD CODE
     /*
@@ -102,14 +112,16 @@ void Person::Update() {
     Character::move(pos);
     */
 
-    City &city = *GameReg::getInstance()->city;
+    if (m_state == STATE_WALKING) {
+        City &city = *GameReg::getInstance()->city;
 
-    if(!m_hasGoal)
-        setGoal(city.getRandomStreet());
-    moveTowardsGoal();
+        if(!m_hasGoal)
+            setGoal(city.getRandomStreet());
+        moveTowardsGoal();
 
-    if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
-    if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
+        if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
+        if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
+    }
 
 }
 
