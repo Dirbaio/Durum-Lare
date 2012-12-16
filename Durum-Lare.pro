@@ -21,7 +21,9 @@ SOURCES += src/main.cpp \
     src/npc.cpp \
     src/animation.cpp \
     src/character.cpp \
-    src/transition.cpp
+    src/transition.cpp \
+    src/item.cpp \
+    src/hud.cpp
 
 HEADERS += headers/game.h \
     headers/game_states.h \
@@ -44,7 +46,9 @@ HEADERS += headers/game.h \
     headers/npc.h \
     headers/animation.h \
     headers/character.h \
-    headers/transition.h
+    headers/transition.h \
+    headers/item.h \
+    headers/hud.h
 
 INCLUDEPATH += src \
                headers
