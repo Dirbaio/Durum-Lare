@@ -1,28 +1,28 @@
 #walking down
 
-ANIM "IdleUp" "img/player_sheet.png" 0
-	 0 0 32 32 0.2
-
 ANIM "IdleDown" "img/player_sheet.png" 0
-	 0 0 32 32 0.2
-
-ANIM "IdleLeft" "img/player_sheet.png" 0
 	 0 0 32 32 0.2
 
 ANIM "IdleRight" "img/player_sheet.png" 0
 	 0 32 32 32 0.2
 
+ANIM "IdleLeft" "img/player_sheet.png" 0
+	 0 64 32 32 0.2
+
+ANIM "IdleUp" "img/player_sheet.png" 0
+	 0 96 32 32 0.2
+
 ANIM "WalkingUp" "img/player_sheet.png" 0
-	 0 0 32 32 0.2
-	32 0 32  32 0.2
-	64 0 32  32 0.2
-	96 0 32 32 0.2
+	 0 96 32 32 0.1
+	32 96 32  32 0.1
+	64 96 32  32 0.1
+	96 96 32 32 0.1
 
 ANIM "WalkingLeft" "img/player_sheet.png" 0
-	 0 0 32 32 0.2
-	32 0 32  32 0.2
-	64 0 32  32 0.2
-	96 0 32 32 0.2
+	 0 0 32 32 0.1
+	32 0 32  32 0.1
+	64 0 32  32 0.1
+	96 0 32 32 0.1
 
 ANIM "WalkingDown" "img/player_sheet.png" 0
 	32 0 32  32 0.1
@@ -31,8 +31,8 @@ ANIM "WalkingDown" "img/player_sheet.png" 0
 	 0 0 32 32 0.1
 
 ANIM "WalkingRight" "img/player_sheet.png" 0
-	 0 0 32 32 0.2
-	32 0 32  32 0.2
-	64 0 32  32 0.2
-	96 0 32 32 0.2
+	 0 0 32 32 0.1
+	32 0 32  32 0.1
+	64 0 32  32 0.1
+	96 0 32 32 0.1
 
