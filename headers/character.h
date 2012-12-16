@@ -27,14 +27,14 @@ protected:
 	virtual bool onUpCollision(int x, int j)   {return true;}
 	virtual bool onDownCollision(int x, int j) {return true;}
 
-    queue<vec2> m_path;
-    vec2 m_goal;
-    bool m_hasGoal;
+	queue<vec2> m_path;
+	vec2 m_goal;
+	bool m_hasGoal;
 
-    float m_vel;
+	float m_vel;
 
-    void setGoal(vec2 goal);
-    void moveTowardsGoal();
+	void setGoal(vec2 goal);
+	void moveTowardsGoal();
 };
 
 #endif // CHARACTER_H

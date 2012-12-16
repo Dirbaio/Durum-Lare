@@ -105,7 +105,7 @@ void Person::Update() {
 
     City &city = *GameReg::getInstance()->city;
 
-    m_vel = 160.0f;
+    m_vel = 16.0f*1.25f;
     if(!m_hasGoal)
         setGoal(city.getRandomStreet());
     moveTowardsGoal();
