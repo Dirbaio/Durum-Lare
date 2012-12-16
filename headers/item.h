@@ -3,6 +3,12 @@
 
 #include "object.h"
 
+enum eItemType {
+    ITEM_MONEY,
+
+    ITEM_TYPE_SIZEs
+};
+
 class Item : public Object {
 public:
 

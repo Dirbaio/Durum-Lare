@@ -11,4 +11,6 @@ void Item::Update() {
 
 void Item::Draw() {
 
+
+
 }

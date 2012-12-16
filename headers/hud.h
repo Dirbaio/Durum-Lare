@@ -16,6 +16,8 @@ private:
 
     sf::Sprite moneyHud;
 
+    sf::Font hudFont;
+
 };
 
 #endif // HUD_H
