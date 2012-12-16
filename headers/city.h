@@ -13,7 +13,7 @@ public:
 	void render();
 	void renderTop();
 
-	int getW();
+    int getW();
 	int getH();
 	int getTW();
 	int getTH();

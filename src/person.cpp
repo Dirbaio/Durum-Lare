@@ -63,6 +63,9 @@ void Person::Update() {
 
     float delta = input->getFrameTime().asSeconds();
 
+    //LE OLD CODE
+    /*
+
     m_walkingTime -= delta;
 
     if (m_walkingTime < 0) {
@@ -98,6 +101,14 @@ void Person::Update() {
         }
     }
     Character::move(pos);
+    */
+
+    City &city = *GameReg::getInstance()->city;
+
+    m_vel = 160.0f;
+    if(!m_hasGoal)
+        setGoal(city.getRandomStreet());
+    moveTowardsGoal();
 
     m_anim->Update(delta);
 }
