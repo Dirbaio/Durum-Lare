@@ -95,10 +95,10 @@ void Player::Update() {
 	{
 		m_actionDelay -= input->getFrameTime().asSeconds();
 
-        if (m_faceDir == FACE_UP)  ensureAnim("AttackUp");
+        if (m_faceDir == FACE_UP)    ensureAnim("AttackUp");
         if (m_faceDir == FACE_DOWN)  ensureAnim("AttackDown");
         if (m_faceDir == FACE_LEFT)  ensureAnim("AttackLeft");
-        if (m_faceDir == FACE_RIGHT)  ensureAnim("AttackRight");
+        if (m_faceDir == FACE_RIGHT) ensureAnim("AttackRight");
 	}
 
 	if (input->getKeyDown(InputEng::PLAYER_ACTION)) {
@@ -112,9 +112,17 @@ void Player::Update() {
     std::list<Item*>* itemList = GameReg::getInstance()->itemList;
     for (std::list<Item*>::iterator it = itemList->begin(); it != itemList->end(); ++it) {
         if ((*it)->isTakeable()) {
+
+            sf::FloatRect moneyBox = this->getBoundBox();
+            moneyBox.left -= moneyBox.width/6;
+            moneyBox.width *= 3;
+            moneyBox.top -= moneyBox.height/6;
+            moneyBox.height *= 3;
+
+
             if (Utils::rectCollision((*it)->getBoundBox(), this->getBoundBox())) {
                 (*it)->takeAction();
-                 myScore += (*it)->getScore();
+                myScore += (*it)->getScore();
             }
         }
     }

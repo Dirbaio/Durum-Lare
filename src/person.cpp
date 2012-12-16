@@ -13,9 +13,9 @@ void Person::Init() {
 
     GraphEng* graphics = GraphEng::getInstance();
     //mySpr.setTexture(*graphics->getTexture("img/person.png"));
-    deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
-    deadSpr.setOrigin(deadSpr.getTextureRect().width*0.5f,
-                      deadSpr.getTextureRect().height*0.5f);
+    bloodSpr.setTexture(*graphics->getTexture("img/blood.png"));
+    bloodSpr.setOrigin(bloodSpr.getTextureRect().width*0.5f,
+                      bloodSpr.getTextureRect().height*0.5f);
 
     DISSAPPEAR_TIME = 12.0f;
     m_walkingTime = 0.0f;
@@ -37,11 +37,9 @@ void Person::Init() {
         if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
         else  ad->Load("anim/morenaca.anim");
     }
-
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
     m_anim->SelectAnim("Walking");
-
 
 
     dieSoundBuff.loadFromFile("audio/wilhelmscream.ogg");
@@ -147,8 +145,10 @@ void Person::Update() {
         }
         m_vel = velbak;
     }
-        break;
+    break;
+
     case STATE_DEAD:
+        ensureAnim("Dead");
         m_mark = MARK_NONE;
         m_prio = -1;
         deathTimer -= input->getFrameTime().asSeconds();
@@ -186,18 +186,18 @@ void Person::Draw() {
 
     sf::Sprite* spr = m_anim->getCurrentFrame();
 
-    if (m_state != STATE_DEAD) {
-        if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
-        else spr->setScale(sf::Vector2f(1.0f, 1.0f));
-        spr->setPosition(m_position);
-        spr->setScale(m_scale);
+    if (m_state == STATE_DEAD) {
+        bloodSpr.setPosition(m_position);
+        App->draw(bloodSpr);
+    }
 
-        App->draw(*spr);
-    }
-    else {
-        deadSpr.setPosition(m_position);
-        App->draw(deadSpr);
-    }
+    if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
+    else spr->setScale(sf::Vector2f(1.0f, 1.0f));
+    spr->setPosition(m_position);
+    spr->setScale(m_scale);
+    App->draw(*spr);
+
+
 }
 
 bool Person::is_alive()

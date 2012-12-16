@@ -1,6 +1,8 @@
+
 ANIM "Idle" "img/person_sheet.png" 0
 	 0 0 32 32 0.2
-
 ANIM "Walking" "img/person_sheet.png" 0
 	64 64 32 32 0.3
 	96 64 32 32 0.3
+ANIM "Dead" "img/person_sheet.png" 0
+	 96 64 32 32 0.2

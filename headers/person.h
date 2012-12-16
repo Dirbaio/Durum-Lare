@@ -44,12 +44,10 @@ class Person : public Npc {
 
     State m_state;
 
-    sf::Sprite deadSpr;
+    sf::Sprite bloodSpr;
     float m_walkingTime;
 
-
     TransitionLinear* transHit;
-
 
 };
 
