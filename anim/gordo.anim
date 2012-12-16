@@ -1,0 +1,6 @@
+ANIM "Idle" "img/person_sheet.png" 0
+	 0 0 32 32 0.2
+
+ANIM "Walking" "img/person_sheet.png" 0
+	 0 64 32 32 0.3
+	32 64 32 32 0.3
