@@ -95,7 +95,7 @@ void Person::Update() {
             vec2i lol = now + dirInc[i];
             if(city.occupedIJ(lol.x, lol.y)) continue;
 
-            float d = 1000000;
+            float d = Utils::distance(vec2(lol.x*64+32, lol.y*64+32), GameReg::getInstance()->player->getPosition())/2;
 
             for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++)
                 if (!it->is_alive())
@@ -104,7 +104,6 @@ void Person::Update() {
                     d = min(d, d2);
                 }
 
-            cout<<d<<endl;
             if(d > bestd)
             {
                 bestd = d;
