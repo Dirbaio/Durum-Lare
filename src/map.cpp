@@ -30,6 +30,7 @@ const int TILESIZE = 64;
 void Map::load(vector<vector<bool> > v)
 {
 
+
     tex.loadFromFile("img/tiles.png");
 
     tx = v.size();
@@ -168,6 +169,7 @@ void Map::render()
 
     for(int x = 0; x < tx; x++)
 	for(int y = 0; y < ty; y++)
+            //graphics->Draw(&m[x][y].s);
             App->draw(m[x][y].s);
 }
 
@@ -178,6 +180,7 @@ void Map::renderTop()
     for(int x = 0; x < tx; x++)
         for(int y = 0; y < ty; y++)
             if(m[x][y].tileNum >= 8)
+                //graphics->Draw(&m[x][y].s2);
                 App->draw(m[x][y].s2);
 
 }
