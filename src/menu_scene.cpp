@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "input_engine.h"
 #include "game_scene.h"
+#include "animation.h"
 
 bool MenuScene::Init() {
 
@@ -14,9 +15,14 @@ bool MenuScene::Init() {
 
     press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
     //press_start.setColor(sf::Color::Green);
-    press_start.setPosition(App->getSize().x/2 - press_start.getLocalBounds().width/2, App->getSize().y/2);
+    press_start.setPosition(App->getSize().x/2 - press_start.getLocalBounds().width/2, App->getSize().y*0.75f);
 
     textTimer = 0.25f;
+
+    AnimationData* ad = new AnimationData();
+    ad->Load("anim/takena.anim");
+    anim_takena.setAnimData(ad);
+    anim_takena.SelectAnim("WalkingDown");
 
     return true;
 }
@@ -37,11 +43,20 @@ void MenuScene::Update() {
 
     if (input->getKeyDown(InputEng::MENU_START)) nextScene = new GameScene();
 
-
+    anim_takena.Update(delta);
 }
 
 void MenuScene::Draw() {
 
+    //Takena walking
+    sf::Sprite* spr = anim_takena.getCurrentFrame();
+    spr->setOrigin(16, 16);
+    spr->setPosition(App->getSize().x*0.5f, App->getSize().y*0.5f);
+    spr->setScale(10, 10);
+    App->draw(*spr);
+
+
+    //Start letters
     App->draw(press_start);
 
 

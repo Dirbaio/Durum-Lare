@@ -10,6 +10,7 @@ using namespace std;
 enum CharacterMark {
     MARK_NONE,
     MARK_EXCLAMATION,
+    MARK_RED_EXCLAMATION,
     MARK_QUESTION
 };
 
@@ -39,7 +40,7 @@ protected:
 
 	float m_vel;
     CharacterMark m_mark;
-    sf::Sprite spriteExc, spriteQuest;
+    sf::Sprite spriteExc, spriteQuest, spriteRedExc;
 
     void DrawMark();
 

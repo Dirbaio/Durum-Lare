@@ -3,6 +3,7 @@
 
 #include <scene.h>
 #include "utils.h"
+#include "animation.h"
 
 class MenuScene : public Scene {
 public:
@@ -18,6 +19,8 @@ private:
 
     sf::Font font;
     sf::Text press_start;
+
+    Animation anim_takena;
 
     float textTimer;
 };

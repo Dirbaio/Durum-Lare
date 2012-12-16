@@ -96,7 +96,7 @@ void Police::Update() {
 	case STATE_ALERT:
 	{
 		m_vel = 60.0f;
-		m_mark = MARK_EXCLAMATION;
+                m_mark = MARK_RED_EXCLAMATION;
 		if (!m_hasGoal) {
 			setGoal(getNewGoal());
 		}
@@ -130,7 +130,7 @@ void Police::Update() {
 	case STATE_CHASING_PLAYER:
 	{
 		m_vel = 75.0f;
-		m_mark = MARK_EXCLAMATION;
+                m_mark = MARK_RED_EXCLAMATION;
 		Player* p = GameReg::getInstance()->player;
 		if(city.visible(p->getPosition(), m_position)) {
 			m_lastDirSawPlayer = p->getPosition()-m_lastPosSawPlayer;

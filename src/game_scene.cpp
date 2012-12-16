@@ -52,8 +52,8 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-    for (int i = 0; i < 100; ++i) spawnNewPerson();
-    for (int i = 0; i < 100; ++i) spawnNewPolice();
+    for (int i = 0; i < 600; ++i) spawnNewPerson();
+    for (int i = 0; i < 30; ++i) spawnNewPolice();
 
 	//Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
@@ -76,12 +76,13 @@ bool GameScene::Init() {
 	initThreadDone = false;
 
 	GraphEng* graphics = graphics->getInstance();
+       /*
 	sf::Sprite loadScene;
 	loadScene.setTexture(*graphics->getTexture("img/loading.png"));
 	loadScene.setPosition(App->getView().getSize().x*0.5f - loadScene.getTexture()->getSize().x*0.5f,
 			      App->getView().getSize().y*0.5f - loadScene.getTexture()->getSize().y*0.5f);
 	loadingText = sf::Text("Loading...");
-
+*/
 	sf::Text titleText;
 	titleText.setColor(sf::Color::Yellow);
 	titleText.setStyle(sf::Text::Bold);

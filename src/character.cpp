@@ -15,8 +15,11 @@ Character::Character()
     GraphEng* graphics = GraphEng::getInstance();
     spriteExc.setTexture(*graphics->getTexture("img/exc_mark.png"));
     spriteExc.setOrigin(8, 8);
+    spriteRedExc.setTexture(*graphics->getTexture("img/exc_rmark.png"));
+    spriteRedExc.setOrigin(8, 8);
     spriteQuest.setTexture(*graphics->getTexture("img/int_mark.png"));
     spriteQuest.setOrigin(8, 8);
+
 }
 
 void Character::move(sf::Vector2f posf)
@@ -133,6 +136,12 @@ void Character::DrawMark()
         spriteQuest.setScale(1+t/10, 1-t/20);
         spriteQuest.setPosition(m_position+vec2(0, -22+t));
         App->draw(spriteQuest);
+    }
+    else if(m_mark == MARK_RED_EXCLAMATION)
+    {
+        spriteRedExc.setScale(1+t/10, 1-t/20);
+        spriteRedExc.setPosition(m_position+vec2(0, -22+t));
+        App->draw(spriteRedExc);
     }
 }
 
