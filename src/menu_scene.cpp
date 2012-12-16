@@ -10,7 +10,7 @@ bool MenuScene::Init() {
 
 
     press_start.setFont(font);
-    press_start.setString("PRESS INTRO TO START");
+    press_start.setString("PRESS INTRO  A LOT OF TIMES TO START");
 
     press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
     //press_start.setColor(sf::Color::Green);

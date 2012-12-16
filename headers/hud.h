@@ -15,6 +15,8 @@ public:
 private:
 
     sf::Sprite moneyHud;
+    sf::Sprite killsHud;
+
 
     sf::Font hudFont;
 

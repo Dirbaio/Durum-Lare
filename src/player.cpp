@@ -28,6 +28,7 @@ void Player::Init() {
 	m_actionDelay = 0;
 
     myScore = 0;
+    myKills = 0;
 }
 
 void Player::LoadAnims() {

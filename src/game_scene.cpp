@@ -52,8 +52,8 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-	for (int i = 0; i < 620; ++i) spawnNewPerson();
-	for (int i = 0; i < 30; ++i) spawnNewPolice();
+    for (int i = 0; i < 100; ++i) spawnNewPerson();
+    for (int i = 0; i < 100; ++i) spawnNewPolice();
 
 	//Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
