@@ -28,10 +28,9 @@ void Person::Init() {
 
     transHit = NULL;
 
+
     AnimationData* ad = new AnimationData();
-
     int rand = Utils::randomInt(0, 4);
-
     if (rand == 0) ad->Load("anim/calvo.anim");
     else if (rand == 1) ad->Load("anim/tupe.anim");
     else if (rand == 2) ad->Load("anim/gordo.anim");
@@ -44,6 +43,8 @@ void Person::Init() {
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
     m_anim->SelectAnim("Walking");
+
+
 
     dieSoundBuff.loadFromFile("audio/wilhelmscream.ogg");
     dieSound.setBuffer(dieSoundBuff);

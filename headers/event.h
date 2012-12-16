@@ -12,6 +12,8 @@ enum EventType {
 
     EVENT_MOVE,
 
+    EVENT_GAME_OVER,
+
     EVENT_PLAYER_ACTION,
 
     EVENT_DELETE_PERSON,
@@ -24,6 +26,10 @@ enum EventType {
 struct Event {
     int type;
     Event(int _type) : type(_type){}
+};
+
+struct EventGameOver : public Event {
+    EventGameOver() : Event(EVENT_GAME_OVER) {}
 };
 
 

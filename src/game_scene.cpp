@@ -23,19 +23,19 @@ GameScene::GameScene() {
 }
 
 GameScene::~GameScene() {
-    bg_music.stop();
+	bg_music.stop();
 
-    for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it)
-        delete (*it);
+	for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it)
+		delete (*it);
 }
 
 void GameScene::initThread() {
 	gameReg = GameReg::getInstance();
 	gameReg->city = &city;
-    gameReg->personList = &personList;
-    gameReg->policeList = &policeList;
-    gameReg->itemList = &itemList;
-    gameReg->player = &player;
+	gameReg->personList = &personList;
+	gameReg->policeList = &policeList;
+	gameReg->itemList = &itemList;
+	gameReg->player = &player;
 
 	GraphEng* graphics = GraphEng::getInstance();
 
@@ -52,23 +52,23 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-    for (int i = 0; i < 620; ++i) spawnNewPerson();
+	for (int i = 0; i < 620; ++i) spawnNewPerson();
 	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
-        //Init Camera
+	//Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
 	camera.zoom(0.5f);
 
 
-    //Init background music
-    bg_music.openFromFile("audio/surrounding.ogg");
-    bg_music.setLoop(true);;
-    bg_music.play();
+	//Init background music
+	bg_music.openFromFile("audio/surrounding.ogg");
+	bg_music.setLoop(true);;
+	bg_music.play();
 
-    //Init hud
-    hud.Init();
+	//Init hud
+	hud.Init();
 
-    //Le oc
+	//Le oc
 	initThreadDone = true;
 }
 
@@ -93,7 +93,7 @@ bool GameScene::Init() {
 	timer.restart();
 
 
-      /*
+	/*
 	sf::Thread thr_init(&GameScene::initThread, this);
 	thr_init.launch();
 	while (!initThreadDone) {
@@ -119,10 +119,10 @@ bool GameScene::Init() {
 
 void GameScene::spawnNewMoney(sf::Vector2f pos) {
 
-    Item* item = ItemFactory::MakeNewItem(ItemFactory::ITEM_MONEY);
-    item->setPosition(pos);
-    item->setTransPos(pos, pos + sf::Vector2f(Utils::randomInt(-16, 16), Utils::randomInt(-16, 16)));
-    itemList.push_back(item);
+	Item* item = ItemFactory::MakeNewItem(ItemFactory::ITEM_MONEY);
+	item->setPosition(pos);
+	item->setTransPos(pos, pos + sf::Vector2f(Utils::randomInt(-16, 16), Utils::randomInt(-16, 16)));
+	itemList.push_back(item);
 
 }
 
@@ -155,9 +155,9 @@ void GameScene::Update() {
 		this->nextScene = new GameScene();
 
 	input->setGlobalMousePos(
-		App->convertCoords(sf::Vector2i(
-			input->getMousePos().x,
-			input->getMousePos().y),camera));
+				App->convertCoords(sf::Vector2i(
+							   input->getMousePos().x,
+							   input->getMousePos().y),camera));
 
 	//Player update
 	player.Update();
@@ -168,14 +168,14 @@ void GameScene::Update() {
 	}
 
 	//Police update
-    for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
+	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
 		it->Update();
 	}
 
-    //Items update
-    for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
-        (*it)->Update();
-    }
+	//Items update
+	for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
+		(*it)->Update();
+	}
 
 
 	HandleCamInput();
@@ -184,10 +184,10 @@ void GameScene::Update() {
 
 bool comp(Object* a, Object* b)
 {
-    if(a->m_prio == b->m_prio)
-        return a->getPosition().y < b->getPosition().y;
-    else
-        return a->m_prio < b->m_prio;
+	if(a->m_prio == b->m_prio)
+		return a->getPosition().y < b->getPosition().y;
+	else
+		return a->m_prio < b->m_prio;
 }
 
 void GameScene::Draw() {
@@ -199,34 +199,34 @@ void GameScene::Draw() {
 
 	//Map draw
 	city.render();
-    graphics->DrawAll();
+	graphics->DrawAll();
 
-    vector<Object*> v;
+	vector<Object*> v;
 
-    v.push_back(&player);
+	v.push_back(&player);
 
-    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
-        v.push_back(&*it);
-    for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
-        v.push_back(&*it);
-    for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it)
-        v.push_back((*it));
+	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
+		v.push_back(&*it);
+	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
+		v.push_back(&*it);
+	for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it)
+		v.push_back((*it));
 
-    sort(v.begin(), v.end(), comp);
-    for(int i = 0; i < v.size(); i++)
-    {
-        v[i]->Draw();
-        v[i]->DrawMark();
-    }
+	sort(v.begin(), v.end(), comp);
+	for(int i = 0; i < v.size(); i++)
+	{
+		v[i]->Draw();
+		v[i]->DrawMark();
+	}
 
-    //Map draw
-    city.renderTop();
+	//Map draw
+	city.renderTop();
 
-    graphics->DrawAll();
+	graphics->DrawAll();
 
-    App->setView(App->getDefaultView());
+	App->setView(App->getDefaultView());
 
-    hud.Draw();
+	hud.Draw();
 
 
 	/*
@@ -339,22 +339,23 @@ void GameScene::HandleEvents() {
 		gameReg->eventQueue.pop();
 		switch(e->type) {
 
-		case EVENT_PLAYER_ACTION: {
+		case EVENT_PLAYER_ACTION:
+		{
 			EventPlayerAction* ev = (EventPlayerAction*)e;
 
-            player.hitAction();
+			player.hitAction();
 
-            for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+			for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
 				if (!it->is_alive()) continue;
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
-                    it->onHit();
+					it->onHit();
 
 
-                    int n_moneys = Utils::randomInt(1, 3);
+					int n_moneys = Utils::randomInt(1, 3);
 
-                    for (int i = 0; i < n_moneys; ++i)
-                        spawnNewMoney(it->getPosition());
+					for (int i = 0; i < n_moneys; ++i)
+						spawnNewMoney(it->getPosition());
 
 				}
 			}
@@ -362,34 +363,39 @@ void GameScene::HandleEvents() {
 			break;
 		}
 
-        case EVENT_DELETE_PERSON: {
-            EventDeletePerson* ev = (EventDeletePerson*)e;
+		case EVENT_DELETE_PERSON: {
+			EventDeletePerson* ev = (EventDeletePerson*)e;
 
-            for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
-                if (&(*it) == ev->person) {
-                    it = personList.erase(it);
-                    break;
-                }
-            }
+			for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+				if (&(*it) == ev->person) {
+					it = personList.erase(it);
+					break;
+				}
+			}
 
-            spawnNewPerson();
+			spawnNewPerson();
+			break;
+		}
 
-            break;
-        }
+		case EVENT_DELETE_ITEM: {
+			EventDeleteItem* ev = (EventDeleteItem*)e;
 
-        case EVENT_DELETE_ITEM: {
-            EventDeleteItem* ev = (EventDeleteItem*)e;
+			for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
+				if ((*it) == ev->item) {
+					delete (*it);
+					it = itemList.erase(it);
+					break;
+				}
+			}
 
-            for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
-                if ((*it) == ev->item) {
-                    delete (*it);
-                    it = itemList.erase(it);
-                    break;
-                }
-            }
+			break;
+		}
 
-            break;
-        }
+		case EVENT_GAME_OVER: {
+			EventGameOver* ev = (EventGameOver*)e;
+			nextScene = new GameScene();
+			break;
+		}
 
 			/*
 		case EVENT_MOVE: {
