@@ -33,7 +33,6 @@ class Person : public Npc {
 
     TransitionLinear* transHit;
 
-    bool flag_draw_mirror;
 
 };
 

@@ -11,15 +11,14 @@ public:
 	void Update();
 	void Draw();
 
-        void ensureAnim(std::string anim);
-        void LoadAnims();
+    void LoadAnims();
 	void hitAction();
 
 private:
 	sf::Sprite mySpr;
 	sf::Vector2f myVel;
 
-        std::string currentAnim;
+    std::string currentAnim;
 	float m_actionDelay;
 };
 

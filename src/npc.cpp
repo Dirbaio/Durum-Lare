@@ -1,6 +1,7 @@
 #include "npc.h"
 #include "defines.h"
 #include "animation.h"
+#include "input_engine.h"
 
 void Npc::Init() {
 
@@ -13,6 +14,10 @@ void Npc::Init() {
 void Npc::Update() {
 
     updateBBox();
+
+
+
+    m_anim->Update(InputEng::getInstance()->getFrameTime().asSeconds());
 
 }
 

@@ -114,10 +114,4 @@ void Player::Draw() {
 
 }
 
-void Player::ensureAnim(std::string anim) {
-    if (currentAnim != anim) {
-       m_anim->SelectAnim(anim);
-       currentAnim = anim;
-    }
 
-}

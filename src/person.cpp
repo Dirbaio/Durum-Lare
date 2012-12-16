@@ -20,8 +20,6 @@ void Person::Init() {
                       deadSpr.getTextureRect().height*0.5f);
 
 
-    flag_draw_mirror = false;
-
     DISSAPPEAR_TIME = 12.0f;
     m_walkingTime = 0.0f;
 
@@ -110,7 +108,9 @@ void Person::Update() {
         setGoal(city.getRandomStreet());
     moveTowardsGoal();
 
-    m_anim->Update(delta);
+    if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
+    if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
+
 }
 
 void Person::doDeath() {
@@ -143,9 +143,8 @@ void Person::Draw() {
         if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
         else spr->setScale(sf::Vector2f(1.0f, 1.0f));
         spr->setPosition(m_position);
+        spr->setScale(m_scale);
 
-        if (flag_draw_mirror) spr->setScale(-1, 1);
-        else spr->setScale(1, 1);
         App->draw(*spr);
     }
     else {

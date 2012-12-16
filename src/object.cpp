@@ -83,3 +83,11 @@ void Object::updateBBox() {
         m_boundbox.left = m_position.x - m_boundbox.width*0.5f;
         m_boundbox.top = m_position.y - m_boundbox.height*0.5f;
 }
+
+void Object::ensureAnim(std::string anim) {
+    if (currentAnim != anim) {
+       m_anim->SelectAnim(anim);
+       currentAnim = anim;
+    }
+
+}

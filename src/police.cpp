@@ -16,6 +16,12 @@ void Police::Init() {
 	m_vel = 16.0f*1.25f;
 	m_watchingTime = 0;
 	m_state = STATE_PATROL_WATCHING;
+
+    AnimationData* ad = new AnimationData();
+    ad->Load("anim/poli.anim");
+    if (m_anim == NULL) m_anim = new Animation();
+    m_anim->setAnimData(ad);
+    m_anim->SelectAnim("IdleDown");
 }
 
 void Police::Update() {
@@ -48,6 +54,23 @@ void Police::Update() {
 
 		break;
 	}
+
+
+    if (m_state == STATE_PATROL_WATCHING) {
+        if (m_faceDir == FACE_UP)  ensureAnim("IdleUp");
+        if (m_faceDir == FACE_DOWN)  ensureAnim("IdleDown");
+        if (m_faceDir == FACE_LEFT)  ensureAnim("IdleLeft");
+        if (m_faceDir == FACE_RIGHT)  ensureAnim("IdleRight");
+    }
+
+    else {
+        if (m_faceDir == FACE_UP)  ensureAnim("WalkingUp");
+        if (m_faceDir == FACE_DOWN)  ensureAnim("WalkingDown");
+        if (m_faceDir == FACE_LEFT)  ensureAnim("WalkingLeft");
+        if (m_faceDir == FACE_RIGHT)  ensureAnim("WalkingRight");
+    }
+
+
 }
 
 sf::Vector2f Police::getNewGoal()
@@ -95,3 +118,12 @@ sf::Vector2f Police::getNewGoal()
 	return vec2(goal.x*64+Utils::randomInt(8, 56), goal.y*64+Utils::randomInt(8, 56));
 
 }
+
+void Police::Draw() {
+
+    sf::Sprite* spr = m_anim->getCurrentFrame();
+    spr->setPosition(m_position);
+    App->draw(*spr);
+
+}
+

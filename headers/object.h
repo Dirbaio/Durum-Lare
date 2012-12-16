@@ -68,6 +68,8 @@ public:
 
     int m_prio;
 
+    void ensureAnim(std::string anim);
+
 protected:
 	int uniqueID;
 
@@ -90,6 +92,8 @@ protected:
 	bool m_isTakeable; //Items only
 	bool m_isUsable;   //Items and props
 	bool m_isTaken;    //Items only
+
+    std::string currentAnim;
 
 	//Transition* myTransitionX;
 	//Transition* myTransitionY;
