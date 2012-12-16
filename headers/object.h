@@ -36,7 +36,7 @@ public:
 	virtual void setPosition(const sf::Vector2f& pos) {
 		m_position = pos;
 	}
-	sf::Vector2f getPosition() { return m_position; }
+    sf::Vector2f getPosition() { return m_position; }
 	sf::Vector2f getOrigin() { return m_origin; }
 
 	sf::FloatRect getLocalBounds() {
@@ -65,6 +65,8 @@ public:
 	virtual void onTake() {}
 	virtual void onGameTick() {}
 	virtual void onCollide() {}
+
+    int m_prio;
 
 protected:
 	int uniqueID;

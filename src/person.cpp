@@ -53,6 +53,7 @@ void Person::Update() {
     Npc::Update();
 
     if (!alive) {
+        m_prio = -1;
         deathTimer -= input->getFrameTime().asSeconds();
         if (deathTimer < 0) {
             GameReg* gameReg = GameReg::getInstance();
