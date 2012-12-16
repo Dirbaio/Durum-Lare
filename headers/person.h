@@ -22,6 +22,7 @@ class Person : public Npc {
 
     bool is_alive();
 
+
     enum State {
 	STATE_WALKING,
 	STATE_PANIC,
@@ -29,6 +30,7 @@ class Person : public Npc {
     };
 
     int getState() { return m_state; }
+    bool knowsPlayer();
 
   private:
     int ix, iy;
@@ -47,6 +49,7 @@ class Person : public Npc {
     sf::Sprite deadSpr;
     float m_walkingTime;
 
+    bool knows_player;
 
     TransitionLinear* transHit;
 
