@@ -44,7 +44,8 @@ void GraphEng::init() {
         m_currentVideoMode = 0;
 
         //App->Create(m_videoModes[0], "Durum dale");
-        App->create(m_videoModes[0], "Durum dale", sf::Style::Resize | sf::Style::Close);
+        App->create(m_videoModes[0], "Durum dale", sf::Style::Close);
+        //App->create(sf::VideoMode(1024, 768), "Durum dale", sf::Style::Fullscreen);
 
         //worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
        // whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);

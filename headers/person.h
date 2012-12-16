@@ -28,6 +28,7 @@ class Person : public Npc {
     float m_vel;
 
     TransitionLinear* transHit;
+
 };
 
 #endif // PERSON_H

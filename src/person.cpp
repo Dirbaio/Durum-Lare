@@ -5,13 +5,16 @@
 #include "input_engine.h"
 #include "game_reg.h"
 #include "utils.h"
+#include "animation.h"
 
 void Person::Init() {
 
     GraphEng* graphics = GraphEng::getInstance();
 
-    mySpr.setTexture(*graphics->getTexture("img/person.png"));
+    //mySpr.setTexture(*graphics->getTexture("img/person.png"));
     deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
+    deadSpr.setOrigin(deadSpr.getTextureRect().width*0.5f,
+                      deadSpr.getTextureRect().height*0.5f);
 
 
     DISSAPPEAR_TIME = 12.0f;
@@ -20,6 +23,12 @@ void Person::Init() {
     life = 1;
 
     transHit = NULL;
+
+    AnimationData* ad = new AnimationData();
+    ad->Load("anim/calvo.anim");
+    if (m_anim == NULL) m_anim = new Animation();
+    m_anim->setAnimData(ad);
+    m_anim->SelectAnim("Walking");
 
 }
 
@@ -74,6 +83,7 @@ void Person::Update() {
     }
     Character::move(pos);
 
+    m_anim->Update(delta);
 }
 
 void Person::doDeath() {
@@ -98,11 +108,13 @@ void Person::onHit() {
 
 void Person::Draw() {
 
+    sf::Sprite* spr = m_anim->getCurrentFrame();
+
     if (alive) {
-        if (transHit != NULL) mySpr.setScale(sf::Vector2f(transHit->getPos(),transHit->getPos()));
-        else mySpr.setScale(sf::Vector2f(1.0f, 1.0f));
-        mySpr.setPosition(m_position);
-        App->draw(mySpr);
+        if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
+        else spr->setScale(sf::Vector2f(1.0f, 1.0f));
+        spr->setPosition(m_position);
+        App->draw(*spr);
     }
     else {
         deadSpr.setPosition(m_position);

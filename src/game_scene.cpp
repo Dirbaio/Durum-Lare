@@ -161,6 +161,7 @@ void GameScene::Draw() {
 	//Map draw
 	city.render();
 
+ graphics->DrawAll();
 	//Player draw
 	player.Draw();
 

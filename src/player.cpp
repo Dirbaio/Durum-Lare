@@ -17,8 +17,8 @@ void Player::Init() {
 	m_position.x = 0;
 	m_position.y = 0;
 
-	myVel.x = 64*3;
-	myVel.y = 64*3;
+        myVel.x = 64*1.8f;
+        myVel.y = 64*1.8f;
 
 	m_boundbox.height = 16;
 	m_boundbox.width = 16;
@@ -32,6 +32,7 @@ void Player::LoadAnims() {
     ad->Load("anim/takena.anim");
     m_anim = new Animation();
     m_anim->setAnimData(ad);
+
 
 
     //mySpr.setOrigin(animations.getCurrentFrame()->getLocalBounds().width*0.5,
