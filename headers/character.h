@@ -23,6 +23,7 @@ protected:
 	virtual bool onUpCollision(int x, int j)   {return true;}
 	virtual bool onDownCollision(int x, int j) {return true;}
 
+
 };
 
 #endif // CHARACTER_H

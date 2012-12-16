@@ -6,6 +6,8 @@ void Npc::Init() {
 
     //Empty
 
+
+
 }
 
 void Npc::Update() {
@@ -22,6 +24,7 @@ void Npc::Draw() {
 
     mySpr.setPosition(m_position);
     App->draw(mySpr);
+
 
 }
 

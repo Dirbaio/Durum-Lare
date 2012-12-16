@@ -2,6 +2,7 @@
 #define PERSON_H
 
 #include "npc.h"
+#include "transition.h"
 
 class Person : public Npc {
   public:
@@ -14,6 +15,8 @@ class Person : public Npc {
 
     void doDeath();
 
+    void onHit();
+
   private:
 
     float DISSAPPEAR_TIME;
@@ -23,6 +26,8 @@ class Person : public Npc {
     sf::Sprite deadSpr;
     float m_walkingTime;
     float m_vel;
+
+    TransitionLinear* transHit;
 };
 
 #endif // PERSON_H

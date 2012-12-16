@@ -13,12 +13,14 @@ void Person::Init() {
     mySpr.setTexture(*graphics->getTexture("img/person.png"));
     deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
 
-<<<<<<< HEAD
+
     DISSAPPEAR_TIME = 12.0f;
-=======
-    DISSAPPEAR_TIME = 3.0f;
     m_walkingTime = 0.0f;
->>>>>>> cd6355c5d29861d90381e4466ef0207adcd10899
+
+    life = 1;
+
+    transHit = NULL;
+
 }
 
 void Person::Update() {
@@ -63,6 +65,13 @@ void Person::Update() {
 	    break;
     }
 
+    if (transHit != NULL) {
+        transHit->update(delta);
+        if (transHit->reached()) {
+            delete transHit;
+            transHit = NULL;
+        }
+    }
     Character::move(pos);
 
 }
@@ -73,10 +82,27 @@ void Person::doDeath() {
     alive = false;
 }
 
+void Person::onHit() {
+
+    life--;
+
+    if (life <= 0) doDeath();
+
+    if (transHit != NULL) delete transHit;
+    transHit = new TransitionLinear();
+
+    transHit->setPos(m_scale.x);
+    transHit->goPos(m_scale.x*1.5f);
+    transHit->setTime(0.05f);
+}
+
 void Person::Draw() {
 
     if (alive) {
-        Npc::Draw();
+        if (transHit != NULL) mySpr.setScale(sf::Vector2f(transHit->getPos(),transHit->getPos()));
+        else mySpr.setScale(sf::Vector2f(1.0f, 1.0f));
+        mySpr.setPosition(m_position);
+        App->draw(mySpr);
     }
     else {
         deadSpr.setPosition(m_position);

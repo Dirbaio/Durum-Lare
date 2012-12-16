@@ -41,7 +41,7 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-        for (int i = 0; i < 1000; ++i) spawnNewPerson();
+        for (int i = 0; i < 220; ++i) spawnNewPerson();
 	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
 	camera.setCenter(sf::Vector2f(0, 0));
@@ -297,7 +297,7 @@ void GameScene::HandleEvents() {
 				if (!it->is_alive()) continue;
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
-                                    it->doDeath();
+                                    it->onHit();
 				}
 			}
 
