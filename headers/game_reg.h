@@ -8,6 +8,8 @@
 #include "item.h"
 #include "person.h"
 
+#include <list>
+
 class GameReg {
 public:
 	GameReg();
