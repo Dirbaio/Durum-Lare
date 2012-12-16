@@ -211,7 +211,10 @@ void GameScene::Draw() {
 
     sort(v.begin(), v.end(), comp);
     for(int i = 0; i < v.size(); i++)
+    {
         v[i]->Draw();
+        v[i]->DrawMark();
+    }
 
     //Map draw
     city.renderTop();
@@ -336,12 +339,13 @@ void GameScene::HandleEvents() {
 		case EVENT_PLAYER_ACTION: {
 			EventPlayerAction* ev = (EventPlayerAction*)e;
 
-			for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+            player.hitAction();
+
+            for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
 				if (!it->is_alive()) continue;
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
                     it->onHit();
-				    player.hitAction();
 
                     spawnNewMoney(it->getPosition());
 				}

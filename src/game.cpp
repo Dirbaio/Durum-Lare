@@ -13,6 +13,7 @@
 
 sf::RenderWindow* App;
 sf::Time global_frametime;
+sf::Time scene_total_time;
 
 bool Game::Init() {
 
@@ -47,8 +48,9 @@ void Game::Go() {
 
 		while(App->isOpen() && scene->nextScene == NULL) {
 
-			global_frametime = clock1.getElapsedTime();
-			clock1.restart();
+            global_frametime = clock1.getElapsedTime();
+            scene_total_time = sceneTimeElapsed.getElapsedTime();
+            clock1.restart();
 
 			//Framerate
 			if (clock2.getElapsedTime().asMilliseconds() > 100) {
