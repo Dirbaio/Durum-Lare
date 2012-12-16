@@ -26,6 +26,8 @@ void Player::Init() {
         LoadAnims();
         ensureAnim("IdleDown");
 	m_actionDelay = 0;
+
+    myScore = 0;
 }
 
 void Player::LoadAnims() {
@@ -116,7 +118,6 @@ void Player::Draw() {
 
         spr->setPosition(m_position);
         App->draw(*spr);
-
 }
 
 
