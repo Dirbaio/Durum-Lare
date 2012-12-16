@@ -171,6 +171,8 @@ void Character::setGoal(vec2 goal) {
                 p.x = antf.x;
             if(v[i].y == ant.y)
                 p.y = antf.y;
+            ant = v[i];
+            antf = p;
             m_path.push(p);
         }
         m_path.push(goal);
@@ -181,7 +183,6 @@ void Character::moveTowardsGoal()
 {
     if(!m_hasGoal) return;
 
-    City &city = *GameReg::getInstance()->city;
     InputEng* input = InputEng::getInstance();
 
     while(!m_path.empty() && Utils::distance(m_path.front(), m_position) < 2)
