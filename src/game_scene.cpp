@@ -349,14 +349,14 @@ void GameScene::HandleEvents() {
 				if (!it->is_alive()) continue;
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
+
+                    player.setKills(player.getKills()+1);
+
 					it->onHit();
 
-
 					int n_moneys = Utils::randomInt(1, 3);
-
 					for (int i = 0; i < n_moneys; ++i)
 						spawnNewMoney(it->getPosition());
-
 				}
 			}
 

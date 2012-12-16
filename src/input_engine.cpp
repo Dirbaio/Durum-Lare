@@ -25,6 +25,8 @@ InputEng::InputEng()
 
     KeyMap[PLAYER_ACTION] = sf::Keyboard::Space;
 
+    KeyMap[MENU_START] = sf::Keyboard::Return;
+
     KeyMap[EXIT] = sf::Keyboard::Escape;
 
 }

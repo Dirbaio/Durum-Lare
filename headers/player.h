@@ -17,6 +17,9 @@ public:
     int getScore(){return myScore;}
     void setScore(int sc) {myScore = sc;}
 
+    int getKills() {return myKills;}
+    void setKills(int k) {myKills = k;}
+
 private:
 	sf::Sprite mySpr;
 	sf::Vector2f myVel;
@@ -25,6 +28,7 @@ private:
 	float m_actionDelay;
 
     int myScore;
+    int myKills;
 };
 
 #endif // PLAYER_H

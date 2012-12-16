@@ -7,6 +7,7 @@
 
 #include "scene.h"
 #include "game_scene.h"
+#include "menu_scene.h"
 
 #include <iostream>
 #include <sstream>
@@ -24,7 +25,7 @@ bool Game::Init() {
 	graphics = GraphEng::getInstance();
 	graphics->init();
 
-	scene = new GameScene();
+    scene = new MenuScene();
 
 	frames = 0;
 
@@ -88,8 +89,8 @@ void Game::Go() {
 
 			scene->Draw();
 
-			App->draw(fpsText);
-			App->draw(timeText);
+            App->draw(fpsText);
+            //App->draw(timeText);
 			App->display();
 
 			frames++;

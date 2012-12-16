@@ -13,6 +13,7 @@ public:
 		PLAYER_ACTION,
 		CAM_UP, CAM_DOWN, CAM_LEFT, CAM_RIGHT,
 		EXIT, NEW_SCENE,
+        MENU_START,
 		K_SIZE
 	};
 

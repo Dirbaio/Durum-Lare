@@ -119,8 +119,7 @@ void Player::Update() {
             moneyBox.top -= moneyBox.height/6;
             moneyBox.height *= 3;
 
-
-            if (Utils::rectCollision((*it)->getBoundBox(), this->getBoundBox())) {
+            if (Utils::rectCollision((*it)->getBoundBox(), moneyBox)) {
                 (*it)->takeAction();
                 myScore += (*it)->getScore();
             }
@@ -129,7 +128,6 @@ void Player::Update() {
 }
 
 void Player::Draw() {
-
         sf::Sprite* spr = m_anim->getCurrentFrame();
 
         if (spr == NULL) return;

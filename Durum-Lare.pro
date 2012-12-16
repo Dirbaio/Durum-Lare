@@ -24,7 +24,8 @@ SOURCES += src/main.cpp \
     src/transition.cpp \
     src/item.cpp \
     src/hud.cpp \
-    src/item_factory.cpp
+    src/item_factory.cpp \
+    src/menu_scene.cpp
 
 
 
@@ -52,7 +53,8 @@ HEADERS += headers/game.h \
     headers/transition.h \
     headers/item.h \
     headers/hud.h \
-    headers/item_factory.h
+    headers/item_factory.h \
+    headers/menu_scene.h
 
 INCLUDEPATH += src \
                headers
