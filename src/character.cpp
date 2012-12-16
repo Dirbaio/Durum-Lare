@@ -1,5 +1,7 @@
 #include "character.h"
 
+#include <cassert>
+
 #include "utils.h"
 #include "game_reg.h"
 #include "input_engine.h"
@@ -224,6 +226,7 @@ void Character::moveTowardsGoal()
 
 void Character::moveInDir(vec2 dir)
 {
+	assert(Utils::norm(dir) != 0);
     Utils::normalize(dir);
 
     if(dir.x < -0.5f) m_faceDir = FACE_LEFT;

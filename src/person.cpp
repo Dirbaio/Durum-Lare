@@ -156,7 +156,9 @@ void Person::Update() {
                     best = lol;
                 }
             }
-            moveInDir(vec2(best.x*64+ix, best.y*64+iy) - m_position);
+	    vec2 togo = vec2(best.x*64+ix, best.y*64+iy);
+	    vec2 dir  = togo - m_position;
+	    if (Utils::norm(dir) != 0) moveInDir(dir);
         }
         m_vel = velbak;
     }

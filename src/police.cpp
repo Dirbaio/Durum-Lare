@@ -103,8 +103,15 @@ void Police::Update() {
 		else moveTowardsGoal();
 
 		Player* p = GameReg::getInstance()->player;
-		if(city.visible(p->getPosition(),m_position)) {
+		vec2 pos = p->getPosition();
+		vec2 dir_player = pos - m_position;
+		vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
+		Utils::normalize(dir_player);
+		Utils::normalize(dir_facing);
+
+		if(Utils::dot2(dir_player,dir_facing) >= 0.5f && city.visible(p->getPosition(),m_position)) {
 			m_lastPosSawPlayer = p->getPosition();
+			m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
 			m_state = STATE_CHASING_PLAYER;
 		}
 		break;
@@ -126,6 +133,7 @@ void Police::Update() {
 		m_mark = MARK_EXCLAMATION;
 		Player* p = GameReg::getInstance()->player;
 		if(city.visible(p->getPosition(), m_position)) {
+			m_lastDirSawPlayer = p->getPosition()-m_lastPosSawPlayer;
 			m_lastPosSawPlayer = p->getPosition();
 		}
 
@@ -139,12 +147,26 @@ void Police::Update() {
 			}
 			else
 			{
-				m_state = STATE_ALERT;
+				m_state = STATE_PLAYER_LOST;
 			}
 		}
 
 		break;
 	}
+	case STATE_PLAYER_LOST:
+		m_vel = 60.0f;
+		m_mark = MARK_QUESTION;
+		Player* p = GameReg::getInstance()->player;
+		if(city.visible(p->getPosition(), m_position)) {
+			m_lastDirSawPlayer = m_lastPosSawPlayer-p->getPosition();
+			m_lastPosSawPlayer = p->getPosition();
+			m_state = STATE_CHASING_PLAYER;
+		}
+		else
+		{
+			moveInDir(m_lastDirSawPlayer);
+		}
+		break;
 	}
 
 
