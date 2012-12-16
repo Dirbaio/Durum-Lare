@@ -31,6 +31,7 @@ class Person : public Npc {
     int getState() { return m_state; }
 
   private:
+    int ix, iy;
 
     float DISSAPPEAR_TIME;
 
