@@ -14,6 +14,7 @@
 #include "person.h"
 #include "police.h"
 #include <list>
+#include "hud.h"
 
 GameScene::GameScene() {
 
@@ -44,14 +45,20 @@ void GameScene::initThread() {
         for (int i = 0; i < 220; ++i) spawnNewPerson();
 	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
+        //Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
 	camera.zoom(0.5f);
 
-        bg_music.openFromFile("audio/surrounding.ogg");
 
+        //Init background music
+        bg_music.openFromFile("audio/surrounding.ogg");
         bg_music.setLoop(true);;
         bg_music.play();
 
+        //Init hud
+        hud.Init();
+
+        //Le oc
 	initThreadDone = true;
 }
 
@@ -179,7 +186,11 @@ void GameScene::Draw() {
     city.renderTop();
 
     graphics->DrawAll();
-	App->setView(App->getDefaultView());
+
+    App->setView(App->getDefaultView());
+
+    hud.Draw();
+
 
 	/*
 	//Display mouse position

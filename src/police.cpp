@@ -8,6 +8,8 @@ void Police::Init() {
     GraphEng* graphics = GraphEng::getInstance();
 
     mySpr.setTexture(*graphics->getTexture("img/police.png"));
+    mySpr.setOrigin(mySpr.getTextureRect().width*0.5f,
+                      mySpr.getTextureRect().height*0.5f);
 
 }
 

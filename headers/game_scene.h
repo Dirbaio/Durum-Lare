@@ -15,6 +15,8 @@
 #include "person.h"
 #include "police.h"
 
+#include "hud.h"
+
 #include <SFML/Audio.hpp>
 
 class GameScene : public Scene {
@@ -46,8 +48,7 @@ private:
 	sf::View camera;
 	Player player;
 	City city;
-
-
+        Hud hud;
 
 	//Managers
 	std::list<Person> personList;

@@ -42,7 +42,7 @@ void Person::Init() {
     dieSound.setBuffer(dieSoundBuff);
     dieSound.setLoop(false);
     //dieSound.setPitch(1.5f);
-    dieSound.setVolume(100.0f);
+    dieSound.setVolume(10000.0f);
 
 }
 
@@ -121,7 +121,7 @@ void Person::doDeath() {
 
 void Person::onHit() {
 
-    //dieSound.play();
+    dieSound.play();
 
     life--;
 

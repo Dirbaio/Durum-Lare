@@ -51,7 +51,7 @@ void Player::Update() {
 
         if (input->getKeyState(InputEng::PLAYER_UP) && !input->getKeyState(InputEng::PLAYER_DOWN)) {
 		posf.y -= myVel.y*input->getFrameTime().asSeconds();
-                ensureAnim("WalkingDown");
+                ensureAnim("WalkingUp");
                 m_faceDir = FACE_UP;
                 hasMoved = true;
         }
@@ -63,13 +63,13 @@ void Player::Update() {
         }
         if (input->getKeyState(InputEng::PLAYER_LEFT) && !input->getKeyState(InputEng::PLAYER_RIGHT)) {
 		posf.x -= myVel.x*input->getFrameTime().asSeconds();
-                ensureAnim("WalkingDown");
+                ensureAnim("WalkingLeft");
                 m_faceDir = FACE_LEFT;
                 hasMoved = true;
         }
         if (input->getKeyState(InputEng::PLAYER_RIGHT) && !input->getKeyState(InputEng::PLAYER_LEFT)) {
 		posf.x += myVel.x*input->getFrameTime().asSeconds();
-                ensureAnim("WalkingDown");
+                ensureAnim("WalkingRight");
                 m_faceDir = FACE_RIGHT;
                 hasMoved = true;
         }
