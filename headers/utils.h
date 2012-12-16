@@ -39,6 +39,10 @@ struct Utils {
         v /= norm(v);
     }
 
+    static float dot2(vec2 a, vec2 b) {
+        return a.x*b.x + a.y*b.y;
+    }
+
 	static bool rectTouchesCircle(const sf::FloatRect& r,
                       const vec2& c, const float& rad) {
         vec2 cDist;

@@ -42,7 +42,7 @@ void Player::LoadAnims() {
 
 void Player::hitAction()
 {
-	m_actionDelay = 0.3f;
+    m_actionDelay = 0.18f;
 }
 
 void Player::Update() {

@@ -129,7 +129,7 @@ void Map::load(vector<vector<bool> > v)
             t.s.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE/2);
 
             t.s2.setTexture(tex);
-            t.s2.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE*3/2, TILESIZE, TILESIZE/2));
+            t.s2.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE*3/2, TILESIZE, TILESIZE));
             t.s2.setOrigin(TILESIZE/2, TILESIZE/2);
             t.s2.setRotation(t.rot*90);
             t.s2.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE);

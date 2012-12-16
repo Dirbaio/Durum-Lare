@@ -24,6 +24,9 @@ void Person::Init() {
     m_walkingTime = 0.0f;
 
     life = 1;
+    m_startPanicTime = 10.0f;
+
+    m_state = STATE_WALKING;
 
     transHit = NULL;
 
@@ -53,6 +56,7 @@ void Person::Update() {
     if (!alive) {
         m_prio = -1;
         deathTimer -= input->getFrameTime().asSeconds();
+        m_state = STATE_DEAD;
         if (deathTimer < 0) {
             GameReg* gameReg = GameReg::getInstance();
             gameReg->eventQueue.push(new EventDeletePerson(this));
@@ -61,6 +65,33 @@ void Person::Update() {
     }
 
     float delta = input->getFrameTime().asSeconds();
+
+    std::list<Person>* personList = GameReg::getInstance()->personList;
+
+
+    if (m_panicTime > 0) m_panicTime -= delta;
+    else m_state = STATE_WALKING;
+
+    vec2 position = m_position;
+    City &city = *GameReg::getInstance()->city;
+
+    if (m_state == STATE_WALKING) {
+        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++) {
+            Person &person = *it;
+            if (person.alive) continue;
+            else {
+                vec2 pos = person.m_position;
+                vec2 dir_corpse = pos-position;
+                vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
+                Utils::normalize(dir_corpse);
+                Utils::normalize(dir_facing);
+                if (city.visible(pos,position) && Utils::dot2(dir_corpse,dir_facing) >= 0.5f) {
+                    m_state = STATE_PANIC;
+                    m_panicTime = m_startPanicTime;
+                }
+            }
+        }
+    }
 
     //LE OLD CODE
     /*
@@ -102,14 +133,16 @@ void Person::Update() {
     Character::move(pos);
     */
 
-    City &city = *GameReg::getInstance()->city;
+    if (m_state == STATE_WALKING) {
+        City &city = *GameReg::getInstance()->city;
 
-    if(!m_hasGoal)
-        setGoal(city.getRandomStreet());
-    moveTowardsGoal();
+        if(!m_hasGoal)
+            setGoal(city.getRandomStreet());
+        moveTowardsGoal();
 
-    if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
-    if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
+        if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
+        if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
+    }
 
 
 }

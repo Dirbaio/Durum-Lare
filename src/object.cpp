@@ -32,6 +32,8 @@ Object::Object() :
     m_boundbox.width = 16;
     m_boundbox.height = 16;
 
+    m_faceDir = FACE_RIGHT;
+
     m_anim = NULL;
     m_prio = 0;
 }
