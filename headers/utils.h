@@ -7,28 +7,41 @@
 #include "defines.h"
 #include <iostream>
 
+typedef sf::Vector2f vec2;
+typedef sf::Vector2i vec2i;
+
 struct Utils {
 
 	//Returns random between [min, max]
 	static int randomInt(int min, int max) {
-		if (min == max) return min;
-
+        if (min >= max) return min;
+/*
 		if (min < 0) {
 			int dist = -min;
 			min = 0;
 			max += dist;
 			return (rand()%((max-min)+1) + min) - dist;
-		}
+        }*/
 		return (rand()%((max-min)+1)) + min;
 	}
 
-	static float vec2fToDeg(sf::Vector2f vector) {
+    static float vec2fToDeg(vec2 vector) {
 		return (atan(vector.y/vector.x))*M_PI*2.0f;
 	}
 
+    static float norm(vec2 v)
+    {
+        return sqrt(v.x*v.x + v.y*v.y);
+    }
+
+    static void normalize(vec2& v)
+    {
+        v /= norm(v);
+    }
+
 	static bool rectTouchesCircle(const sf::FloatRect& r,
-				      const sf::Vector2f& c, const float& rad) {
-		sf::Vector2f cDist;
+                      const vec2& c, const float& rad) {
+        vec2 cDist;
 		cDist.x = abs(c.x - r.left);
 		cDist.y = abs(c.y - r.top);
 
@@ -45,7 +58,7 @@ struct Utils {
 
 	}
 
-	static float distance(const sf::Vector2f& p1, const sf::Vector2f& p2) {
+    static float distance(const vec2& p1, const vec2& p2) {
 		return sqrt( (p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y) );
 	}
 
@@ -68,7 +81,7 @@ struct Utils {
 
 
 	//Returns true if point r is counterclockwise over line pq
-	static bool orientationTest(sf::Vector2f p, sf::Vector2f q, sf::Vector2f r) {
+    static bool orientationTest(vec2 p, vec2 q, vec2 r) {
 		return (((p.x-r.x)*(q.y-r.y) - (q.x-r.x)*(p.y-r.y)) > 0 );
 	}
 
@@ -108,8 +121,8 @@ struct Utils {
 	}
 */
 	//Returns unitary vector of direction (from) -> (to)
-	static sf::Vector2f getDirection(const sf::Vector2f& from, const sf::Vector2f& to) {
-		sf::Vector2f direction = to - from;
+    static vec2 getDirection(const vec2& from, const vec2& to) {
+        vec2 direction = to - from;
 
 		float magnitude = sqrt((direction.x*direction.x)+(direction.y*direction.y));
 		direction.x = direction.x/magnitude;

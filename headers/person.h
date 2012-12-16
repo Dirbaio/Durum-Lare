@@ -30,7 +30,6 @@ class Person : public Npc {
 
     sf::Sprite deadSpr;
     float m_walkingTime;
-    float m_vel;
 
     TransitionLinear* transHit;
 

@@ -45,23 +45,13 @@ bool City::occupedRect(sf::IntRect rect) {
 }
 
 sf::Vector2f City::getRandomStreet() {
-        while(1) {
-		int x = rand()%(map.m[0].size()*32);
-		int y = rand()%(map.m.size()*32);
-		int w=32, h=32;
-		sf::IntRect rect(x, y, w, h);
-		//std::cerr << x << " " << y << " " << w << " " << h << std::endl;
-                if (!occupedRect(rect)) return sf::Vector2f(x+w/2., y+h/2.);
-
-
-        }
-
-
-        //int dX = Utils::randomInt(-12, 28);
-        //int dY = Utils::randomInt(-12, 28);
-        //return sf::Vector2f(pos.x*64 + dX, pos.y*64 + dY);
-
-
+    while(1) {
+        int x = rand()%(map.m[0].size()*64);
+        int y = rand()%(map.m.size()*64);
+        int w=16, h=16;
+        sf::IntRect rect(x, y, w, h);
+        if (!occupedRect(rect)) return sf::Vector2f(x+w/2., y+h/2.);
+    }
 }
 
 sf::Vector2i City::absoluteToTilePos(const sf::Vector2f &pos)
