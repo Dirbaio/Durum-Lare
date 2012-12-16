@@ -31,6 +31,7 @@ public:
 	float tileLeftPos(int x);
 	float tileRightPos(int x);
 
+    bool visible(sf::Vector2f from, sf::Vector2f to);
 private:
 	int tw, th;
 	Map map;
