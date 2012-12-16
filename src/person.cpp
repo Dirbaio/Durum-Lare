@@ -28,8 +28,16 @@ void Person::Init() {
 
     AnimationData* ad = new AnimationData();
 
-    if (Utils::randomInt(0, 1)) ad->Load("anim/calvo.anim");
-    else ad->Load("anim/tupe.anim");
+    int rand = Utils::randomInt(0, 4);
+
+    if (rand == 0) ad->Load("anim/calvo.anim");
+    else if (rand == 1) ad->Load("anim/tupe.anim");
+    else if (rand == 2) ad->Load("anim/gordo.anim");
+    else if (rand == 3) ad->Load("anim/moderno.anim");
+    else {
+        if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
+        else  ad->Load("anim/morenaca.anim");
+    }
 
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
