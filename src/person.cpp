@@ -49,43 +49,65 @@ void Person::Update() {
     InputEng* input = InputEng::getInstance();
     float delta = input->getFrameTime().asSeconds();
 
+    City &city = *GameReg::getInstance()->city;
+    std::list<Person>* personList = GameReg::getInstance()->personList;
+
     switch(m_state)
     {
     case STATE_WALKING:
     {
         m_mark = MARK_NONE;
-        vec2 position = m_position;
-        City &city = *GameReg::getInstance()->city;
 
         if(!m_hasGoal)
             setGoal(city.getRandomStreet());
         moveTowardsGoal();
 
-        std::list<Person>* personList = GameReg::getInstance()->personList;
-        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++) {
-            Person &person = *it;
-            if (person.is_alive()) continue;
-            else {
-                vec2 pos = person.m_position;
-                vec2 dir_corpse = pos-position;
-                vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
-                Utils::normalize(dir_corpse);
-                Utils::normalize(dir_facing);
-                if (city.visible(pos,position) && Utils::dot2(dir_corpse,dir_facing) >= 0.5f) {
-                    m_state = STATE_PANIC;
-                    m_panicTime = m_startPanicTime;
-                }
+        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++)
+            if (!it->is_alive() && canSee(it->m_position))
+            {
+                m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
             }
-        }
 
         if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
         if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
     }
         break;
     case STATE_PANIC:
+    {
         if (m_panicTime > 0) m_panicTime -= delta;
         else m_state = STATE_WALKING;
         m_mark = MARK_EXCLAMATION;
+
+        vec2i now = city.absoluteToTilePos(m_position);
+        vec2i best = now;
+        float bestd = 0;
+        for(int i = 0; i < 4; i++)
+        {
+            vec2i lol = now + dirInc[i];
+            if(city.occupedIJ(lol.x, lol.y)) continue;
+
+            float d = 1000000;
+
+            for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++)
+                if (!it->is_alive())
+                {
+                    float d2 = Utils::distance(vec2(lol.x*64+32, lol.y*64+32), it->m_position);
+                    d = min(d, d2);
+                }
+
+            cout<<d<<endl;
+            if(d > bestd)
+            {
+                bestd = d;
+                best = lol;
+            }
+        }
+        float velbak = m_vel;
+        m_vel = 70;
+        moveInDir(vec2(best.x*64+32, best.y*64+32) - m_position);
+        m_vel = velbak;
+    }
         break;
     case STATE_DEAD:
         m_mark = MARK_NONE;
@@ -97,45 +119,6 @@ void Person::Update() {
         }
         break;
     }
-
-    //LE OLD CODE
-    /*
-    m_walkingTime -= delta;
-
-    if (m_walkingTime < 0) {
-        m_faceDir = Utils::randomInt(0, FACE_SIZE-1);
-        m_walkingTime = Utils::randomInt(0, 2000)/1000.0f;
-    }
-
-    sf::Vector2f pos = m_position;
-    m_vel = 16.0f;
-
-    switch (m_faceDir) {
-    case FACE_UP:
-        pos.y -= delta * m_vel;
-        break;
-    case FACE_DOWN:
-        pos.y += delta * m_vel;
-        break;
-    case FACE_LEFT:
-        pos.x -= delta * m_vel;
-            flag_draw_mirror = true;
-        break;
-    case FACE_RIGHT:
-        pos.x += delta * m_vel;
-            flag_draw_mirror = false;
-        break;
-    }
-
-    if (transHit != NULL) {
-        transHit->update(delta);
-        if (transHit->reached()) {
-            delete transHit;
-            transHit = NULL;
-        }
-    }
-    Character::move(pos);
-    */
 }
 
 void Person::doDeath() {

@@ -52,7 +52,7 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-    for (int i = 0; i < 220; ++i) spawnNewPerson();
+    for (int i = 0; i < 620; ++i) spawnNewPerson();
 	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
         //Init Camera

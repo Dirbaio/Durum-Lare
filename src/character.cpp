@@ -208,7 +208,6 @@ void Character::moveTowardsGoal()
 {
     if(!m_hasGoal) return;
 
-    InputEng* input = InputEng::getInstance();
 
     while(!m_path.empty() && Utils::distance(m_path.front(), m_position) < 2)
         m_path.pop();
@@ -220,8 +219,11 @@ void Character::moveTowardsGoal()
     }
 
     vec2 to = m_path.front();
+    moveInDir(to-m_position);
+}
 
-    vec2 dir = to-m_position;
+void Character::moveInDir(vec2 dir)
+{
     Utils::normalize(dir);
 
     if(dir.x < -0.5f) m_faceDir = FACE_LEFT;
@@ -229,6 +231,19 @@ void Character::moveTowardsGoal()
     if(dir.x >  0.5f) m_faceDir = FACE_RIGHT;
     if(dir.y >  0.5f) m_faceDir = FACE_DOWN;
 
+    InputEng* input = InputEng::getInstance();
     float delta = input->getFrameTime().asSeconds();
     move(m_position + dir*delta*m_vel);
+}
+
+bool Character::canSee(vec2 pos)
+{
+
+    vec2 dir_corpse = pos-m_position;
+    vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
+    Utils::normalize(dir_corpse);
+    Utils::normalize(dir_facing);
+
+    City &city = *GameReg::getInstance()->city;
+    return city.visible(pos,m_position) && Utils::dot2(dir_corpse,dir_facing) >= 0.5f;
 }
