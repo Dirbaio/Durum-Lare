@@ -391,6 +391,13 @@ void GameScene::HandleEvents() {
             break;
         }
 
+        case EVENT_GAME_OVER: {
+            EventGameOver* ev = (EventGameOve*)e;
+
+            //To-do
+
+        }
+
 			/*
 		case EVENT_MOVE: {
 			EventMove* ev = (EventMove*)e;
