@@ -15,6 +15,7 @@ class Police : public Npc {
   private:
 
     sf::Vector2f getNewGoal();
+    void lookAtRandomPlace();
 
     enum State  {
 	    STATE_PATROL_MOVING,
@@ -25,6 +26,7 @@ class Police : public Npc {
 
     State m_state;
     float m_watchingTime;
+    float m_watchingTimeFacing;
 };
 
 #endif // POLICE_H

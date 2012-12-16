@@ -28,28 +28,32 @@ void Police::Update() {
 
 	Npc::Update();
 	InputEng* input = InputEng::getInstance();
+	City &city = *GameReg::getInstance()->city;
 
 	switch(m_state)
 	{
 	case STATE_PATROL_MOVING:
 		if (!m_hasGoal) {
 			m_state = STATE_PATROL_WATCHING;
-			m_watchingTime = Utils::randomInt(4, 6);
-			m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
+			m_watchingTime = Utils::randomInt(2, 6);
+			lookAtRandomPlace();
+			m_watchingTimeFacing = Utils::randomInt(1, 2);
 			setGoal(getNewGoal());
 		}
 		else moveTowardsGoal();
 		break;
 	case STATE_PATROL_WATCHING:
 		m_watchingTime -= input->getFrameTime().asSeconds();
+		m_watchingTimeFacing -= input->getFrameTime().asSeconds();
 
 		if (m_watchingTime < 0) {
 			setGoal(getNewGoal());
 			m_state = STATE_PATROL_MOVING;
 		}
-		else
-		{
-			m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
+
+		if (m_watchingTimeFacing < 0) {
+			lookAtRandomPlace();
+			m_watchingTimeFacing = Utils::randomInt(1, 2);
 		}
 
 		break;
@@ -75,7 +79,7 @@ void Police::Update() {
 
 sf::Vector2f Police::getNewGoal()
 {
-	int distGoal = 3;
+	int distGoal = 5;
 	std::vector<vec2i> goals;
 
 	City &city = *GameReg::getInstance()->city;
@@ -83,40 +87,47 @@ sf::Vector2f Police::getNewGoal()
 
 	vector<vector<int> > vis(city.getTW(), vector<int>(city.getTH(), -1));
 
-	int dx[] = {0, 0, 1, -1};
-	int dy[] = {1, -1, 0, 0};
-
 	queue<vec2i> q;
 	q.push(from);
 	vis[from.x][from.y] = 0;
 	while(!q.empty())
 	{
-		vec2i& v = q.front();
-		int x = v.x;
-		int y = v.y;
-		int dist = vis[x][x];
+		vec2i v = q.front();
+		int dist = vis[v.x][v.y];
 		q.pop();
 
-		if (distGoal >= dist) goals.push_back(v);
-		else if (distGoal < dist) continue;
+		if (dist > distGoal) continue;
+		else goals.push_back(v);
 
-		dist++;
 		for(int i = 0; i < 4; i++)
 		{
-			int x2 = x + dx[i];
-			int y2 = y + dy[i];
-			if(x2 < 0 || x2 >= city.getTW()) continue;
-			if(y2 < 0 || y2 >= city.getTH()) continue;
-			if(city.occupedIJ(x2, y2)) continue;
-			if(vis[x2][y2] != -1) continue;
-			vis[x2][y2] = dist;
-			q.push(vec2i(x2, y2));
+			vec2i v2 = v + dirInc[i];
+			if(v2.x < 0 || v2.x >= city.getTW()) continue;
+			if(v2.y < 0 || v2.y >= city.getTH()) continue;
+			if(city.occupedIJ(v2.x, v2.y)) continue;
+			if(vis[v2.x][v2.y] != -1) continue;
+			vis[v2.x][v2.y] = dist+1;
+			q.push(v2);
 		}
 	}
 
 	vec2i goal = goals[Utils::randomInt(0, goals.size()-2)];
 	return vec2(goal.x*64+Utils::randomInt(8, 56), goal.y*64+Utils::randomInt(8, 56));
 
+}
+
+void Police::lookAtRandomPlace()
+{
+	City &city = *GameReg::getInstance()->city;
+	vec2i v = city.absoluteToTilePos(m_position);
+
+	int i = 0;
+	while(i < 4) {
+		m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
+		vec2i v2 = v + dirInc[m_faceDir];
+		if(!city.occupedIJ(v2.x, v2.y)) break;
+		i++;
+	}
 }
 
 void Police::Draw() {
