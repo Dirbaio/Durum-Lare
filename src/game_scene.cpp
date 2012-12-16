@@ -428,11 +428,3 @@ void GameScene::HandleEvents() {
 		delete e;
 	}
 }
-
-std::list<Person> GameScene::getPersonList() {
-    return personList;
-}
-
-std::list<Police> GameScene::getPoliceList() {
-    return policeList;
-}
