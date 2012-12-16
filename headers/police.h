@@ -28,6 +28,7 @@ class Police : public Npc {
     State m_state;
     float m_watchingTime;
     float m_watchingTimeFacing;
+    sf::Vector2f m_lastPosSawPlayer;
 };
 
 #endif // POLICE_H

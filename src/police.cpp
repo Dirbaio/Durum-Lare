@@ -94,22 +94,57 @@ void Police::Update() {
 
 		break;
 	case STATE_ALERT:
+	{
 		m_vel = 60.0f;
 		m_mark = MARK_EXCLAMATION;
 		if (!m_hasGoal) {
 			setGoal(getNewGoal());
 		}
 		else moveTowardsGoal();
+
+		Player* p = GameReg::getInstance()->player;
+		if(city.visible(p->getPosition(),m_position)) {
+			m_lastPosSawPlayer = p->getPosition();
+			m_state = STATE_CHASING_PLAYER;
+		}
 		break;
+	}
 	case STATE_CONFUSE:
+	{
 		m_vel = 30.0f;
 		m_mark = MARK_QUESTION;
 		if (!m_hasGoal) {
 			setGoal(getNewGoal());
-			m_state = STATE_PATROL_MOVING;
+			m_state = STATE_ALERT;
 		}
 		else moveTowardsGoal();
 		break;
+	}
+	case STATE_CHASING_PLAYER:
+	{
+		m_vel = 75.0f;
+		m_mark = MARK_EXCLAMATION;
+		Player* p = GameReg::getInstance()->player;
+		if(city.visible(p->getPosition(), m_position)) {
+			m_lastPosSawPlayer = p->getPosition();
+		}
+
+		moveInDir(m_lastPosSawPlayer-m_position);
+		sf::FloatRect rect = getBoundBox();
+		if (rect.contains(m_lastPosSawPlayer))
+		{
+			if (rect.intersects(p->getBoundBox()))
+			{
+				GameReg::getInstance()->eventQueue.push(new EventGameOver());
+			}
+			else
+			{
+				m_state = STATE_ALERT;
+			}
+		}
+
+		break;
+	}
 	}
 
 
