@@ -7,6 +7,12 @@
 
 using namespace std;
 
+enum CharacterMark {
+    MARK_NONE,
+    MARK_EXCLAMATION,
+    MARK_QUESTION
+};
+
 class Character : public Object
 {
 public:
@@ -32,6 +38,10 @@ protected:
 	bool m_hasGoal;
 
 	float m_vel;
+    CharacterMark m_mark;
+    sf::Sprite spriteExc, spriteQuest;
+
+    void DrawMark();
 
 	void setGoal(vec2 goal);
 	void moveTowardsGoal();

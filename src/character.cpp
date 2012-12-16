@@ -3,11 +3,18 @@
 #include "utils.h"
 #include "game_reg.h"
 #include "input_engine.h"
-
+#include "graphics_engine.h"
 Character::Character()
 {
     m_hasGoal = false;
+    m_mark = MARK_NONE;
     m_vel = 16.0f;
+
+    GraphEng* graphics = GraphEng::getInstance();
+    spriteExc.setTexture(*graphics->getTexture("img/exc_mark.png"));
+    spriteExc.setOrigin(8, 8);
+    spriteQuest.setTexture(*graphics->getTexture("img/int_mark.png"));
+    spriteQuest.setOrigin(8, 8);
 }
 
 void Character::move(sf::Vector2f posf)
@@ -109,6 +116,23 @@ horz_exit:
 	m_position = posf;
 }
 
+void Character::DrawMark()
+{
+    float t = scene_total_time.asSeconds() * 10;
+    t = sin(t) * 3;
+    if(m_mark == MARK_EXCLAMATION)
+    {
+        spriteExc.setScale(1+t/10, 1-t/20);
+        spriteExc.setPosition(m_position+vec2(0, -22+t));
+        App->draw(spriteExc);
+    }
+    else if(m_mark == MARK_QUESTION)
+    {
+        spriteQuest.setScale(1+t/10, 1-t/20);
+        spriteQuest.setPosition(m_position+vec2(0, -22+t));
+        App->draw(spriteQuest);
+    }
+}
 
 void Character::setGoal(vec2 goal) {
     m_goal = goal;
