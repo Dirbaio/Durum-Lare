@@ -2,6 +2,7 @@
 #include "graphics_engine.h"
 
 #include "game_reg.h"
+#include "input_engine.h"
 #include "defines.h"
 
 void Police::Init() {
@@ -14,27 +15,44 @@ void Police::Init() {
 
 	m_vel = 16.0f*1.25f;
 	m_watchingTime = 0;
-
+	m_state = STATE_PATROL_WATCHING;
 }
 
 void Police::Update() {
 
 	Npc::Update();
+	InputEng* input = InputEng::getInstance();
 
 	switch(m_state)
 	{
 	case STATE_PATROL_MOVING:
 		if (!m_hasGoal) {
-
+			m_state = STATE_PATROL_WATCHING;
+			m_watchingTime = Utils::randomInt(4, 6);
+			m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
+			setGoal(getNewGoal());
 		}
+		else moveTowardsGoal();
 		break;
+	case STATE_PATROL_WATCHING:
+		m_watchingTime -= input->getFrameTime().asSeconds();
 
+		if (m_watchingTime < 0) {
+			setGoal(getNewGoal());
+			m_state = STATE_PATROL_MOVING;
+		}
+		else
+		{
+			m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
+		}
+
+		break;
 	}
 }
 
 sf::Vector2f Police::getNewGoal()
 {
-	int distGoal = Utils::randomInt(1, 5);
+	int distGoal = 3;
 	std::vector<vec2i> goals;
 
 	City &city = *GameReg::getInstance()->city;
@@ -56,7 +74,7 @@ sf::Vector2f Police::getNewGoal()
 		int dist = vis[x][x];
 		q.pop();
 
-		if (distGoal == dist) goals.push_back(v);
+		if (distGoal >= dist) goals.push_back(v);
 		else if (distGoal < dist) continue;
 
 		dist++;
@@ -73,7 +91,7 @@ sf::Vector2f Police::getNewGoal()
 		}
 	}
 
-	vec2i goal = goals[Utils::randomInt(0, goals.size()-1)];
+	vec2i goal = goals[Utils::randomInt(0, goals.size()-2)];
 	return vec2(goal.x*64+Utils::randomInt(8, 56), goal.y*64+Utils::randomInt(8, 56));
 
 }

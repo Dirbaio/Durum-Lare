@@ -43,7 +43,7 @@ void Person::Init() {
     dieSound.setLoop(false);
     //dieSound.setPitch(1.5f);
     dieSound.setVolume(10000.0f);
-
+    m_vel = 16.0f*1.25f * Utils::randomInt(750, 2000)/1000.0f;
 }
 
 void Person::Update() {
@@ -106,7 +106,6 @@ void Person::Update() {
 
     City &city = *GameReg::getInstance()->city;
 
-    m_vel = 16.0f*1.25f;
     if(!m_hasGoal)
         setGoal(city.getRandomStreet());
     moveTowardsGoal();

@@ -316,6 +316,7 @@ void GameScene::HandleEvents() {
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
                                     it->onHit();
+				    player.hitAction();
 				}
 			}
 
