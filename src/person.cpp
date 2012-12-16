@@ -12,20 +12,16 @@
 void Person::Init() {
 
     GraphEng* graphics = GraphEng::getInstance();
-
-
     //mySpr.setTexture(*graphics->getTexture("img/person.png"));
     deadSpr.setTexture(*graphics->getTexture("img/person_dead.png"));
     deadSpr.setOrigin(deadSpr.getTextureRect().width*0.5f,
                       deadSpr.getTextureRect().height*0.5f);
-
 
     DISSAPPEAR_TIME = 12.0f;
     m_walkingTime = 0.0f;
 
     life = 1;
     m_startPanicTime = 10.0f;
-
     m_state = STATE_WALKING;
 
     transHit = NULL;
@@ -48,37 +44,27 @@ void Person::Init() {
 }
 
 void Person::Update() {
-
-    InputEng* input = InputEng::getInstance();
-
     Npc::Update();
 
-    if (!alive) {
-        m_prio = -1;
-        deathTimer -= input->getFrameTime().asSeconds();
-        m_state = STATE_DEAD;
-        if (deathTimer < 0) {
-            GameReg* gameReg = GameReg::getInstance();
-            gameReg->eventQueue.push(new EventDeletePerson(this));
-        }
-        return;
-    }
-
+    InputEng* input = InputEng::getInstance();
     float delta = input->getFrameTime().asSeconds();
 
-    std::list<Person>* personList = GameReg::getInstance()->personList;
+    switch(m_state)
+    {
+    case STATE_WALKING:
+    {
+        m_mark = MARK_NONE;
+        vec2 position = m_position;
+        City &city = *GameReg::getInstance()->city;
 
+        if(!m_hasGoal)
+            setGoal(city.getRandomStreet());
+        moveTowardsGoal();
 
-    if (m_panicTime > 0) m_panicTime -= delta;
-    else m_state = STATE_WALKING;
-
-    vec2 position = m_position;
-    City &city = *GameReg::getInstance()->city;
-
-    if (m_state == STATE_WALKING) {
+        std::list<Person>* personList = GameReg::getInstance()->personList;
         for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++) {
             Person &person = *it;
-            if (person.alive) continue;
+            if (person.is_alive()) continue;
             else {
                 vec2 pos = person.m_position;
                 vec2 dir_corpse = pos-position;
@@ -91,16 +77,34 @@ void Person::Update() {
                 }
             }
         }
+
+        if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
+        if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
+    }
+        break;
+    case STATE_PANIC:
+        if (m_panicTime > 0) m_panicTime -= delta;
+        else m_state = STATE_WALKING;
+        m_mark = MARK_EXCLAMATION;
+        break;
+    case STATE_DEAD:
+        m_mark = MARK_NONE;
+        m_prio = -1;
+        deathTimer -= input->getFrameTime().asSeconds();
+        if (deathTimer < 0) {
+            GameReg* gameReg = GameReg::getInstance();
+            gameReg->eventQueue.push(new EventDeletePerson(this));
+        }
+        break;
     }
 
     //LE OLD CODE
     /*
-
     m_walkingTime -= delta;
 
     if (m_walkingTime < 0) {
-	    m_faceDir = Utils::randomInt(0, FACE_SIZE-1);
-	    m_walkingTime = Utils::randomInt(0, 2000)/1000.0f;
+        m_faceDir = Utils::randomInt(0, FACE_SIZE-1);
+        m_walkingTime = Utils::randomInt(0, 2000)/1000.0f;
     }
 
     sf::Vector2f pos = m_position;
@@ -108,19 +112,19 @@ void Person::Update() {
 
     switch (m_faceDir) {
     case FACE_UP:
-	    pos.y -= delta * m_vel;
-	    break;
+        pos.y -= delta * m_vel;
+        break;
     case FACE_DOWN:
-	    pos.y += delta * m_vel;
-	    break;
+        pos.y += delta * m_vel;
+        break;
     case FACE_LEFT:
-	    pos.x -= delta * m_vel;
+        pos.x -= delta * m_vel;
             flag_draw_mirror = true;
-	    break;
+        break;
     case FACE_RIGHT:
-	    pos.x += delta * m_vel;
+        pos.x += delta * m_vel;
             flag_draw_mirror = false;
-	    break;
+        break;
     }
 
     if (transHit != NULL) {
@@ -132,25 +136,12 @@ void Person::Update() {
     }
     Character::move(pos);
     */
-
-    if (m_state == STATE_WALKING) {
-        City &city = *GameReg::getInstance()->city;
-
-        if(!m_hasGoal)
-            setGoal(city.getRandomStreet());
-        moveTowardsGoal();
-
-        if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
-        if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
-    }
-
-
 }
 
 void Person::doDeath() {
 
     deathTimer = DISSAPPEAR_TIME;
-    alive = false;
+    m_state = STATE_DEAD;
 }
 
 void Person::onHit() {
@@ -173,7 +164,7 @@ void Person::Draw() {
 
     sf::Sprite* spr = m_anim->getCurrentFrame();
 
-    if (alive) {
+    if (m_state != STATE_DEAD) {
         if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
         else spr->setScale(sf::Vector2f(1.0f, 1.0f));
         spr->setPosition(m_position);
@@ -185,4 +176,9 @@ void Person::Draw() {
         deadSpr.setPosition(m_position);
         App->draw(deadSpr);
     }
+}
+
+bool Person::is_alive()
+{
+    return m_state != STATE_DEAD;
 }

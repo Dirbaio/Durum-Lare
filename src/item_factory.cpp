@@ -22,7 +22,7 @@ namespace ItemFactory{
                 spr.setTexture(*graphics->getTexture("img/money.png"));
                 spr.setOrigin(spr.getTextureRect().width/2, spr.getTextureRect().height/2);
                 item->setSprite(spr);
-                item->setScore(Utils::randomInt(1, 10));
+                item->setScore(Utils::randomInt(1, 3));
                 return item;
 
                 break;

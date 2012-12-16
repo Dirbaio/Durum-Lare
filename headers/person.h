@@ -15,12 +15,12 @@ class Person : public Npc {
 
     void Init();
     void Update();
-
     void Draw();
 
     void doDeath();
-
     void onHit();
+
+    bool is_alive();
 
   private:
 

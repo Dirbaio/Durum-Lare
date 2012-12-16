@@ -4,32 +4,19 @@
 #include "input_engine.h"
 
 void Npc::Init() {
-
     //Empty
-
-
-
 }
 
 void Npc::Update() {
-
     updateBBox();
-
-
-
     m_anim->Update(InputEng::getInstance()->getFrameTime().asSeconds());
-
 }
 
 void Npc::Draw() {
-
-    if (!alive) return;
+    if (is_alive()) return;
 
     //sf::Sprite* spr = m_anim->getCurrentFrame();
-
     mySpr.setPosition(m_position);
     App->draw(mySpr);
-
-
 }
 

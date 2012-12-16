@@ -114,7 +114,7 @@ void Player::Update() {
         if ((*it)->isTakeable()) {
             if (Utils::rectCollision((*it)->getBoundBox(), this->getBoundBox())) {
                 (*it)->takeAction();
-                myScore += (*it)->getScore();
+                 myScore += (*it)->getScore();
             }
         }
     }
