@@ -71,13 +71,13 @@ void Player::Update() {
             }
             if (input->getKeyState(InputEng::PLAYER_LEFT) && !input->getKeyState(InputEng::PLAYER_RIGHT)) {
             posf.x -= myVel.x*input->getFrameTime().asSeconds();
-                    ensureAnim("WalkingLeft");
+		    if(!hasMoved) ensureAnim("WalkingLeft");
                     m_faceDir = FACE_LEFT;
                     hasMoved = true;
             }
             if (input->getKeyState(InputEng::PLAYER_RIGHT) && !input->getKeyState(InputEng::PLAYER_LEFT)) {
             posf.x += myVel.x*input->getFrameTime().asSeconds();
-                    ensureAnim("WalkingRight");
+		    if(!hasMoved) ensureAnim("WalkingRight");
                     m_faceDir = FACE_RIGHT;
                     hasMoved = true;
             }

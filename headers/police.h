@@ -22,13 +22,15 @@ class Police : public Npc {
 	    STATE_PATROL_WATCHING,
 	    STATE_ALERT,
 	    STATE_CONFUSE,
-	    STATE_CHASING_PLAYER
+	    STATE_CHASING_PLAYER,
+	    STATE_PLAYER_LOST
     };
 
     State m_state;
     float m_watchingTime;
     float m_watchingTimeFacing;
     sf::Vector2f m_lastPosSawPlayer;
+    sf::Vector2f m_lastDirSawPlayer;
 };
 
 #endif // POLICE_H
