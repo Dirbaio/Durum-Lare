@@ -22,8 +22,13 @@ SOURCES += src/main.cpp \
     src/animation.cpp \
     src/character.cpp \
     src/transition.cpp \
+<<<<<<< HEAD
     src/item.cpp \
     src/hud.cpp
+=======
+    src/particleemitter.cpp \
+    src/particle.cpp
+>>>>>>> 5530fbb018159954fa2055abe2b34f5010240114
 
 HEADERS += headers/game.h \
     headers/game_states.h \
@@ -47,8 +52,13 @@ HEADERS += headers/game.h \
     headers/animation.h \
     headers/character.h \
     headers/transition.h \
+<<<<<<< HEAD
     headers/item.h \
     headers/hud.h
+=======
+    headers/particleemitter.h \
+    headers/particle.h
+>>>>>>> 5530fbb018159954fa2055abe2b34f5010240114
 
 INCLUDEPATH += src \
                headers
