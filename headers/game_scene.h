@@ -49,7 +49,7 @@ private:
 	sf::View camera;
 	Player player;
 	City city;
-        Hud hud;
+    Hud hud;
 
 	//Managers
 	std::list<Person> personList;

@@ -111,6 +111,7 @@ void Person::Update() {
     if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
     if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
 
+
 }
 
 void Person::doDeath() {

@@ -41,6 +41,8 @@ public:
     sf::Vector2f getPosition() { return m_position; }
 	sf::Vector2f getOrigin() { return m_origin; }
 
+    sf::Vector2f getCenter() {return m_center;}
+
 	sf::FloatRect getLocalBounds() {
 		return mySpr.getLocalBounds();
 	}

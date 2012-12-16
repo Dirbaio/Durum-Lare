@@ -14,6 +14,9 @@ public:
     void LoadAnims();
 	void hitAction();
 
+    int getScore(){return myScore;}
+    void setScore(int sc) {myScore = sc;}
+
 private:
 	sf::Sprite mySpr;
 	sf::Vector2f myVel;

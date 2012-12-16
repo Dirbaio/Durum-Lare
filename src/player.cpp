@@ -107,7 +107,17 @@ void Player::Update() {
 	}
 
 
-        m_anim->Update(input->getFrameTime().asSeconds());
+    m_anim->Update(input->getFrameTime().asSeconds());
+
+    std::list<Item*>* itemList = GameReg::getInstance()->itemList;
+    for (std::list<Item*>::iterator it = itemList->begin(); it != itemList->end(); ++it) {
+        if ((*it)->isTakeable()) {
+            if (Utils::rectCollision((*it)->getBoundBox(), this->getBoundBox())) {
+                (*it)->takeAction();
+                myScore += (*it)->getScore();
+            }
+        }
+    }
 }
 
 void Player::Draw() {

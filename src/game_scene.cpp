@@ -35,6 +35,7 @@ void GameScene::initThread() {
     gameReg->personList = &personList;
     gameReg->policeList = &policeList;
     gameReg->itemList = &itemList;
+    gameReg->player = &player;
 
 	GraphEng* graphics = GraphEng::getInstance();
 
@@ -43,6 +44,7 @@ void GameScene::initThread() {
 	//Init player
 	player.Init();
 	player.setPosition(city.getRandomStreet());
+
 
 	//Init camera
 	camera.reset(sf::FloatRect(0, 0,
@@ -119,6 +121,7 @@ void GameScene::spawnNewMoney(sf::Vector2f pos) {
 
     Item* item = ItemFactory::MakeNewItem(ItemFactory::ITEM_MONEY);
     item->setPosition(pos);
+    item->setTransPos(pos, pos + sf::Vector2f(Utils::randomInt(-16, 16), Utils::randomInt(-16, 16)));
     itemList.push_back(item);
 
 }
@@ -343,7 +346,12 @@ void GameScene::HandleEvents() {
                     it->onHit();
 				    player.hitAction();
 
-                    spawnNewMoney(it->getPosition());
+
+                    int n_moneys = Utils::randomInt(1, 3);
+
+                    for (int i = 0; i < n_moneys; ++i)
+                        spawnNewMoney(it->getPosition());
+
 				}
 			}
 
@@ -360,8 +368,21 @@ void GameScene::HandleEvents() {
                 }
             }
 
-
             spawnNewPerson();
+
+            break;
+        }
+
+        case EVENT_DELETE_ITEM: {
+            EventDeleteItem* ev = (EventDeleteItem*)e;
+
+            for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
+                if ((*it) == ev->item) {
+                    delete (*it);
+                    it = itemList.erase(it);
+                    break;
+                }
+            }
 
             break;
         }

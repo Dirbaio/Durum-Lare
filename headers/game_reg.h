@@ -10,6 +10,8 @@
 
 #include <list>
 
+#include "player.h"
+
 class GameReg {
 public:
 	GameReg();
@@ -17,7 +19,10 @@ public:
 
         //Event Queue
         std::queue<Event*> eventQueue;
+
         City *city;
+        Player* player;
+
 
         std::list<Person>* personList;
         std::list<Police>* policeList;

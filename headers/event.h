@@ -6,6 +6,7 @@
 #include <set>
 
 class Person;
+class Item;
 
 enum EventType {
 
@@ -14,7 +15,7 @@ enum EventType {
     EVENT_PLAYER_ACTION,
 
     EVENT_DELETE_PERSON,
-
+    EVENT_DELETE_ITEM,
 
     //Total events number
     EVENT_TYPE_SIZE
@@ -34,6 +35,12 @@ struct EventDeletePerson : public Event {
     EventDeletePerson(Person* _person) : Event(EVENT_DELETE_PERSON), person(_person) {}
 
     Person* person;
+};
+
+struct EventDeleteItem : public Event {
+    EventDeleteItem(Item* _item) : Event(EVENT_DELETE_ITEM), item(_item) {}
+
+    Item* item;
 };
 
 /*
