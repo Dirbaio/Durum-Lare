@@ -89,3 +89,18 @@ float City::tileRightPos(int x)
 {
 	return float(x+1)*tw;
 }
+
+bool City::visible(vec2 from, vec2 to)
+{
+    if(Utils::distance(from, to) > 200)
+        return false;
+
+    for(int i = 0; i <= 20; i++)
+    {
+        vec2 pt = (from*float(i) + to*float(20-i))/20.0f;
+        if(occupedXY(pt.x, pt.y))
+            return false;
+    }
+
+    return true;
+}

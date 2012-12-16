@@ -7,6 +7,7 @@
 Character::Character()
 {
     m_hasGoal = false;
+    m_vel = 16.0f;
 }
 
 void Character::move(sf::Vector2f posf)

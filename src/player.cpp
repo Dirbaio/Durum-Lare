@@ -17,8 +17,8 @@ void Player::Init() {
 	m_position.x = 0;
 	m_position.y = 0;
 
-        myVel.x = 64*1.8f;
-        myVel.y = 64*1.8f;
+	myVel.x = 64*1.25;
+	myVel.y = 64*1.25;
 
 	m_boundbox.height = 16;
 	m_boundbox.width = 16;
