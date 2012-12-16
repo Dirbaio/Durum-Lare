@@ -4,6 +4,9 @@
 #include "event.h"
 
 #include "city.h"
+#include "police.h"
+#include "item.h"
+#include "person.h"
 
 class GameReg {
 public:
@@ -12,7 +15,11 @@ public:
 
         //Event Queue
         std::queue<Event*> eventQueue;
-	City *city;
+        City *city;
+
+        std::list<Person>* personList;
+        std::list<Police>* policeList;
+        std::list<Item*>* itemList;
 
 private:
         static GameReg* myInstance;

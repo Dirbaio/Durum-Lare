@@ -16,7 +16,7 @@
 #include "police.h"
 
 #include "hud.h"
-
+#include "item.h"
 #include <SFML/Audio.hpp>
 
 class GameScene : public Scene {
@@ -42,6 +42,7 @@ private:
 	//Map map;
 	void spawnNewPerson();
 	void spawnNewPolice();
+    void spawnNewMoney(sf::Vector2f pos);
 
 
 	//Registry
@@ -56,9 +57,9 @@ private:
 	//Managers
 	std::list<Person> personList;
 	std::list<Police> policeList;
+    std::list<Item*> itemList;
 
-
-        sf::Music bg_music;
+    sf::Music bg_music;
 };
 
 #endif // GAMESCENE_H

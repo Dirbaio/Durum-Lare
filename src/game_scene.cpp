@@ -15,6 +15,8 @@
 #include "police.h"
 #include <list>
 #include "hud.h"
+#include "item.h"
+#include "item_factory.h"
 
 GameScene::GameScene() {
 
@@ -22,11 +24,17 @@ GameScene::GameScene() {
 
 GameScene::~GameScene() {
     bg_music.stop();
+
+    for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it)
+        delete (*it);
 }
 
 void GameScene::initThread() {
 	gameReg = GameReg::getInstance();
 	gameReg->city = &city;
+    gameReg->personList = &personList;
+    gameReg->policeList = &policeList;
+    gameReg->itemList = &itemList;
 
 	GraphEng* graphics = GraphEng::getInstance();
 
@@ -42,7 +50,7 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-        for (int i = 0; i < 220; ++i) spawnNewPerson();
+    for (int i = 0; i < 220; ++i) spawnNewPerson();
 	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
         //Init Camera
@@ -50,15 +58,15 @@ void GameScene::initThread() {
 	camera.zoom(0.5f);
 
 
-        //Init background music
-        bg_music.openFromFile("audio/surrounding.ogg");
-        bg_music.setLoop(true);;
-        bg_music.play();
+    //Init background music
+    bg_music.openFromFile("audio/surrounding.ogg");
+    bg_music.setLoop(true);;
+    bg_music.play();
 
-        //Init hud
-        hud.Init();
+    //Init hud
+    hud.Init();
 
-        //Le oc
+    //Le oc
 	initThreadDone = true;
 }
 
@@ -107,6 +115,15 @@ bool GameScene::Init() {
 	return true;
 }
 
+void GameScene::spawnNewMoney(sf::Vector2f pos) {
+
+    Item* item = ItemFactory::MakeNewItem(ItemFactory::ITEM_MONEY);
+    item->setPosition(pos);
+    itemList.push_back(item);
+
+}
+
+
 void GameScene::spawnNewPerson() {
 
 	Person p;
@@ -152,6 +169,12 @@ void GameScene::Update() {
 		it->Update();
 	}
 
+    //Items update
+    for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
+        (*it)->Update();
+    }
+
+
 	HandleCamInput();
 	HandleEvents();
 }
@@ -183,6 +206,8 @@ void GameScene::Draw() {
         v.push_back(&*it);
     for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
         v.push_back(&*it);
+    for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it)
+        v.push_back((*it));
 
     sort(v.begin(), v.end(), comp);
     for(int i = 0; i < v.size(); i++)
@@ -315,29 +340,31 @@ void GameScene::HandleEvents() {
 				if (!it->is_alive()) continue;
 
 				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
-                                    it->onHit();
+                    it->onHit();
 				    player.hitAction();
+
+                    spawnNewMoney(it->getPosition());
 				}
 			}
 
 			break;
 		}
 
-                case EVENT_DELETE_PERSON: {
-                    EventDeletePerson* ev = (EventDeletePerson*)e;
+        case EVENT_DELETE_PERSON: {
+            EventDeletePerson* ev = (EventDeletePerson*)e;
 
-                    for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
-                        if (&(*it) == ev->person) {
-                            it = personList.erase(it);
-                            break;
-                        }
-                    }
-
-
-                    spawnNewPerson();
-
+            for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+                if (&(*it) == ev->person) {
+                    it = personList.erase(it);
                     break;
                 }
+            }
+
+
+            spawnNewPerson();
+
+            break;
+        }
 
 			/*
 		case EVENT_MOVE: {

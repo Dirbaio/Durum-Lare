@@ -20,6 +20,8 @@ private:
 
     std::string currentAnim;
 	float m_actionDelay;
+
+    int myScore;
 };
 
 #endif // PLAYER_H

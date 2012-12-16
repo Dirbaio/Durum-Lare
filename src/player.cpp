@@ -26,6 +26,8 @@ void Player::Init() {
         LoadAnims();
         ensureAnim("IdleDown");
 	m_actionDelay = 0;
+
+    myScore = 0;
 }
 
 void Player::LoadAnims() {
@@ -48,50 +50,55 @@ void Player::Update() {
 
 	InputEng* input = InputEng::getInstance();
 
-	const sf::Vector2f &pos0 = m_position;
-	sf::Vector2f posf = m_position;
-
-        bool hasMoved = false;
-
-        if (input->getKeyState(InputEng::PLAYER_UP) && !input->getKeyState(InputEng::PLAYER_DOWN)) {
-		posf.y -= myVel.y*input->getFrameTime().asSeconds();
-                ensureAnim("WalkingUp");
-                m_faceDir = FACE_UP;
-                hasMoved = true;
-        }
-        if (input->getKeyState(InputEng::PLAYER_DOWN) && !input->getKeyState(InputEng::PLAYER_UP)) {
-		posf.y += myVel.y*input->getFrameTime().asSeconds();
-                ensureAnim("WalkingDown");
-                m_faceDir = FACE_DOWN;
-                hasMoved = true;
-        }
-        if (input->getKeyState(InputEng::PLAYER_LEFT) && !input->getKeyState(InputEng::PLAYER_RIGHT)) {
-		posf.x -= myVel.x*input->getFrameTime().asSeconds();
-                ensureAnim("WalkingLeft");
-                m_faceDir = FACE_LEFT;
-                hasMoved = true;
-        }
-        if (input->getKeyState(InputEng::PLAYER_RIGHT) && !input->getKeyState(InputEng::PLAYER_LEFT)) {
-		posf.x += myVel.x*input->getFrameTime().asSeconds();
-                ensureAnim("WalkingRight");
-                m_faceDir = FACE_RIGHT;
-                hasMoved = true;
-        }
-
-        if (!hasMoved) {
-            if (m_faceDir == FACE_UP)  ensureAnim("IdleUp");
-            if (m_faceDir == FACE_DOWN)  ensureAnim("IdleDown");
-            if (m_faceDir == FACE_LEFT)  ensureAnim("IdleLeft");
-            if (m_faceDir == FACE_RIGHT)  ensureAnim("IdleRight");
-        }
-
 	if (m_actionDelay < 0)
 	{
+        const sf::Vector2f &pos0 = m_position;
+        sf::Vector2f posf = m_position;
+
+            bool hasMoved = false;
+
+            if (input->getKeyState(InputEng::PLAYER_UP) && !input->getKeyState(InputEng::PLAYER_DOWN)) {
+            posf.y -= myVel.y*input->getFrameTime().asSeconds();
+                    ensureAnim("WalkingUp");
+                    m_faceDir = FACE_UP;
+                    hasMoved = true;
+            }
+            if (input->getKeyState(InputEng::PLAYER_DOWN) && !input->getKeyState(InputEng::PLAYER_UP)) {
+            posf.y += myVel.y*input->getFrameTime().asSeconds();
+                    ensureAnim("WalkingDown");
+                    m_faceDir = FACE_DOWN;
+                    hasMoved = true;
+            }
+            if (input->getKeyState(InputEng::PLAYER_LEFT) && !input->getKeyState(InputEng::PLAYER_RIGHT)) {
+            posf.x -= myVel.x*input->getFrameTime().asSeconds();
+                    ensureAnim("WalkingLeft");
+                    m_faceDir = FACE_LEFT;
+                    hasMoved = true;
+            }
+            if (input->getKeyState(InputEng::PLAYER_RIGHT) && !input->getKeyState(InputEng::PLAYER_LEFT)) {
+            posf.x += myVel.x*input->getFrameTime().asSeconds();
+                    ensureAnim("WalkingRight");
+                    m_faceDir = FACE_RIGHT;
+                    hasMoved = true;
+            }
+
+            if (!hasMoved) {
+                if (m_faceDir == FACE_UP)  ensureAnim("IdleUp");
+                if (m_faceDir == FACE_DOWN)  ensureAnim("IdleDown");
+                if (m_faceDir == FACE_LEFT)  ensureAnim("IdleLeft");
+                if (m_faceDir == FACE_RIGHT)  ensureAnim("IdleRight");
+            }
+
 		Character::move(posf);
 	}
 	else
 	{
 		m_actionDelay -= input->getFrameTime().asSeconds();
+
+        if (m_faceDir == FACE_UP)  ensureAnim("AttackUp");
+        if (m_faceDir == FACE_DOWN)  ensureAnim("AttackDown");
+        if (m_faceDir == FACE_LEFT)  ensureAnim("AttackLeft");
+        if (m_faceDir == FACE_RIGHT)  ensureAnim("AttackRight");
 	}
 
 	if (input->getKeyDown(InputEng::PLAYER_ACTION)) {
@@ -111,7 +118,6 @@ void Player::Draw() {
 
         spr->setPosition(m_position);
         App->draw(*spr);
-
 }
 
 

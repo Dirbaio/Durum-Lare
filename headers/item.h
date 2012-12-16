@@ -18,10 +18,15 @@ public:
     virtual void Update();
     virtual void Draw();
 
+    void setSprite(sf::Sprite spr);
+    void setScore(int n) {myScore = n;}
+
 protected:
 
-
+    int myScore;
 
 };
+
+
 
 #endif // ITEM_H
