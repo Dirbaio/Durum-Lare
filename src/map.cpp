@@ -30,6 +30,7 @@ const int TILESIZE = 64;
 void Map::load(vector<vector<bool> > v)
 {
 
+
     tex.loadFromFile("img/tiles.png");
 
     tx = v.size();

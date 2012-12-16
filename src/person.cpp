@@ -25,7 +25,10 @@ void Person::Init() {
     transHit = NULL;
 
     AnimationData* ad = new AnimationData();
-    ad->Load("anim/calvo.anim");
+
+    if (Utils::randomInt(0, 1)) ad->Load("anim/calvo.anim");
+    else ad->Load("anim/tupe.anim");
+
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
     m_anim->SelectAnim("Walking");
