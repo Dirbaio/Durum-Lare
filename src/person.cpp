@@ -24,6 +24,8 @@ void Person::Init() {
     m_startPanicTime = 10.0f;
     m_state = STATE_WALKING;
 
+    knows_player = false;
+
     transHit = NULL;
 
 
@@ -85,6 +87,8 @@ void Person::Update() {
     City &city = *GameReg::getInstance()->city;
     std::list<Person>* personList = GameReg::getInstance()->personList;
 
+    vec2 playerPosition = GameReg::getInstance()->player->getPosition();
+
     switch(m_state)
     {
     case STATE_WALKING:
@@ -95,11 +99,19 @@ void Person::Update() {
             setGoal(city.getRandomStreet());
         moveTowardsGoal();
 
+        if (knows_player && canSee(playerPosition))
+        {
+            m_state = STATE_PANIC;
+            m_panicTime = m_startPanicTime;
+        }
+
         for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++)
             if (!it->is_alive() && canSee(it->m_position))
             {
                 m_state = STATE_PANIC;
                 m_panicTime = m_startPanicTime;
+                vec2i myPos = city.absoluteToTilePos(it->m_position);
+                if (myPos == city.absoluteToTilePos(playerPosition)) knows_player = true;
             }
 
         if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
@@ -116,6 +128,9 @@ void Person::Update() {
         }
 
         m_mark = MARK_EXCLAMATION;
+
+        if (knows_player && city.visible(m_position, playerPosition))
+            m_panicTime = m_startPanicTime;
 
         vec2i now = city.absoluteToTilePos(m_position);
         vec2i best = now;
@@ -203,4 +218,9 @@ void Person::Draw() {
 bool Person::is_alive()
 {
     return m_state != STATE_DEAD;
+}
+
+bool Person::knowsPlayer()
+{
+    return knows_player;
 }
