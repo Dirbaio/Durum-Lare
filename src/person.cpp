@@ -111,7 +111,7 @@ void Person::Update() {
                 m_state = STATE_PANIC;
                 m_panicTime = m_startPanicTime;
 
-                if (dist(it->m_position, playerPosition) < 70) knows_player = true;
+                if (Utils::distance(it->m_position, playerPosition) < 70) knows_player = true;
             }
     }
         break;
