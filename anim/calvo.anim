@@ -27,6 +27,5 @@ ANIM "WalkingLeft" "img/person_sheet.png" 0
 	 128 0 32 32 0.3
 	160 0 32  32 0.3
 ANIM "WalkingRight" "img/person_sheet.png" 0
-	  192 32 32 0.3
-	224 0 32  32 0.3
-
+	192 0 32 32 0.3
+	224 0 32 32 0.3
