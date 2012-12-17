@@ -20,6 +20,8 @@ public:
     int getKills() {return myKills;}
     void setKills(int k) {myKills = k;}
 
+    bool isDoingAction() { return m_actionDelay > 0; }
+
 private:
 	sf::Sprite mySpr;
 	sf::Vector2f myVel;

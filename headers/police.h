@@ -17,11 +17,6 @@ class Police : public Npc {
     sf::Vector2f getNewGoal(sf::Vector2f pos);
     void lookAtRandomPlace();
 
-    void noLeftCollision();
-    void noRightCollision();
-    void noUpCollision();
-    void noDownCollision();
-
     bool onLeftCollision(int x, int j);
     bool onRightCollision(int x, int j);
     bool onUpCollision(int x, int j);
