@@ -59,7 +59,6 @@ class Person : public Npc {
 
     bool knows_player;
     TransitionLinear* transHit;
-
 };
 
 #endif // PERSON_H

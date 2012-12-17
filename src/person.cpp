@@ -9,6 +9,26 @@
 #include "game_scene.h"
 #include <SFML/Audio.hpp>
 
+#define NUM_ANIMS_DATA 6
+
+AnimationData* s_data[NUM_ANIMS_DATA] = {
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL
+};
+
+char* s_dataFilenames[NUM_ANIMS_DATA] = {
+	"anim/calvo.anim",
+	"anim/tupe.anim",
+	"anim/gordo.anim",
+	"anim/moderno.anim",
+	"anim/rubiaca.anim",
+	"anim/morenaca.anim"
+};
+
 void Person::Init() {
 
     GraphEng* graphics = GraphEng::getInstance();
@@ -29,16 +49,13 @@ void Person::Init() {
     transHit = NULL;
     m_confuseCooldown = 0.0f;
 
-    AnimationData* ad = new AnimationData();
-    int rand = Utils::randomInt(0, 4);
-    if (rand == 0) ad->Load("anim/calvo.anim");
-    else if (rand == 1) ad->Load("anim/tupe.anim");
-    else if (rand == 2) ad->Load("anim/gordo.anim");
-    else if (rand == 3) ad->Load("anim/moderno.anim");
-    else {
-        if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
-        else  ad->Load("anim/morenaca.anim");
+    int rand = Utils::randomInt(0, NUM_ANIMS_DATA-1);
+    if (s_data[rand] == NULL) {
+	    s_data[rand] = new AnimationData();
+	    s_data[rand]->Load(s_dataFilenames[rand]);
     }
+
+    AnimationData* ad = s_data[rand];
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
     m_anim->SelectAnim("Walking");
