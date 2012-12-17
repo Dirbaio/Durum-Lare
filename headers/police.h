@@ -17,6 +17,12 @@ class Police : public Npc {
     sf::Vector2f getNewGoal();
     void lookAtRandomPlace();
 
+    bool onCollision(int x, int j);
+    bool onLeftCollision(int x, int j);
+    bool onRightCollision(int x, int j);
+    bool onUpCollision(int x, int j);
+    bool onDownCollision(int x, int j);
+
     enum State  {
 	    STATE_PATROL_MOVING,
 	    STATE_PATROL_WATCHING,

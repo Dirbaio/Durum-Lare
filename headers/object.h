@@ -78,6 +78,7 @@ public:
     void ensureAnim(std::string anim);
 
 protected:
+    static int idCount;
 	int uniqueID;
 
 	bool m_toBeDeleted;

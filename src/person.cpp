@@ -113,9 +113,6 @@ void Person::Update() {
                 vec2i myPos = city.absoluteToTilePos(it->m_position);
                 if (myPos == city.absoluteToTilePos(playerPosition)) knows_player = true;
             }
-
-        if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
-        if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
     }
         break;
     case STATE_PANIC:
@@ -174,6 +171,9 @@ void Person::Update() {
 
         break;
     }
+
+    if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
+    if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
 }
 
 void Person::doDeath() {

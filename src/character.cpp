@@ -257,5 +257,5 @@ bool Character::canSee(vec2 pos)
     Utils::normalize(dir_facing);
 
     City &city = *GameReg::getInstance()->city;
-    return city.visible(pos,m_position) && Utils::dot2(dir_corpse,dir_facing) >= 0.5f;
+    return Utils::dot2(dir_corpse,dir_facing) >= 0.0f && city.visible(pos,m_position);
 }

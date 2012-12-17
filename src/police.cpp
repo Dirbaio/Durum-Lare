@@ -38,7 +38,7 @@ void Police::Update() {
 		vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
 		Utils::normalize(dir_corpse);
 		Utils::normalize(dir_facing);
-		if (Utils::dot2(dir_corpse,dir_facing) >= 0.5f && city.visible(pos,m_position)) {
+		if (canSee(person.getPosition())) {
 			switch(person.getState())
 			{
 			case Person::STATE_PANIC:
@@ -96,7 +96,7 @@ void Police::Update() {
 	case STATE_ALERT:
 	{
 		m_vel = 60.0f;
-                m_mark = MARK_RED_EXCLAMATION;
+		m_mark = MARK_QUESTION;
 		if (!m_hasGoal) {
 			setGoal(getNewGoal());
 		}
@@ -157,7 +157,7 @@ void Police::Update() {
 		m_vel = 60.0f;
 		m_mark = MARK_QUESTION;
 		Player* p = GameReg::getInstance()->player;
-		if(city.visible(p->getPosition(), m_position)) {
+		if(canSee(p->getPosition())) {
 			m_lastDirSawPlayer = m_lastPosSawPlayer-p->getPosition();
 			m_lastPosSawPlayer = p->getPosition();
 			m_state = STATE_CHASING_PLAYER;
@@ -247,4 +247,14 @@ void Police::Draw() {
 	App->draw(*spr);
 
 }
+
+bool Police::onCollision(int x, int j)
+{
+	return true;
+}
+
+bool Police::onLeftCollision(int x, int j) {return onCollision(x,j);}
+bool Police::onRightCollision(int x, int j){return onCollision(x,j);}
+bool Police::onUpCollision(int x, int j)   {return onCollision(x,j);}
+bool Police::onDownCollision(int x, int j) {return onCollision(x,j);}
 
