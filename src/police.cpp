@@ -32,6 +32,7 @@ void Police::Update() {
 	InputEng* input = InputEng::getInstance();
 	float delta = input->getFrameTime().asSeconds();
 	City &city = *GameReg::getInstance()->city;
+	Player* p = GameReg::getInstance()->player;
 
 	std::list<Person>* personList = GameReg::getInstance()->personList;
 	for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++) {
@@ -43,23 +44,52 @@ void Police::Update() {
 			{
 				if(m_state == STATE_PATROL_MOVING ||
 				   m_state == STATE_PATROL_WATCHING) {
-					m_state = STATE_CONFUSE;
-					m_alertTime = 15;
-					m_lastAlertPos = person.getPosition();
-					setGoal(m_lastAlertPos);
+					if (person.knowsPlayer())
+					{
+						m_state = STATE_ALERT;
+						m_alertTime = 20;
+						m_lastAlertPos = person.getPosition();
+						setGoal(m_lastAlertPos);
+					}
+					else
+					{
+						m_state = STATE_CONFUSE;
+						m_alertTime = 15;
+						m_lastAlertPos = person.getPosition();
+						setGoal(m_lastAlertPos);
+					}
 				}
 				break;
 			}
 			case Person::STATE_DEAD:
-				if(m_state == STATE_PATROL_MOVING ||
-				   m_state == STATE_PATROL_WATCHING ||
-				   m_state == STATE_CONFUSE) {
-					m_state = STATE_ALERT;
-					m_alertTime = 20;
-					m_lastAlertPos = person.getPosition();
-					setGoal(m_lastAlertPos);
+			{
+				m_knowPlayer = m_knowPlayer || (canSee(p->m_position) &&
+				    Utils::distance(person.m_position, p->m_position) < 70);
+				if (m_knowPlayer)
+				{
+					if(m_state == STATE_PATROL_MOVING ||
+					   m_state == STATE_PATROL_WATCHING ||
+					   m_state == STATE_CONFUSE) {
+						m_state = STATE_ALERT;
+						m_alertTime = 20;
+						m_lastAlertPos = person.getPosition();
+						setGoal(m_lastAlertPos);
+					}
 				}
+				else
+				{
+					if(m_state == STATE_PATROL_MOVING ||
+					   m_state == STATE_PATROL_WATCHING ||
+					   m_state == STATE_CONFUSE) {
+						m_state = STATE_CONFUSE;
+						m_alertTime = 20;
+						m_lastAlertPos = person.getPosition();
+						setGoal(m_lastAlertPos);
+					}
+				}
+
 				break;
+			}
 			}
 		}
 	}
@@ -120,7 +150,6 @@ void Police::Update() {
 
 		moveTowardsGoal();
 
-		Player* p = GameReg::getInstance()->player;
 		if(canSee(p->getPosition())) {
 			if (p->isDoingAction()) m_knowPlayer = true;
 			if (m_knowPlayer) {
