@@ -25,7 +25,7 @@ bool Game::Init() {
 	graphics = GraphEng::getInstance();
 	graphics->init();
 
-    scene = new MenuScene();
+        scene = new MenuScene();
 
 	frames = 0;
 

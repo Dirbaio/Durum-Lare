@@ -17,6 +17,7 @@
 #include "hud.h"
 #include "item.h"
 #include "item_factory.h"
+#include "score_scene.h"
 
 GameScene::GameScene() {
 
@@ -394,7 +395,7 @@ void GameScene::HandleEvents() {
 
 		case EVENT_GAME_OVER: {
 			EventGameOver* ev = (EventGameOver*)e;
-			nextScene = new GameScene();
+                        nextScene = new ScoreScene();
 			break;
 		}
 
