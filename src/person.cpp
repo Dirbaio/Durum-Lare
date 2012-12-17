@@ -61,11 +61,11 @@ void Person::Init() {
     m_anim->SelectAnim("Walking");
 
 
-    dieSoundBuff.loadFromFile("audio/wilhelmscream.ogg");
-    dieSound.setBuffer(dieSoundBuff);
-    dieSound.setLoop(false);
+    //dieSoundBuff.loadFromFile("audio/wilhelmscream.ogg");
+    //dieSound.setBuffer(dieSoundBuff);
+    //dieSound.setLoop(false);
     //dieSound.setPitch(1.5f);
-    dieSound.setVolume(10000.0f);
+    //dieSound.setVolume(10000.0f);
     m_vel = 16.0f*1.25f * Utils::randomInt(750, 2000)/1000.0f;
     ix = Utils::randomInt(8, 56);
     iy = Utils::randomInt(8, 56);

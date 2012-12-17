@@ -271,6 +271,7 @@ void Police::Update() {
 		}
 
 		moveInDir(m_lastPosSawPlayer-m_position);
+
 		if (Utils::distance(m_position, p->m_position) <= 12)
 		{
 			GameReg::getInstance()->eventQueue.push(new EventGameOver());
@@ -305,13 +306,12 @@ void Police::Update() {
 		else
 		{
 			moveInDir(m_lastDirSawPlayer);
-		}
-
-		if (m_lastPosSawTime < 0 || m_collided)
-		{
-			m_state = STATE_ALERT;
-			m_alertTime = 20;
-			m_lastAlertPos = m_lastPosSawPlayer;
+			if (m_lastPosSawTime < 0 || m_collided)
+			{
+				m_state = STATE_ALERT;
+				m_alertTime = 20;
+				m_lastAlertPos = m_lastPosSawPlayer;
+			}
 		}
 
 		break;
