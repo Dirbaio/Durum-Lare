@@ -169,7 +169,7 @@ void Police::Update() {
                 m_mark = MARK_RED_EXCLAMATION;
 		m_lastPosSawTime -= delta;
 		Player* p = GameReg::getInstance()->player;
-		if(city.visible(p->getPosition(), m_position)) {
+		if(city.visible(m_position, p->getPosition())) {
 			m_lastDirSawPlayer = p->getPosition()-m_lastPosSawPlayer;
 			m_lastPosSawPlayer = p->getPosition();
 			m_lastPosSawTime = 5;

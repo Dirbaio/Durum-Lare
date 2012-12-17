@@ -77,6 +77,8 @@ public:
 
     void ensureAnim(std::string anim);
 
+	sf::Vector2f m_position;
+
 protected:
     static int idCount;
 	int uniqueID;
@@ -88,7 +90,6 @@ protected:
         Animation* m_anim;
         sf::Sprite mySpr;
 
-	sf::Vector2f m_position;
 	sf::Vector2f m_origin;
 	sf::Vector2f m_scale;
 	sf::Vector2f m_center;

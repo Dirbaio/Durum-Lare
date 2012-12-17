@@ -39,6 +39,7 @@ class Person : public Npc {
 
     float deathTimer;
 
+	float getClosestMenace(vec2 pos, vec2& menacePos);
     sf::SoundBuffer dieSoundBuff;
     sf::Sound dieSound;
 

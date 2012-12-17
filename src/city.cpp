@@ -92,7 +92,11 @@ float City::tileRightPos(int x)
 
 int City::getTileAt(vec2 pt)
 {
-	return map.m[int(pt.x/tw)][int(pt.y/th)].tileNum;
+	int i = int(pt.x/tw);
+	int j = int(pt.y/th);
+	if (i < 0 || i >= map.tx ) return true;
+	if (j < 0 || j >= map.ty ) return true;
+	return map.m[i][j].tileNum;
 }
 
 //Dice si una persona en FROM ve a una persona en TO

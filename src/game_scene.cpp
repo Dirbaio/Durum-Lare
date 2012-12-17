@@ -237,6 +237,27 @@ void GameScene::Draw() {
 		v.push_back(&*it);
 	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
 		v.push_back(&*it);
+
+	cerr<<"LOLOL"<<endl;
+	for(int i = 0; i < v.size(); i++)
+		for(int j = i+1; j < v.size(); j++)
+		{
+			Object* a = v[i];
+			Object* b = v[j];
+			if(Utils::distance(a->m_position, b->m_position) < 10)
+			{
+				vec2 l = b->m_position - a->m_position;
+				if(Utils::norm(l) == 0) continue;
+				
+				Utils::normalize(l);
+				vec2 m = (b->m_position + a->m_position) / 2.0f;
+				a->m_position = m-l*5.0f;
+				b->m_position = m+l*5.0f;
+			}
+		}
+
+	cerr<<"LOLWTF"<<endl;
+
 	for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it)
 		v.push_back(&*it);
 
