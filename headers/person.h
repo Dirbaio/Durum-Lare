@@ -43,7 +43,7 @@ class Person : public Npc {
     sf::Sound dieSound;
 
     float m_panicTime, m_startPanicTime;
-
+	vec2 m_lastSawPlayer;
     State m_state;
 
     sf::Sprite bloodSpr;
