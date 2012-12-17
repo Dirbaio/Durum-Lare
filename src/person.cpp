@@ -85,6 +85,7 @@ void Person::Update() {
 
     vec2 currPlayerPosition = GameReg::getInstance()->player->getPosition();
     bool seesPlayerNow = canSee(currPlayerPosition);
+    Player* p = GameReg::getInstance()->player;
     if(seesPlayerNow)
     	m_lastSawPlayer = currPlayerPosition;
 	
@@ -120,6 +121,13 @@ void Person::Update() {
             m_state = STATE_CONFUSED;
 			m_confusedTime = Utils::randomInt(2,5);
 			m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
+        }
+
+        if(canSee(p->getPosition())) {
+            if (p->isDoingAction()) {
+                m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
+            }
         }
     }
         break;
@@ -188,7 +196,6 @@ void Person::Update() {
         }
 
 	    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
-		cout<<v.size()<<endl;
 		for(int i = 0; i < v.size(); i++)
         {
             m_state = STATE_PANIC;
@@ -198,9 +205,16 @@ void Person::Update() {
         }
 
         if (knows_player) {
-            Player* p = GameReg::getInstance()->player;
             if(canSee(p->getPosition())) {
                 m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
+            }
+        }
+
+        if(canSee(p->getPosition())) {
+            if (p->isDoingAction()) {
+                m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
             }
         }
 
