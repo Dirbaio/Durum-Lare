@@ -43,6 +43,7 @@ void Person::Init() {
     else {
         if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
         else  ad->Load("anim/morenaca.anim");
+
     }
 
 
