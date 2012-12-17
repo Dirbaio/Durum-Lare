@@ -21,7 +21,6 @@ bool ScoreScene::Init() {
 }
 
 
-
 void ScoreScene::Update() {
 
     InputEng* input = InputEng::getInstance();
