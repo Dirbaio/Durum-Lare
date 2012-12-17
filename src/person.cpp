@@ -62,12 +62,12 @@ void Person::Init() {
 }
 
 
-float getClosestMenace(vec2 pos, vec2& menacePos)
+float Person::getClosestMenace(vec2 pos, vec2& menacePos)
 {
     City &city = *GameReg::getInstance()->city;
     std::list<Person>* personList = GameReg::getInstance()->personList;
 
-    menacePos = GameReg::getInstance()->player->getPosition();
+    menacePos = m_lastSawPlayer;
     float d = Utils::distance(pos, menacePos)/2;
 
     for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++)
@@ -94,8 +94,11 @@ void Person::Update() {
     City &city = *GameReg::getInstance()->city;
     std::list<Person>* personList = GameReg::getInstance()->personList;
 
-    vec2 playerPosition = GameReg::getInstance()->player->getPosition();
-
+    vec2 currPlayerPosition = GameReg::getInstance()->player->getPosition();
+    bool seesPlayerNow = canSee(currPlayerPosition);
+    if(seesPlayerNow)
+    	m_lastSawPlayer = currPlayerPosition;
+	
     switch(m_state)
     {
     case STATE_WALKING:
@@ -106,7 +109,7 @@ void Person::Update() {
             setGoal(city.getRandomStreet());
         moveTowardsGoal();
 
-        if (knows_player && canSee(playerPosition))
+        if (knows_player && seesPlayerNow)
         {
             m_state = STATE_PANIC;
             m_panicTime = m_startPanicTime;
@@ -118,10 +121,19 @@ void Person::Update() {
                 m_state = STATE_PANIC;
                 m_panicTime = m_startPanicTime;
 
-                if (Utils::distance(it->m_position, playerPosition) < 70) knows_player = true;
+                if (Utils::distance(it->m_position, m_lastSawPlayer) < 70) knows_player = true;
+            }
+
+        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_CONFUSED; it++)
+            if (it->m_state == STATE_PANIC && canSee(it->m_position))
+            {
+                m_state = STATE_CONFUSED;
+                m_confusedTime = Utils::randomInt(5, 10);
+                m_confusedTimeFacing = Utils::randomInt(1, 2);
             }
     }
         break;
+
     case STATE_PANIC:
     {
         if (m_panicTime > 0) m_panicTime -= delta;
@@ -133,7 +145,7 @@ void Person::Update() {
 
         m_mark = MARK_EXCLAMATION;
 
-        if (knows_player && city.visible(m_position, playerPosition))
+        if (knows_player && seesPlayerNow)
             m_panicTime = m_startPanicTime;
 
         vec2i now = city.absoluteToTilePos(m_position);
@@ -167,6 +179,40 @@ void Person::Update() {
         m_vel = velbak;
     }
     break;
+
+    case STATE_CONFUSED:
+        m_mark = MARK_QUESTION;
+        m_vel = 20.0f;
+        m_confusedTime -= delta;
+        m_confusedTimeFacing -= delta;
+
+        if (m_confusedTime < 0) {
+            setGoal(city.getRandomStreet());
+            m_state = STATE_WALKING;
+        }
+
+        if (m_confusedTimeFacing < 0) {
+            lookAtRandomPlace();
+            m_confusedTimeFacing = Utils::randomInt(1, 2);
+        }
+
+        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++)
+            if (!it->is_alive() && canSee(it->m_position))
+            {
+                m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
+
+                if (Utils::distance(it->m_position, m_lastSawPlayer) < 70) knows_player = true;
+            }
+
+        if (knows_player) {
+            Player* p = GameReg::getInstance()->player;
+            if(canSee(p->getPosition())) {
+                m_state = STATE_PANIC;
+            }
+        }
+
+        break;
 
     case STATE_DEAD:
         if (m_faceDir == FACE_UP) ensureAnim("DeadUp");
@@ -231,6 +277,20 @@ void Person::Draw() {
     App->draw(*spr);
 
 
+}
+
+void Person::lookAtRandomPlace()
+{
+    City &city = *GameReg::getInstance()->city;
+    vec2i v = city.absoluteToTilePos(m_position);
+
+    int i = 0;
+    while(i < 4) {
+        m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
+        vec2i v2 = v + dirInc[m_faceDir];
+        if(!city.occupedIJ(v2.x, v2.y)) break;
+        i++;
+    }
 }
 
 bool Person::is_alive()

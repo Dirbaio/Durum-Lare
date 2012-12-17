@@ -20,9 +20,9 @@ public:
 	Character();
 	virtual ~Character() {}
 
+	void move(sf::Vector2f posf);
 protected:
 
-	void move(sf::Vector2f posf);
 
 	virtual void noLeftCollision() {}
 	virtual void noRightCollision(){}

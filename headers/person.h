@@ -24,9 +24,10 @@ class Person : public Npc {
 
 
     enum State {
-	STATE_WALKING,
-	STATE_PANIC,
-	STATE_DEAD
+        STATE_WALKING,
+        STATE_PANIC,
+        STATE_DEAD,
+        STATE_CONFUSED
     };
 
     int getState() { return m_state; }
@@ -39,15 +40,20 @@ class Person : public Npc {
 
     float deathTimer;
 
+	float getClosestMenace(vec2 pos, vec2& menacePos);
     sf::SoundBuffer dieSoundBuff;
     sf::Sound dieSound;
 
     float m_panicTime, m_startPanicTime;
 	vec2 m_lastSawPlayer;
     State m_state;
+    void lookAtRandomPlace();
 
     sf::Sprite bloodSpr;
     float m_walkingTime;
+
+    float m_confusedTime;
+    float m_confusedTimeFacing;
 
     bool knows_player;
     TransitionLinear* transHit;
