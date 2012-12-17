@@ -32,9 +32,9 @@ void Person::Init() {
 
 
     AnimationData* ad = new AnimationData();
-    ad->Load("anim/calvo.anim");
+    //ad->Load("anim/calvo.anim");
 
-    /*        Animacion Random
+    /*        Animacion Random*/
     int rand = Utils::randomInt(0, 4);
     if (rand == 0) ad->Load("anim/calvo.anim");
     else if (rand == 1) ad->Load("anim/tupe.anim");
@@ -43,7 +43,7 @@ void Person::Init() {
     else {
         if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
         else  ad->Load("anim/morenaca.anim");
-    }*/
+    }
 
 
     if (m_anim == NULL) m_anim = new Animation();
