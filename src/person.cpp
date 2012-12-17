@@ -115,7 +115,7 @@ void Person::Update() {
         }
 
 	    v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_PANIC);
-		cout<<v.size()<<endl;
+
         if (m_confuseCooldown <= 0.0f) {
             for(int i = 0; i < v.size(); i++)
             {
