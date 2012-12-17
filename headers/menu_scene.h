@@ -15,14 +15,20 @@ public:
     void Draw();
     void Destroy() {}
 
+    static void setNewScore(int score);
+
 private:
 
     sf::Font font;
     sf::Text press_start;
+    sf::Text last_points;
+
 
     Animation anim_takena;
 
     float textTimer;
+
+    static int max_points;
 };
 
 

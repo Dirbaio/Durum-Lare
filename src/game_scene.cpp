@@ -17,7 +17,7 @@
 #include "hud.h"
 #include "item.h"
 #include "item_factory.h"
-#include "score_scene.h"
+#include "menu_scene.h"
 
 GameScene::GameScene() {
 
@@ -52,8 +52,8 @@ void GameScene::initThread() {
 
 	//Init NPCS
 
-    for (int i = 0; i < 2000; ++i) spawnNewPerson();
-    for (int i = 0; i < 0; ++i) spawnNewPolice();
+    for (int i = 0; i < 600; ++i) spawnNewPerson();
+    for (int i = 0; i < 30; ++i) spawnNewPolice();
 
 	//Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
@@ -557,7 +557,9 @@ void GameScene::HandleEvents() {
 
 		case EVENT_GAME_OVER: {
 			EventGameOver* ev = (EventGameOver*)e;
-                        nextScene = new ScoreScene();
+
+			MenuScene::setNewScore(player.getScore());
+			nextScene = new MenuScene();
 			break;
 		}
 
