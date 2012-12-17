@@ -61,7 +61,7 @@ void GameScene::initThread() {
 
 	//Init background music
 	bg_music.openFromFile("audio/surrounding.ogg");
-	bg_music.setLoop(true);;
+	bg_music.setLoop(true);
 	bg_music.play();
 
 	//Init hud
@@ -170,7 +170,6 @@ vector<Person*> GameScene::getPeopleAround(vec2 pos, float r, SearchType st)
 						 && Utils::distance(pos, v[i]->m_position) <= r)
 					res.push_back(v[i]);
 		}
-	cout << "ASDF "<<res.size()<<endl;
 	return res;
 }
 
@@ -514,7 +513,7 @@ void GameScene::HandleEvents() {
 
 			player.hitAction();
 
-			std::vector<Person*> persons = getPeopleAround(player.getPosition(), 13, SEARCH_ANY);
+			std::vector<Person*> persons = getPeopleAround(player.getPosition(), 20, SEARCH_ANY);
 //			std::vector<Person*> persons = getPeopleSeen(&player, SEARCH_ANY);
 			for (std::vector<Person*>::iterator it = persons.begin(); it != persons.end(); ++it) {
 				if (!(*it)->is_alive()) continue;
