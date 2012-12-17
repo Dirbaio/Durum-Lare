@@ -238,7 +238,6 @@ void GameScene::Draw() {
 	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
 		v.push_back(&*it);
 
-	cerr<<"LOLOL"<<endl;
 	for(int i = 0; i < v.size(); i++)
 		for(int j = i+1; j < v.size(); j++)
 		{
@@ -255,8 +254,6 @@ void GameScene::Draw() {
 				b->move(m+l*5.0f);
 			}
 		}
-
-	cerr<<"LOLWTF"<<endl;
 
 	for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it)
 		v.push_back(&*it);
