@@ -5,7 +5,7 @@
 
 class Npc : public Character {
   public:
-    Npc() {}
+    Npc();
     virtual ~Npc() {}
 
     virtual void Init();

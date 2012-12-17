@@ -3,6 +3,10 @@
 #include "animation.h"
 #include "input_engine.h"
 
+Npc::Npc() {
+
+}
+
 void Npc::Init() {
     //Empty
 }

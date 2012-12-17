@@ -28,8 +28,13 @@ void Person::Init() {
 
     transHit = NULL;
 
+    m_origin = sf::Vector2f(16, 16);
+
 
     AnimationData* ad = new AnimationData();
+    ad->Load("anim/calvo.anim");
+
+    /*        Animacion Random
     int rand = Utils::randomInt(0, 4);
     if (rand == 0) ad->Load("anim/calvo.anim");
     else if (rand == 1) ad->Load("anim/tupe.anim");
@@ -38,10 +43,12 @@ void Person::Init() {
     else {
         if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
         else  ad->Load("anim/morenaca.anim");
-    }
+    }*/
+
+
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
-    m_anim->SelectAnim("Walking");
+    m_anim->SelectAnim("WalkingDown");
 
 
     dieSoundBuff.loadFromFile("audio/wilhelmscream.ogg");
@@ -162,7 +169,10 @@ void Person::Update() {
     break;
 
     case STATE_DEAD:
-        ensureAnim("Dead");
+        if (m_faceDir == FACE_UP) ensureAnim("DeadUp");
+        else if (m_faceDir == FACE_DOWN) ensureAnim("DeadDown");
+        else if (m_faceDir == FACE_LEFT) ensureAnim("DeadLeft");
+        else if (m_faceDir == FACE_RIGHT) ensureAnim("DeadRight");
         m_mark = MARK_NONE;
         m_prio = -1;
         deathTimer -= input->getFrameTime().asSeconds();
@@ -172,8 +182,13 @@ void Person::Update() {
         break;
     }
 
-    if (m_faceDir == FACE_LEFT) m_scale = sf::Vector2f(-1, 1);
-    if (m_faceDir == FACE_RIGHT) m_scale = sf::Vector2f(1, 1);
+    if (m_state != STATE_DEAD) {
+        if (m_faceDir == FACE_UP) ensureAnim("WalkingUp");
+        else if (m_faceDir == FACE_DOWN) ensureAnim("WalkingDown");
+        else if (m_faceDir == FACE_LEFT) ensureAnim("WalkingLeft");
+        else if (m_faceDir == FACE_RIGHT) ensureAnim("WalkingRight");
+    }
+
 }
 
 void Person::doDeath() {
@@ -207,8 +222,10 @@ void Person::Draw() {
         App->draw(bloodSpr);
     }
 
-    if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
-    else spr->setScale(sf::Vector2f(1.0f, 1.0f));
+    //if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
+    //else spr->setScale(sf::Vector2f(1.0f, 1.0f));
+
+    spr->setOrigin(m_origin);
     spr->setPosition(m_position);
     spr->setScale(m_scale);
     App->draw(*spr);

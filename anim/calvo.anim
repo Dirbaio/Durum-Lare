@@ -1,9 +1,32 @@
-ANIM "Idle" "img/person_sheet.png" 0
-	 0 0 32 32 0.2
 
-ANIM "Walking" "img/person_sheet.png" 0
+ANIM "IdleUp" "img/person_sheet.png" 0
+	 0 0 32 32 0.2
+ANIM "IdleDown" "img/person_sheet.png" 0
+	 64 0 32 32 0.2
+ANIM "IdleLeft" "img/person_sheet.png" 0
+	 128 0 32 32 0.2
+ANIM "IdleRight" "img/person_sheet.png" 0
+	 192 0 32 32 0.2
+
+ANIM "DeadUp" "img/person_sheet.png" 0
+	 32 0 32 32 0.2
+ANIM "DeadDown" "img/person_sheet.png" 0
+	 96 0 32 32 0.2
+ANIM "DeadLeft" "img/person_sheet.png" 0
+	 160 0 32 32 0.2
+ANIM "DeadRight" "img/person_sheet.png" 0
+	 224 0 32 32 0.2
+
+ANIM "WalkingUp" "img/person_sheet.png" 0
 	 0 0 32 32 0.3
 	32 0 32  32 0.3
+ANIM "WalkingDown" "img/person_sheet.png" 0
+	 64 0 32 32 0.3
+	96 0 32  32 0.3
+ANIM "WalkingLeft" "img/person_sheet.png" 0
+	 128 0 32 32 0.3
+	160 0 32  32 0.3
+ANIM "WalkingRight" "img/person_sheet.png" 0
+	  192 32 32 0.3
+	224 0 32  32 0.3
 
-ANIM "Dead" "img/person_sheet.png" 0
-	32  0 32 32 0.2
