@@ -35,8 +35,10 @@ class Police : public Npc {
     State m_state;
     float m_watchingTime;
     float m_watchingTimeFacing;
+    float m_lastPosSawTime;
     sf::Vector2f m_lastPosSawPlayer;
     sf::Vector2f m_lastDirSawPlayer;
+    bool m_knowPlayer;
 };
 
 #endif // POLICE_H
