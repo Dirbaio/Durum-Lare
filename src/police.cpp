@@ -15,6 +15,7 @@ void Police::Init() {
 
 	m_vel = 20.0f;
 	m_watchingTime = 0;
+	m_knowPlayer = false;
 	m_state = STATE_PATROL_WATCHING;
 
 	AnimationData* ad = new AnimationData();
@@ -28,6 +29,7 @@ void Police::Update() {
 
 	Npc::Update();
 	InputEng* input = InputEng::getInstance();
+	float delta = input->getFrameTime().asSeconds();
 	City &city = *GameReg::getInstance()->city;
 
 	std::list<Person>* personList = GameReg::getInstance()->personList;
@@ -79,8 +81,8 @@ void Police::Update() {
 	case STATE_PATROL_WATCHING:
 		m_mark = MARK_NONE;
 		m_vel = 20.0f;
-		m_watchingTime -= input->getFrameTime().asSeconds();
-		m_watchingTimeFacing -= input->getFrameTime().asSeconds();
+		m_watchingTime -= delta;
+		m_watchingTimeFacing -= delta;
 
 		if (m_watchingTime < 0) {
 			setGoal(getNewGoal());
@@ -103,15 +105,10 @@ void Police::Update() {
 		else moveTowardsGoal();
 
 		Player* p = GameReg::getInstance()->player;
-		vec2 pos = p->getPosition();
-		vec2 dir_player = pos - m_position;
-		vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
-		Utils::normalize(dir_player);
-		Utils::normalize(dir_facing);
-
-		if(Utils::dot2(dir_player,dir_facing) >= 0.5f && city.visible(p->getPosition(),m_position)) {
+		if(canSee(p->getPosition())) {
 			m_lastPosSawPlayer = p->getPosition();
 			m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
+			m_lastPosSawTime = 5;
 			m_state = STATE_CHASING_PLAYER;
 		}
 		break;
@@ -131,10 +128,12 @@ void Police::Update() {
 	{
 		m_vel = 75.0f;
                 m_mark = MARK_RED_EXCLAMATION;
+		m_lastPosSawTime -= delta;
 		Player* p = GameReg::getInstance()->player;
 		if(city.visible(p->getPosition(), m_position)) {
 			m_lastDirSawPlayer = p->getPosition()-m_lastPosSawPlayer;
 			m_lastPosSawPlayer = p->getPosition();
+			m_lastPosSawTime = 5;
 		}
 
 		moveInDir(m_lastPosSawPlayer-m_position);
@@ -151,21 +150,34 @@ void Police::Update() {
 			}
 		}
 
+		if (m_lastPosSawTime < 0 )
+		{
+			m_state = STATE_ALERT;
+		}
+
 		break;
 	}
 	case STATE_PLAYER_LOST:
 		m_vel = 60.0f;
 		m_mark = MARK_QUESTION;
+		m_lastPosSawTime -= delta;
 		Player* p = GameReg::getInstance()->player;
 		if(canSee(p->getPosition())) {
 			m_lastDirSawPlayer = m_lastPosSawPlayer-p->getPosition();
 			m_lastPosSawPlayer = p->getPosition();
+			m_lastPosSawTime = 5;
 			m_state = STATE_CHASING_PLAYER;
 		}
 		else
 		{
 			moveInDir(m_lastDirSawPlayer);
 		}
+
+		if (m_lastPosSawTime < 0 )
+		{
+			m_state = STATE_ALERT;
+		}
+
 		break;
 	}
 
