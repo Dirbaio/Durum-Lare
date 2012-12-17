@@ -108,7 +108,7 @@ void Police::Update() {
 	{
 	case STATE_PATROL_MOVING:
 	{
-		m_mark = MARK_NONE;
+                m_mark = MARK_NONE;
 		m_vel = 20.0f;
 		if (!m_hasGoal) {
 			m_state = STATE_PATROL_WATCHING;

@@ -181,7 +181,7 @@ void Person::Update() {
     break;
 
     case STATE_CONFUSED:
-        m_mark = MARK_QUESTION;
+        m_mark = MARK_BLUE_QUESTION;
         m_vel = 20.0f;
         m_confusedTime -= delta;
         m_confusedTimeFacing -= delta;
@@ -241,6 +241,12 @@ void Person::doDeath() {
 
     deathTimer = DISSAPPEAR_TIME;
     m_state = STATE_DEAD;
+
+    m_boundbox.left = m_boundbox.left - m_boundbox.width ;
+    m_boundbox.width = (m_boundbox.width *2);
+    m_boundbox.top = m_boundbox.top - m_boundbox.height ;
+    m_boundbox.height = (m_boundbox.height *2);
+
 }
 
 void Person::onHit() {

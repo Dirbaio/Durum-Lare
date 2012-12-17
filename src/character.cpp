@@ -17,8 +17,10 @@ Character::Character()
     spriteExc.setOrigin(8, 8);
     spriteRedExc.setTexture(*graphics->getTexture("img/exc_rmark.png"));
     spriteRedExc.setOrigin(8, 8);
-    spriteQuest.setTexture(*graphics->getTexture("img/int_mark.png"));
+    spriteQuest.setTexture(*graphics->getTexture("img/int_rmark.png"));
     spriteQuest.setOrigin(8, 8);
+    spriteBlueQuest.setTexture(*graphics->getTexture("img/int_mark.png"));
+    spriteBlueQuest.setOrigin(8, 8);
 
 }
 
@@ -136,6 +138,12 @@ void Character::DrawMark()
         spriteQuest.setScale(1+t/10, 1-t/20);
         spriteQuest.setPosition(m_position+vec2(0, -22+t));
         App->draw(spriteQuest);
+    }
+    else if(m_mark == MARK_BLUE_QUESTION)
+    {
+        spriteBlueQuest.setScale(1+t/10, 1-t/20);
+        spriteBlueQuest.setPosition(m_position+vec2(0, -22+t));
+        App->draw(spriteBlueQuest);
     }
     else if(m_mark == MARK_RED_EXCLAMATION)
     {
