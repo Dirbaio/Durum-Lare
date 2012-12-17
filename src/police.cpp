@@ -48,7 +48,9 @@ void Police::Update() {
 				if(m_state == STATE_PATROL_MOVING ||
 				   m_state == STATE_PATROL_WATCHING) {
 					m_state = STATE_CONFUSE;
-					setGoal(person.getPosition());
+					m_alertTime = 15;
+					m_lastAlertPos = person.getPosition();
+					setGoal(m_lastAlertPos);
 				}
 				break;
 			}
@@ -57,7 +59,9 @@ void Police::Update() {
 				   m_state == STATE_PATROL_WATCHING ||
 				   m_state == STATE_CONFUSE) {
 					m_state = STATE_ALERT;
-					setGoal(person.getPosition());
+					m_alertTime = 20;
+					m_lastAlertPos = person.getPosition();
+					setGoal(m_lastAlertPos);
 				}
 				break;
 			}
@@ -74,9 +78,20 @@ void Police::Update() {
 			m_watchingTime = Utils::randomInt(2, 6);
 			lookAtRandomPlace();
 			m_watchingTimeFacing = Utils::randomInt(1, 2);
-			setGoal(getNewGoal());
+			setGoal(getNewGoal(m_position));
 		}
-		else moveTowardsGoal();
+
+		moveTowardsGoal();
+		if (m_knowPlayer) {
+			Player* p = GameReg::getInstance()->player;
+			if(canSee(p->getPosition())) {
+				m_lastPosSawPlayer = p->getPosition();
+				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
+				m_lastPosSawTime = 5;
+				m_state = STATE_CHASING_PLAYER;
+			}
+		}
+
 		break;
 	case STATE_PATROL_WATCHING:
 		m_mark = MARK_NONE;
@@ -85,7 +100,7 @@ void Police::Update() {
 		m_watchingTimeFacing -= delta;
 
 		if (m_watchingTime < 0) {
-			setGoal(getNewGoal());
+			setGoal(getNewGoal(m_position));
 			m_state = STATE_PATROL_MOVING;
 		}
 
@@ -94,15 +109,32 @@ void Police::Update() {
 			m_watchingTimeFacing = Utils::randomInt(1, 2);
 		}
 
+		if (m_knowPlayer) {
+			Player* p = GameReg::getInstance()->player;
+			if(canSee(p->getPosition())) {
+				m_lastPosSawPlayer = p->getPosition();
+				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
+				m_lastPosSawTime = 5;
+				m_state = STATE_CHASING_PLAYER;
+			}
+		}
+
 		break;
 	case STATE_ALERT:
 	{
 		m_vel = 60.0f;
 		m_mark = MARK_QUESTION;
+		m_alertTime -= delta;
+
 		if (!m_hasGoal) {
-			setGoal(getNewGoal());
+			setGoal(getNewGoal(m_lastAlertPos));
 		}
-		else moveTowardsGoal();
+
+		moveTowardsGoal();
+		if (m_alertTime < 0) {
+			m_state = STATE_PATROL_MOVING;
+			m_knowPlayer = true;
+		}
 
 		Player* p = GameReg::getInstance()->player;
 		if(canSee(p->getPosition())) {
@@ -111,17 +143,24 @@ void Police::Update() {
 			m_lastPosSawTime = 5;
 			m_state = STATE_CHASING_PLAYER;
 		}
+
 		break;
 	}
 	case STATE_CONFUSE:
 	{
 		m_vel = 30.0f;
 		m_mark = MARK_QUESTION;
+		m_alertTime -= delta;
+
 		if (!m_hasGoal) {
-			setGoal(getNewGoal());
-			m_state = STATE_ALERT;
+			setGoal(getNewGoal(m_lastAlertPos));
 		}
-		else moveTowardsGoal();
+
+		moveTowardsGoal();
+		if (m_alertTime < 0) {
+			m_state = STATE_PATROL_MOVING;
+		}
+
 		break;
 	}
 	case STATE_CHASING_PLAYER:
@@ -150,9 +189,11 @@ void Police::Update() {
 			}
 		}
 
-		if (m_lastPosSawTime < 0 )
+		if (m_lastPosSawTime < 0)
 		{
 			m_state = STATE_ALERT;
+			m_alertTime = 20;
+			m_lastAlertPos = m_lastPosSawPlayer;
 		}
 
 		break;
@@ -173,14 +214,15 @@ void Police::Update() {
 			moveInDir(m_lastDirSawPlayer);
 		}
 
-		if (m_lastPosSawTime < 0 )
+		if (m_lastPosSawTime < 0 || m_collided)
 		{
 			m_state = STATE_ALERT;
+			m_alertTime = 20;
+			m_lastAlertPos = m_lastPosSawPlayer;
 		}
 
 		break;
 	}
-
 
 	if (m_state == STATE_PATROL_WATCHING) {
 		if (m_faceDir == FACE_UP)  ensureAnim("IdleUp");
@@ -199,13 +241,13 @@ void Police::Update() {
 
 }
 
-sf::Vector2f Police::getNewGoal()
+sf::Vector2f Police::getNewGoal(sf::Vector2f pos)
 {
 	int distGoal = 5;
 	std::vector<vec2i> goals;
 
 	City &city = *GameReg::getInstance()->city;
-	vec2i from = city.absoluteToTilePos(m_position);
+	vec2i from = city.absoluteToTilePos(pos);
 
 	vector<vector<int> > vis(city.getTW(), vector<int>(city.getTH(), -1));
 
@@ -260,13 +302,41 @@ void Police::Draw() {
 
 }
 
-bool Police::onCollision(int x, int j)
+void Police::noLeftCollision()
 {
-	return true;
+	m_collided = false;
 }
 
-bool Police::onLeftCollision(int x, int j) {return onCollision(x,j);}
-bool Police::onRightCollision(int x, int j){return onCollision(x,j);}
-bool Police::onUpCollision(int x, int j)   {return onCollision(x,j);}
-bool Police::onDownCollision(int x, int j) {return onCollision(x,j);}
+void Police::noRightCollision()
+{
+	m_collided = false;
+}
 
+void Police::noUpCollision()
+{
+	m_collided = false;
+}
+void Police::noDownCollision()
+{
+	m_collided = false;
+}
+
+bool Police::onLeftCollision(int x, int j)
+{
+	return m_state != STATE_CHASING_PLAYER;
+}
+
+bool Police::onRightCollision(int x, int j)
+{
+	return m_state != STATE_CHASING_PLAYER;
+}
+
+bool Police::onUpCollision(int x, int j)
+{
+	return m_state != STATE_CHASING_PLAYER;
+}
+
+bool Police::onDownCollision(int x, int j)
+{
+	return m_state != STATE_CHASING_PLAYER;
+}
