@@ -74,21 +74,18 @@ void Person::Init() {
 
 float Person::getClosestMenace(vec2 pos, vec2& menacePos)
 {
-    menacePos = m_lastSawPlayer;
-    float d = Utils::distance(pos, menacePos)/2;
+    menacePos = m_lastSawPlayer*6.0f;
+	int menaceCount = 6;
 
     vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
 	for(int i = 0; i < v.size(); i++)
     {
-        float d2 = Utils::distance(pos, v[i]->getPosition());
-        if(d2 < d)
-        {
-            d = d2;
-            menacePos = v[i]->getPosition();
-        }
+        menacePos += v[i]->getPosition();
+        menaceCount++;
     }
 
-    return d;
+	menacePos /= float(menaceCount);
+    return Utils::distance(pos, menacePos);
 }
 
 
