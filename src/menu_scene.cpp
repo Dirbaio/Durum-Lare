@@ -9,9 +9,8 @@ bool MenuScene::Init() {
 
     font.loadFromFile("fonts/BitDarling.TTF");
 
-
     press_start.setFont(font);
-    press_start.setString("PRESS INTRO  A LOT OF TIMES TO START");
+    press_start.setString("PRESS INTRO TO START");
 
     press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
     //press_start.setColor(sf::Color::Green);
@@ -41,7 +40,9 @@ void MenuScene::Update() {
         press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
     }
 
-    if (input->getKeyDown(InputEng::MENU_START)) nextScene = new GameScene();
+    if (input->getKeyDown(InputEng::MENU_START)) {
+	    nextScene = new GameScene();
+    }
 
     anim_takena.Update(delta);
 }

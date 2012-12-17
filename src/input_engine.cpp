@@ -62,13 +62,18 @@ void InputEng::Update() {
             App->close();
             break;
 
-            //KeyRelased
+	case sf::Event::KeyPressed:
+	    for (int i = 0; i < K_SIZE; i++)
+		if (Event.key.code == KeyMap[i]) {
+		    KeyDown[i] = true;
+		    KeyState[i] = true;
+		}
+
         case sf::Event::KeyReleased:
             for (int i = 0; i < K_SIZE; i++) {
                 if (Event.key.code == KeyMap[i]) {
-                    //std::cerr << "Key released: " << i << std::endl;
-                    if(KeyState[i]) KeyUp[i] = true;
-                    //KeyState[i] = false;
+		    KeyUp[i] = true;
+		    KeyState[i] = false;
                 }
             }
             break;
@@ -86,10 +91,7 @@ void InputEng::Update() {
             break;
 
             //KeyPressed
-        case sf::Event::KeyPressed:
-            for (int i = 0; i < K_SIZE; i++)
-                if (Event.key.code == KeyMap[i])
-                    if(!KeyState[i]) KeyDown[i] = true;
+
             break;
 
             //Resize
@@ -108,10 +110,10 @@ void InputEng::Update() {
     MousePos = sf::Mouse::getPosition(*App);
 
     for (int i = 0; i < sf::Mouse::ButtonCount; ++i)
-        MouseState[i] = sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
+	MouseState[i] = sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
 
     for (int i = 0; i < K_SIZE; i++)
-        KeyState[i] = sf::Keyboard::isKeyPressed(KeyMap[i]);
+	KeyState[i] = sf::Keyboard::isKeyPressed(KeyMap[i]);
 
     //Chivato para saber estado de teclas
     /*
