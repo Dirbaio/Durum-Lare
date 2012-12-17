@@ -121,11 +121,10 @@ void Map::load(vector<vector<bool> > v)
                 }
                 else if(rand()%3 == 0 || border)
                     t.tileNum = 8;
-                else if(rand()%6 == 0)
+                else if(rand()%4 == 0)
                     t.tileNum = 11;
                 else if(rand()%3 == 0)
                     t.tileNum = 5;
-                else t.tileNum = 11;
             }
         }
 
