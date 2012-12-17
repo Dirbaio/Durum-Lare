@@ -196,7 +196,6 @@ void Person::Update() {
         }
 
 	    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
-		cout<<v.size()<<endl;
 		for(int i = 0; i < v.size(); i++)
         {
             m_state = STATE_PANIC;
