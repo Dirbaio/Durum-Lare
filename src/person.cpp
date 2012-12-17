@@ -10,12 +10,14 @@
 #include <SFML/Audio.hpp>
 
 
-#define NUM_ANIMS_DATA 4
+#define NUM_ANIMS_DATA 6
 
 AnimationData* s_person_data[NUM_ANIMS_DATA] = {
 	NULL,
 	NULL,
 	NULL,
+        NULL,
+        NULL,
         NULL
 };
 
@@ -23,7 +25,9 @@ char* s_person_dataFilenames[NUM_ANIMS_DATA] = {
 	"anim/calvo.anim",
 	"anim/tupe.anim",
 	"anim/gordo.anim",
-        "anim/rubiaca.anim"
+        "anim/rubiaca.anim",
+        "anim/morenaca.anim",
+        "anim/moderno.anim"
 };
 
 void Person::Init() {
