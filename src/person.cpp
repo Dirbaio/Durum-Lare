@@ -117,12 +117,12 @@ void Person::Update() {
 	    v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_PANIC);
 		cout<<v.size()<<endl;
         if (m_confuseCooldown <= 0.0f) {
-            m_confuseCooldown = Utils::randomInt(10,15);
             for(int i = 0; i < v.size(); i++)
             {
                 m_state = STATE_CONFUSED;
                 m_confusedTime = Utils::randomInt(1,2);
                 m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
+		m_confuseCooldown = Utils::randomInt(12,17);
             }
         }
         else {
