@@ -103,8 +103,8 @@ bool City::visible(vec2 from, vec2 to)
     
     //Desde fuera no se puede ver dentro..
 	if(!fromGrass && toGrass) return false;
-	if(fromGrass && toGrass && d > 25) return false;
 	float d = Utils::distance(from, to);
+	if(fromGrass && toGrass && d > 36) return false;
     if(d > 200) return false;
 
 	
