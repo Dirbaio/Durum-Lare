@@ -98,7 +98,7 @@ bool City::visible(vec2 from, vec2 to)
     for(int i = 0; i <= 20; i++)
     {
         vec2 pt = (from*float(i) + to*float(20-i))/20.0f;
-        if(occupedXY(pt.x, pt.y))
+        if(occupedXY(pt.x, pt.y) || map.m[int(pt.x/tw)][int(pt.y/th)].tileNum == 11)
             return false;
     }
 

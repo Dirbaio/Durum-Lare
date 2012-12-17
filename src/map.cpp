@@ -25,6 +25,16 @@ static Tile tiles[] = {
     Tile(3, 0),     // 1111
 };
 
+bool isSolid(int n)
+{
+	return n >= 8 && n != 11;
+}
+
+bool needsOverlay(int n)
+{
+	return n >= 8;
+}
+
 const int TILESIZE = 64;
 
 void Map::load(vector<vector<bool> > v)
@@ -111,6 +121,8 @@ void Map::load(vector<vector<bool> > v)
                 }
                 else if(rand()%3 == 0 || border)
                     t.tileNum = 8;
+                else if(rand()%6 == 0)
+                    t.tileNum = 11;
                 else if(rand()%3 == 0)
                     t.tileNum = 5;
             }
@@ -123,16 +135,30 @@ void Map::load(vector<vector<bool> > v)
             t.s.setTexture(tex);
             int ttx = t.tileNum % 4;
             int tty = t.tileNum / 4;
+            if(t.tileNum == 11)
+            	ttx = 0, tty = 1;
+            
             t.s.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE*3/2+TILESIZE/2, TILESIZE, TILESIZE));
             t.s.setOrigin(TILESIZE/2, TILESIZE/2);
             t.s.setRotation(t.rot*90);
             t.s.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE/2);
-
+			
+            ttx = t.tileNum % 4;
+            tty = t.tileNum / 4;
+            
             t.s2.setTexture(tex);
-            t.s2.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE*3/2, TILESIZE, TILESIZE));
             t.s2.setOrigin(TILESIZE/2, TILESIZE/2);
             t.s2.setRotation(t.rot*90);
-            t.s2.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE);
+			if(t.tileNum == 11)
+			{
+		        t.s2.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE*3/2+TILESIZE/2, TILESIZE, TILESIZE));
+	            t.s2.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE/2);
+		    }
+		    else
+			{
+		        t.s2.setTextureRect(sf::IntRect(ttx*TILESIZE, tty*TILESIZE*3/2, TILESIZE, TILESIZE));
+		        t.s2.setPosition((x+1)*TILESIZE - TILESIZE/2, (y+1)*TILESIZE - TILESIZE);
+		    }
         }
 
     boolMatrix = vector<vector<bool> > (tx, vector<bool> (ty, true));
@@ -152,7 +178,7 @@ void Map::load(vector<vector<bool> > v)
         q.pop();
         if(x < 0 || x >= tx) continue;
         if(y < 0 || y >= ty) continue;
-        if(m[x][y].tileNum >= 8) continue;
+        if(isSolid(m[x][y].tileNum)) continue;
         if(!boolMatrix[x][y]) continue;
         boolMatrix[x][y] = false;
         q.push(pair<int, int>(x+1, y));
@@ -179,7 +205,7 @@ void Map::renderTop()
 
     for(int x = 0; x < tx; x++)
         for(int y = 0; y < ty; y++)
-            if(m[x][y].tileNum >= 8)
+            if(needsOverlay(m[x][y].tileNum))
                 //graphics->Draw(&m[x][y].s2);
                 App->draw(m[x][y].s2);
 
