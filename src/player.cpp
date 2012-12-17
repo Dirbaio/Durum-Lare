@@ -7,6 +7,7 @@
 #include "animation.h"
 #include <GL/gl.h>
 
+AnimationData* s_animData = NULL;
 
 void Player::Init() {
 
@@ -32,13 +33,17 @@ void Player::Init() {
 }
 
 void Player::LoadAnims() {
-    AnimationData* ad = new AnimationData();
-    ad->Load("anim/takena.anim");
-    m_anim = new Animation();
-    m_anim->setAnimData(ad);
 
-    //mySpr.setOrigin(animations.getCurrentFrame()->getLocalBounds().width*0.5,
-    // animations.getCurrentFrame()->getLocalBounds().height*0.5);
+	if (s_animData == NULL) {
+		s_animData = new AnimationData();
+		s_animData->Load("anim/takena.anim");
+	}
+
+	m_anim = new Animation();
+	m_anim->setAnimData(s_animData);
+
+	//mySpr.setOrigin(animations.getCurrentFrame()->getLocalBounds().width*0.5,
+	// animations.getCurrentFrame()->getLocalBounds().height*0.5);
 }
 
 void Player::hitAction()
