@@ -6,7 +6,7 @@
 #include "game_reg.h"
 #include "utils.h"
 #include "animation.h"
-
+#include "game_scene.h"
 #include <SFML/Audio.hpp>
 
 void Person::Init() {
@@ -57,22 +57,19 @@ void Person::Init() {
 
 float Person::getClosestMenace(vec2 pos, vec2& menacePos)
 {
-    City &city = *GameReg::getInstance()->city;
-    std::list<Person>* personList = GameReg::getInstance()->personList;
-
     menacePos = m_lastSawPlayer;
     float d = Utils::distance(pos, menacePos)/2;
 
-    for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++)
-        if (!it->is_alive())
+    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
+	for(int i = 0; i < v.size(); i++)
+    {
+        float d2 = Utils::distance(pos, v[i]->getPosition());
+        if(d2 < d)
         {
-            float d2 = Utils::distance(pos, it->getPosition());
-            if(d2 < d)
-            {
-                d = d2;
-                menacePos = it->getPosition();
-            }
+            d = d2;
+            menacePos = v[i]->getPosition();
         }
+    }
 
     return d;
 }
@@ -85,7 +82,6 @@ void Person::Update() {
     float delta = input->getFrameTime().asSeconds();
 
     City &city = *GameReg::getInstance()->city;
-    std::list<Person>* personList = GameReg::getInstance()->personList;
 
     vec2 currPlayerPosition = GameReg::getInstance()->player->getPosition();
     bool seesPlayerNow = canSee(currPlayerPosition);
@@ -108,22 +104,23 @@ void Person::Update() {
             m_panicTime = m_startPanicTime;
         }
 
-        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++)
-            if (!it->is_alive() && canSee(it->m_position))
-            {
-                m_state = STATE_PANIC;
-                m_panicTime = m_startPanicTime;
+	    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
+		for(int i = 0; i < v.size(); i++)
+        {
+            m_state = STATE_PANIC;
+            m_panicTime = m_startPanicTime;
 
-                if (Utils::distance(it->m_position, m_lastSawPlayer) < 70) knows_player = true;
-            }
+            if (Utils::distance(v[i]->m_position, m_lastSawPlayer) < 70) knows_player = true;
+        }
 
-        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_CONFUSED; it++)
-            if (it->m_state == STATE_PANIC && canSee(it->m_position))
-            {
-                m_state = STATE_CONFUSED;
-                m_confusedTime = Utils::randomInt(5, 10);
-                m_confusedTimeFacing = Utils::randomInt(1, 2);
-            }
+	    v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_PANIC);
+		cout<<v.size()<<endl;
+		for(int i = 0; i < v.size(); i++)
+        {
+            m_state = STATE_CONFUSED;
+            m_confusedTime = Utils::randomInt(5, 10);
+            m_confusedTimeFacing = Utils::randomInt(1, 2);
+        }
     }
         break;
 
@@ -174,6 +171,7 @@ void Person::Update() {
     break;
 
     case STATE_CONFUSED:
+    {
         m_mark = MARK_QUESTION;
         m_vel = 20.0f;
         m_confusedTime -= delta;
@@ -189,14 +187,15 @@ void Person::Update() {
             m_confusedTimeFacing = Utils::randomInt(1, 2);
         }
 
-        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++)
-            if (!it->is_alive() && canSee(it->m_position))
-            {
-                m_state = STATE_PANIC;
-                m_panicTime = m_startPanicTime;
+	    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
+		cout<<v.size()<<endl;
+		for(int i = 0; i < v.size(); i++)
+        {
+            m_state = STATE_PANIC;
+            m_panicTime = m_startPanicTime;
 
-                if (Utils::distance(it->m_position, m_lastSawPlayer) < 70) knows_player = true;
-            }
+            if (Utils::distance(v[i]->m_position, m_lastSawPlayer) < 70) knows_player = true;
+        }
 
         if (knows_player) {
             Player* p = GameReg::getInstance()->player;
@@ -206,7 +205,7 @@ void Person::Update() {
         }
 
         break;
-
+	}
     case STATE_DEAD:
         ensureAnim("Dead");
         m_mark = MARK_NONE;

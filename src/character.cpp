@@ -219,7 +219,6 @@ void Character::moveTowardsGoal()
 {
     if(!m_hasGoal) return;
 
-
     while(!m_path.empty() && Utils::distance(m_path.front(), m_position) < 2)
         m_path.pop();
 
@@ -248,7 +247,7 @@ void Character::moveInDir(vec2 dir)
     move(m_position + dir*delta*m_vel);
 }
 
-bool Character::canSee(vec2 pos)
+bool Character::canSee(const vec2& pos)
 {
 
     vec2 dir_corpse = pos-m_position;

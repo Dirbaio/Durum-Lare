@@ -19,6 +19,12 @@
 #include "item.h"
 #include <SFML/Audio.hpp>
 
+enum SearchType {
+    SEARCH_ANY,
+    SEARCH_DEAD,
+    SEARCH_PANIC
+};
+
 class GameScene : public Scene {
 public:
 	GameScene();
@@ -28,6 +34,9 @@ public:
 	void Update();
 	void Draw();
 	void Destroy();
+
+	vector<Person*> getPeopleAround(vec2 pos, float r, SearchType st);
+	vector<Person*> getPeopleSeen(Character* c, SearchType st);
 
 private:
 	void initThread();
@@ -41,6 +50,9 @@ private:
 	void spawnNewPolice();
     void spawnNewMoney(sf::Vector2f pos);
 
+	void collide(Character* a);
+	vector<vector<vector<Person*> > > estructuraPepinoPeople;
+	vector<vector<vector<Police*> > > estructuraPepinoPolice;
 
 	//Registry
 	GameReg* gameReg;
