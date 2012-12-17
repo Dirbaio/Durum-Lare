@@ -160,6 +160,15 @@ void Character::setGoal(vec2 goal) {
 
     vec2i from = city.absoluteToTilePos(m_position);
     vec2i to = city.absoluteToTilePos(m_goal);
+	
+	if(city.occupedIJ(from.x, from.y)) {
+		cout<<"Pathfinding: Current pos is solid. "<<endl;
+		return;
+	}
+	if(city.occupedIJ(to.x, to.y)) {
+		cout<<"Pathfinding: Goal is solid."<<endl;
+		return;
+	}
 
     //Calculate the path!
     vector<vector<int> > vis(city.getTW(), vector<int>(city.getTH(), -1));
@@ -167,9 +176,11 @@ void Character::setGoal(vec2 goal) {
     int dx[] = {0, 0, 1, -1};
     int dy[] = {1, -1, 0, 0};
 
+	bool end = false;
+	
     queue<vec2i> q;
     q.push(to);
-    while(!q.empty())
+    while(!q.empty() && !end)
     {
         int x = q.front().x;
         int y = q.front().y;
@@ -184,43 +195,46 @@ void Character::setGoal(vec2 goal) {
             if(city.occupedIJ(x2, y2)) continue;
             if(vis[x2][y2] != -1) continue;
             vis[x2][y2] = i;
-            q.push(vec2i(x2, y2));
+            vec2i v2 (x2, y2);
+            if(v2 == from)
+            	end = true;
+            q.push(v2);
         }
     }
 
-    if(vis[from.x][from.y] == -1)
-        cerr<<"ERROR NO PATH FOUND OMG OMG OMG"<<endl;
-    else
-    {
-        m_hasGoal = true;
-        vector<vec2i> v;
-
-        while(from != to)
-        {
-            v.push_back(from);
-            vec2i from2 = from;
-            from.x -= dx[vis[from2.x][from2.y]];
-            from.y -= dy[vis[from2.x][from2.y]];
-        }
-        v.push_back(from);
-
-        m_path = queue<vec2>();
-
-        vec2i ant(-1, -1);
-        vec2 antf(16, 16);
-        for(int i = 0; i < v.size(); i++)
-        {
-            vec2 p (v[i].x*64+Utils::randomInt(8, 56), v[i].y*64+Utils::randomInt(8, 56));
-            if(v[i].x == ant.x)
-                p.x = antf.x;
-            if(v[i].y == ant.y)
-                p.y = antf.y;
-            ant = v[i];
-            antf = p;
-            m_path.push(p);
-        }
-        m_path.push(goal);
+    if(vis[from.x][from.y] == -1) {
+        cout<<"Pathfinding: ERROR NO PATH FOUND OMG OMG OMG"<<endl;
+        return;
     }
+    
+	m_hasGoal = true;
+	vector<vec2i> v;
+
+	while(from != to)
+	{
+		v.push_back(from);
+		vec2i from2 = from;
+		from.x -= dx[vis[from2.x][from2.y]];
+		from.y -= dy[vis[from2.x][from2.y]];
+	}
+	v.push_back(from);
+
+	m_path = queue<vec2>();
+
+	vec2i ant(-1, -1);
+	vec2 antf(16, 16);
+	for(int i = 0; i < v.size(); i++)
+	{
+		vec2 p (v[i].x*64+Utils::randomInt(8, 56), v[i].y*64+Utils::randomInt(8, 56));
+		if(v[i].x == ant.x)
+			p.x = antf.x;
+		if(v[i].y == ant.y)
+			p.y = antf.y;
+		ant = v[i];
+		antf = p;
+		m_path.push(p);
+	}
+	m_path.push(goal);
 }
 
 void Character::moveTowardsGoal()

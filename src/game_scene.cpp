@@ -51,7 +51,8 @@ void GameScene::initThread() {
 				   graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-    for (int i = 0; i < 900; ++i) spawnNewPerson();
+
+    for (int i = 0; i < 200; ++i) spawnNewPerson();
     for (int i = 0; i < 30; ++i) spawnNewPolice();
 
 	//Init Camera
@@ -147,7 +148,7 @@ void GameScene::spawnNewPolice() {
 vector<Person*> GameScene::getPeopleAround(vec2 pos, float r, SearchType st)
 {
 	vec2 min = pos - vec2(r, r);
-	vec2 max = pos - vec2(r, r);
+	vec2 max = pos + vec2(r, r);
 	int xmin = min.x / 64;
 	int ymin = min.y / 64;
 	int xmax = max.x / 64;
@@ -169,6 +170,7 @@ vector<Person*> GameScene::getPeopleAround(vec2 pos, float r, SearchType st)
 						 && Utils::distance(pos, v[i]->m_position) <= r)
 					res.push_back(v[i]);
 		}
+	cout << "ASDF "<<res.size()<<endl;
 	return res;
 }
 
@@ -178,7 +180,7 @@ void GameScene::collide(Character* a)
 	float r = 10;
 	
 	vec2 min = pos - vec2(r, r);
-	vec2 max = pos - vec2(r, r);
+	vec2 max = pos + vec2(r, r);
 	int xmin = min.x / 64;
 	int ymin = min.y / 64;
 	int xmax = max.x / 64;
@@ -512,19 +514,14 @@ void GameScene::HandleEvents() {
 
 			player.hitAction();
 
-			for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
-				if (!it->is_alive()) continue;
-
-				if (Utils::rectCollision(player.getBoundBox(), it->getBoundBox())) {
-
-                    player.setKills(player.getKills()+1);
-
-					it->onHit();
-
-					int n_moneys = Utils::randomInt(1, 3);
-					for (int i = 0; i < n_moneys; ++i)
-						spawnNewMoney(it->getPosition());
-				}
+			std::vector<Person*> persons = getPeopleAround(player.getPosition(), 13, SEARCH_ANY);
+//			std::vector<Person*> persons = getPeopleSeen(&player, SEARCH_ANY);
+			for (std::vector<Person*>::iterator it = persons.begin(); it != persons.end(); ++it) {
+				if (!(*it)->is_alive()) continue;
+				player.setKills(player.getKills()+1);
+				(*it)->onHit();
+				int n_moneys = Utils::randomInt(1, 3);
+				for (int i = 0; i < n_moneys; ++i) spawnNewMoney((*it)->getPosition());
 			}
 
 			break;

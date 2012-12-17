@@ -9,6 +9,23 @@
 #include "game_scene.h"
 #include <SFML/Audio.hpp>
 
+
+#define NUM_ANIMS_DATA 4
+
+AnimationData* s_data[NUM_ANIMS_DATA] = {
+	NULL,
+	NULL,
+	NULL,
+        NULL
+};
+
+char* s_dataFilenames[NUM_ANIMS_DATA] = {
+	"anim/calvo.anim",
+	"anim/tupe.anim",
+	"anim/gordo.anim",
+        "anim/rubiaca.anim"
+};
+
 void Person::Init() {
 
     GraphEng* graphics = GraphEng::getInstance();
@@ -31,22 +48,13 @@ void Person::Init() {
     m_origin = sf::Vector2f(16, 16);
     m_confuseCooldown = 0.0f;
 
+    int rand = Utils::randomInt(0, NUM_ANIMS_DATA-1);
+    if (s_data[rand] == NULL) {
+	    s_data[rand] = new AnimationData();
+	    s_data[rand]->Load(s_dataFilenames[rand]);
+    }
 
-    AnimationData* ad = new AnimationData();
-    //ad->Load("anim/calvo.anim");
-
-    /*        Animacion Random*/
-    int rand = Utils::randomInt(0, 4);
-    if (rand == 0) ad->Load("anim/calvo.anim");
-    else if (rand == 1) ad->Load("anim/tupe.anim");
-    else if (rand == 2) ad->Load("anim/gordo.anim");
-    else if (rand == 3) ad->Load("anim/moderno.anim");
-    else ad->Load("anim/rubiaca.anim");
-    //    if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
-    //    else  ad->Load("anim/morenaca.anim");
-
-    //}
-
+    AnimationData* ad = s_data[rand];
 
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
@@ -124,14 +132,14 @@ void Person::Update() {
         }
 
 	    v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_PANIC);
-                //cout<<v.size()<<endl;
+
         if (m_confuseCooldown <= 0.0f) {
-            m_confuseCooldown = Utils::randomInt(10,15);
             for(int i = 0; i < v.size(); i++)
             {
                 m_state = STATE_CONFUSED;
                 m_confusedTime = Utils::randomInt(1,2);
                 m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
+		m_confuseCooldown = Utils::randomInt(12,17);
             }
         }
         else {
