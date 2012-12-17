@@ -3,6 +3,7 @@
 
 #include "game_reg.h"
 #include "input_engine.h"
+#include "game_scene.h"
 #include "defines.h"
 
 void Police::Init() {
@@ -34,9 +35,9 @@ void Police::Update() {
 	City &city = *GameReg::getInstance()->city;
 	Player* p = GameReg::getInstance()->player;
 
-	std::list<Person>* personList = GameReg::getInstance()->personList;
-	for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++) {
-		Person &person = *it;
+	std::vector<Person*> personList = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_ANY);
+	for (std::vector<Person*>::iterator it = personList.begin(); it != personList.end(); it++) {
+		Person &person = *(*it);
 		if (canSee(person.getPosition())) {
 			switch(person.getState())
 			{
