@@ -36,7 +36,7 @@ void Item::Update() {
 
     if (flagDie) {
         dieTimer -= delta;
-        if (dieTimer <= 0) GameReg::getInstance()->eventQueue.push(new EventDeleteItem(this));
+         if (dieTimer <= 0) markForDelete();
     }
 
 

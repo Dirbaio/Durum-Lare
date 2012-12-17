@@ -21,6 +21,7 @@ Object::Object() :
 {
     //uniqueID = Utils::getNewUniqueID();
 
+	m_toBeDeleted = false;
     m_isTakeable = false;
     m_isUsable = false;
     m_isTaken = false;

@@ -54,7 +54,7 @@ private:
 	//Managers
 	std::list<Person> personList;
 	std::list<Police> policeList;
-    std::list<Item*> itemList;
+    std::list<Item> itemList;
 
     sf::Music bg_music;
 };

@@ -57,7 +57,9 @@ public:
 	bool isTakeable() { return m_isTakeable; }
 	void setTakeable(bool isTakeable) { m_isTakeable = isTakeable; }
 	bool isUsable() { return m_isUsable; }
-
+	bool isToBeDeleted() { return m_toBeDeleted; }
+	void markForDelete() { m_toBeDeleted = true; }
+	
 	//Transitions
 	/*
 	void setDrawTransition(Transition* tx, Transition* ty);
@@ -78,6 +80,8 @@ public:
 protected:
 	int uniqueID;
 
+	bool m_toBeDeleted;
+	
 	int m_type;
 
         Animation* m_anim;

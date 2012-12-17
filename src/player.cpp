@@ -110,9 +110,9 @@ void Player::Update() {
 
     m_anim->Update(input->getFrameTime().asSeconds());
 
-    std::list<Item*>* itemList = GameReg::getInstance()->itemList;
-    for (std::list<Item*>::iterator it = itemList->begin(); it != itemList->end(); ++it) {
-        if ((*it)->isTakeable()) {
+    std::list<Item>* itemList = GameReg::getInstance()->itemList;
+    for (std::list<Item>::iterator it = itemList->begin(); it != itemList->end(); ++it) {
+        if (it->isTakeable()) {
 
             sf::FloatRect moneyBox = this->getBoundBox();
             moneyBox.left -= moneyBox.width/6;
@@ -120,9 +120,9 @@ void Player::Update() {
             moneyBox.top -= moneyBox.height/6;
             moneyBox.height *= 3;
 
-            if (Utils::rectCollision((*it)->getBoundBox(), moneyBox)) {
-                (*it)->takeAction();
-                myScore += (*it)->getScore();
+            if (Utils::rectCollision(it->getBoundBox(), moneyBox)) {
+                it->takeAction();
+                myScore += it->getScore();
             }
         }
     }

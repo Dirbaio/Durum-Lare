@@ -25,9 +25,6 @@ GameScene::GameScene() {
 
 GameScene::~GameScene() {
 	bg_music.stop();
-
-	for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it)
-		delete (*it);
 }
 
 void GameScene::initThread() {
@@ -120,12 +117,11 @@ bool GameScene::Init() {
 }
 
 void GameScene::spawnNewMoney(sf::Vector2f pos) {
-
 	Item* item = ItemFactory::MakeNewItem(ItemFactory::ITEM_MONEY);
 	item->setPosition(pos);
 	item->setTransPos(pos, pos + sf::Vector2f(Utils::randomInt(-16, 16), Utils::randomInt(-16, 16)));
-	itemList.push_back(item);
-
+	itemList.push_back(*item);
+	delete item;
 }
 
 
@@ -175,10 +171,34 @@ void GameScene::Update() {
 	}
 
 	//Items update
-	for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
-		(*it)->Update();
+	for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
+		it->Update();
 	}
 
+	//Delete persons
+	for (std::list<Person>::iterator it = personList.begin(); it != personList.end();) {
+		if(it->isToBeDeleted())
+		{
+			std::list<Person>::iterator it2 = it;
+			it2++;
+			personList.erase(it);
+			it = it2;
+			spawnNewPerson();
+		}
+		else ++it;
+	}
+
+	//Delete items
+	for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end();) {
+		if(it->isToBeDeleted())
+		{
+			std::list<Item	>::iterator it2 = it;
+			it2++;
+			itemList.erase(it);
+			it = it2;
+		}
+		else ++it;
+	}
 
 	HandleCamInput();
 	HandleEvents();
@@ -211,8 +231,8 @@ void GameScene::Draw() {
 		v.push_back(&*it);
 	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
 		v.push_back(&*it);
-	for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it)
-		v.push_back((*it));
+	for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it)
+		v.push_back(&*it);
 
 	sort(v.begin(), v.end(), comp);
 	for(int i = 0; i < v.size(); i++)
@@ -365,6 +385,7 @@ void GameScene::HandleEvents() {
 			break;
 		}
 
+/*
 		case EVENT_DELETE_PERSON: {
 			EventDeletePerson* ev = (EventDeletePerson*)e;
 
@@ -382,7 +403,7 @@ void GameScene::HandleEvents() {
 		case EVENT_DELETE_ITEM: {
 			EventDeleteItem* ev = (EventDeleteItem*)e;
 
-			for (std::list<Item*>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
+			for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it) {
 				if ((*it) == ev->item) {
 					delete (*it);
 					it = itemList.erase(it);
@@ -391,7 +412,7 @@ void GameScene::HandleEvents() {
 			}
 
 			break;
-		}
+		}*/
 
 		case EVENT_GAME_OVER: {
 			EventGameOver* ev = (EventGameOver*)e;

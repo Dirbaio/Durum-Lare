@@ -169,10 +169,9 @@ void Person::Update() {
         m_mark = MARK_NONE;
         m_prio = -1;
         deathTimer -= input->getFrameTime().asSeconds();
-        if (deathTimer < 0) {
-            GameReg* gameReg = GameReg::getInstance();
-            gameReg->eventQueue.push(new EventDeletePerson(this));
-        }
+        if (deathTimer < 0)
+        	markForDelete();
+
         break;
     }
 }

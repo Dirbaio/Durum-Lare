@@ -26,7 +26,7 @@ public:
 
         std::list<Person>* personList;
         std::list<Police>* policeList;
-        std::list<Item*>* itemList;
+        std::list<Item>* itemList;
 
 private:
         static GameReg* myInstance;
