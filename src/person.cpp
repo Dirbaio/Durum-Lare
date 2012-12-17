@@ -27,7 +27,7 @@ void Person::Init() {
     knows_player = false;
 
     transHit = NULL;
-
+    m_confuseCooldown = 0.0f;
 
     AnimationData* ad = new AnimationData();
     int rand = Utils::randomInt(0, 4);
@@ -116,11 +116,17 @@ void Person::Update() {
 
 	    v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_PANIC);
 		cout<<v.size()<<endl;
-		for(int i = 0; i < v.size(); i++)
-        {
-            m_state = STATE_CONFUSED;
-			m_confusedTime = Utils::randomInt(2,5);
-			m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
+        if (m_confuseCooldown <= 0.0f) {
+            m_confuseCooldown = Utils::randomInt(10,15);
+            for(int i = 0; i < v.size(); i++)
+            {
+                m_state = STATE_CONFUSED;
+                m_confusedTime = Utils::randomInt(1,2);
+                m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
+            }
+        }
+        else {
+            m_confuseCooldown -= delta;
         }
 
         if(canSee(p->getPosition())) {

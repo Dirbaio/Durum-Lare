@@ -52,6 +52,8 @@ class Person : public Npc {
     sf::Sprite bloodSpr;
     float m_walkingTime;
 
+    float m_confuseCooldown;
+
     float m_confusedTime;
     float m_confusedTimeFacing;
 
