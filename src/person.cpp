@@ -118,8 +118,8 @@ void Person::Update() {
 		for(int i = 0; i < v.size(); i++)
         {
             m_state = STATE_CONFUSED;
-            m_confusedTime = Utils::randomInt(5, 10);
-            m_confusedTimeFacing = Utils::randomInt(1, 2);
+			m_confusedTime = Utils::randomInt(2,5);
+			m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
         }
     }
         break;
@@ -184,7 +184,7 @@ void Person::Update() {
 
         if (m_confusedTimeFacing < 0) {
             lookAtRandomPlace();
-            m_confusedTimeFacing = Utils::randomInt(1, 2);
+	    m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
         }
 
 	    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
@@ -266,11 +266,12 @@ void Person::lookAtRandomPlace()
     City &city = *GameReg::getInstance()->city;
     vec2i v = city.absoluteToTilePos(m_position);
 
+    int lastFaceDir = m_faceDir;
     int i = 0;
-    while(i < 4) {
+    while(i < 8) {
         m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
         vec2i v2 = v + dirInc[m_faceDir];
-        if(!city.occupedIJ(v2.x, v2.y)) break;
+	if(!city.occupedIJ(v2.x, v2.y) && m_faceDir != lastFaceDir) break;
         i++;
     }
 }
