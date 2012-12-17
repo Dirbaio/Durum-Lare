@@ -30,7 +30,7 @@ public:
 	float tileBottomPos(int y);
 	float tileLeftPos(int x);
 	float tileRightPos(int x);
-
+	int getTileAt(sf::Vector2f pt);
     bool visible(sf::Vector2f from, sf::Vector2f to);
 private:
 	int tw, th;

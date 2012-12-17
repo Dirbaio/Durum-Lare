@@ -90,15 +90,31 @@ float City::tileRightPos(int x)
 	return float(x+1)*tw;
 }
 
+int City::getTileAt(vec2 pt)
+{
+	return map.m[int(pt.x/tw)][int(pt.y/th)].tileNum;
+}
+
+//Dice si una persona en FROM ve a una persona en TO
 bool City::visible(vec2 from, vec2 to)
 {
-    if(Utils::distance(from, to) > 200)
-        return false;
+    bool fromGrass = getTileAt(from) == 11;
+    bool toGrass = getTileAt(to) == 11;
+    
+    //Desde fuera no se puede ver dentro..
+	if(!fromGrass && toGrass) return false;
+	if(fromGrass && toGrass && d > 25) return false;
+	float d = Utils::distance(from, to);
+    if(d > 200) return false;
 
+	
     for(int i = 0; i <= 20; i++)
     {
         vec2 pt = (from*float(i) + to*float(20-i))/20.0f;
-        if(occupedXY(pt.x, pt.y) || map.m[int(pt.x/tw)][int(pt.y/th)].tileNum == 11)
+        //Si los dos dentro, ha de ser todo grass.
+        if(fromGrass && getTileAt(pt) != 11)
+        	return false;
+        if(occupedXY(pt.x, pt.y))
             return false;
     }
 

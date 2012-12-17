@@ -125,6 +125,7 @@ void Map::load(vector<vector<bool> > v)
                     t.tileNum = 11;
                 else if(rand()%3 == 0)
                     t.tileNum = 5;
+                else t.tileNum = 11;
             }
         }
 
