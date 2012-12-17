@@ -152,7 +152,7 @@ void Police::Update() {
 		moveTowardsGoal();
 
 		if(canSee(p->getPosition())) {
-			if (p->isDoingAction()) m_knowPlayer = true;
+			m_knowPlayer = m_knowPlayer || p->isDoingAction();
 			if (m_knowPlayer) {
 				m_lastPosSawPlayer = p->getPosition();
 				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
@@ -179,9 +179,9 @@ void Police::Update() {
 			m_watchingTimeFacing = Utils::randomInt(1, 2);
 		}
 
-		if (m_knowPlayer) {
-			Player* p = GameReg::getInstance()->player;
-			if(canSee(p->getPosition())) {
+		if(canSee(p->getPosition())) {
+			m_knowPlayer = m_knowPlayer || p->isDoingAction();
+			if (m_knowPlayer) {
 				m_lastPosSawPlayer = p->getPosition();
 				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
 				m_lastPosSawTime = 5;
@@ -229,6 +229,16 @@ void Police::Update() {
 		moveTowardsGoal();
 		if (m_alertTime < 0) {
 			m_state = STATE_PATROL_MOVING;
+		}
+
+		if(canSee(p->getPosition())) {
+			m_knowPlayer = m_knowPlayer || p->isDoingAction();
+			if (m_knowPlayer) {
+				m_lastPosSawPlayer = p->getPosition();
+				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
+				m_lastPosSawTime = 5;
+				m_state = STATE_CHASING_PLAYER;
+			}
 		}
 
 		break;
