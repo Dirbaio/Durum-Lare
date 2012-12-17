@@ -189,6 +189,16 @@ void Police::Update() {
 			}
 		}
 
+        if(canSee(p->getPosition())) {
+            if (p->isDoingAction()) m_knowPlayer = true;
+            if (m_knowPlayer) {
+                m_lastPosSawPlayer = p->getPosition();
+                m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
+                m_lastPosSawTime = 5;
+                m_state = STATE_CHASING_PLAYER;
+            }
+        }
+
 		break;
 	case STATE_ALERT:
 	{
