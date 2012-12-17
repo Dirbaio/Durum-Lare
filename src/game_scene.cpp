@@ -207,7 +207,13 @@ void GameScene::Update() {
 bool comp(Object* a, Object* b)
 {
 	if(a->m_prio == b->m_prio)
-		return a->getPosition().y < b->getPosition().y;
+	{
+		int ya = int(a->getPosition().y+0.1);
+		int yb = int(b->getPosition().y+0.1);
+		if(ya == yb)
+			return a->getUniqueID() < b->getUniqueID();
+		return ya < yb;
+	}
 	else
 		return a->m_prio < b->m_prio;
 }

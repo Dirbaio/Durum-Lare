@@ -110,8 +110,8 @@ void Person::Update() {
             {
                 m_state = STATE_PANIC;
                 m_panicTime = m_startPanicTime;
-                vec2i myPos = city.absoluteToTilePos(it->m_position);
-                if (myPos == city.absoluteToTilePos(playerPosition)) knows_player = true;
+
+                if (Utils::distance(it->m_position, playerPosition) < 70) knows_player = true;
             }
     }
         break;
