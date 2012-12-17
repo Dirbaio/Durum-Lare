@@ -30,10 +30,13 @@ bool City::occupedXY(int x, int y) {
 	return occupedIJ(x/tw, y/th);
 }
 
+bool City::validTile(int i, int j) {
+	if (i < 0 || i >= map.tx ) return false;
+	if (j < 0 || j >= map.ty ) return false;
+	return true;
+}
 bool City::occupedIJ(int i, int j) {
-	//std::cerr << "IJ: " << i << " " << j << " - " << !map.m[i][j].transitable() << std::endl;
-	if (i < 0 || i >= map.tx ) return true;
-	if (j < 0 || j >= map.ty ) return true;
+	if(!validTile(i, j)) return true;
 	return map.boolMatrix[i][j];
 }
 
@@ -94,8 +97,7 @@ int City::getTileAt(vec2 pt)
 {
 	int i = int(pt.x/tw);
 	int j = int(pt.y/th);
-	if (i < 0 || i >= map.tx ) return true;
-	if (j < 0 || j >= map.ty ) return true;
+	if(!validTile(i, j)) return true;
 	return map.m[i][j].tileNum;
 }
 
@@ -109,7 +111,7 @@ bool City::visible(vec2 from, vec2 to)
 	if(!fromGrass && toGrass) return false;
 	float d = Utils::distance(from, to);
 	if(fromGrass && toGrass && d > 36) return false;
-    if(d > 200) return false;
+    if(d > 180) return false;
 
 	
     for(int i = 0; i <= 20; i++)

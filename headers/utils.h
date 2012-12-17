@@ -25,11 +25,11 @@ struct Utils {
 		return (rand()%((max-min)+1)) + min;
 	}
 
-    static float vec2fToDeg(vec2 vector) {
+    static float vec2fToDeg(const vec2& vector) {
 		return (atan(vector.y/vector.x))*M_PI*2.0f;
 	}
 
-    static float norm(vec2 v)
+    static float norm(const vec2& v)
     {
         return sqrt(v.x*v.x + v.y*v.y);
     }
@@ -39,7 +39,7 @@ struct Utils {
         v /= norm(v);
     }
 
-    static float dot2(vec2 a, vec2 b) {
+    static float dot2(const vec2& a, const vec2& b) {
         return a.x*b.x + a.y*b.y;
     }
 
@@ -77,12 +77,14 @@ struct Utils {
 
 		return c - '0';
 	}
-
+/*
+	//ESTO DA UN GUARNIN
+	
 	static void safeDel(void* &ptr) {
 		if (ptr != NULL) delete ptr;
 		ptr = NULL;
 	}
-
+*/
 
 	//Returns true if point r is counterclockwise over line pq
     static bool orientationTest(vec2 p, vec2 q, vec2 r) {

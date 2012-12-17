@@ -34,6 +34,7 @@ void GameScene::initThread() {
 	gameReg->policeList = &policeList;
 	gameReg->itemList = &itemList;
 	gameReg->player = &player;
+	gameReg->scene = this;
 
 	GraphEng* graphics = GraphEng::getInstance();
 
@@ -143,6 +144,124 @@ void GameScene::spawnNewPolice() {
 	policeList.push_back(p);
 }
 
+vector<Person*> GameScene::getPeopleAround(vec2 pos, float r, SearchType st)
+{
+	vec2 min = pos - vec2(r, r);
+	vec2 max = pos - vec2(r, r);
+	int xmin = min.x / 64;
+	int ymin = min.y / 64;
+	int xmax = max.x / 64;
+	int ymax = max.y / 64;
+	if(xmin < 0) xmin = 0;
+	if(ymin < 0) ymin = 0;
+	if(xmax >= city.getTW()) xmax = city.getTW()-1;
+	if(ymax >= city.getTH()) ymax = city.getTH()-1;
+
+	vector<Person*> res;
+	for(int x = xmin; x <= xmax; x++)
+		for(int y = ymin; y <= ymax; y++)
+		{
+			vector<Person*>& v = estructuraPepinoPeople[x][y];
+			for(int i = 0; i < v.size(); i++)
+				if( (st == SEARCH_ANY || 
+					(st == SEARCH_DEAD && !v[i]->is_alive()) || 
+					(st == SEARCH_PANIC && v[i]->getState() == Person::STATE_PANIC))
+						 && Utils::distance(pos, v[i]->m_position) <= r)
+					res.push_back(v[i]);
+		}
+	return res;
+}
+
+void GameScene::collide(Character* a)
+{
+	vec2 pos = a->m_position;
+	float r = 10;
+	
+	vec2 min = pos - vec2(r, r);
+	vec2 max = pos - vec2(r, r);
+	int xmin = min.x / 64;
+	int ymin = min.y / 64;
+	int xmax = max.x / 64;
+	int ymax = max.y / 64;
+	if(xmin < 0) xmin = 0;
+	if(ymin < 0) ymin = 0;
+	if(xmax >= city.getTW()) xmax = city.getTW()-1;
+	if(ymax >= city.getTH()) ymax = city.getTH()-1;
+
+	for(int x = xmin; x <= xmax; x++)
+		for(int y = ymin; y <= ymax; y++)
+		{
+			{
+				vector<Person*>& v = estructuraPepinoPeople[x][y];
+				for(int i = 0; i < v.size(); i++)
+				{
+					Character* b = v[i];
+				
+					if(Utils::distance(pos, b->m_position) < 10)
+					{
+						vec2 l = b->m_position - a->m_position;
+						if(Utils::norm(l) == 0) continue;
+				
+						Utils::normalize(l);
+						vec2 m = (b->m_position + a->m_position) / 2.0f;
+						a->move(m-l*5.0f);
+						b->move(m+l*5.0f);
+					}
+				}
+			}
+			
+			{
+				vector<Police*>& v = estructuraPepinoPolice[x][y];
+				for(int i = 0; i < v.size(); i++)
+				{
+					Character* b = v[i];
+				
+					if(Utils::distance(pos, b->m_position) < 10)
+					{
+						vec2 l = b->m_position - a->m_position;
+						if(Utils::norm(l) == 0) continue;
+				
+						Utils::normalize(l);
+						vec2 m = (b->m_position + a->m_position) / 2.0f;
+						a->move(m-l*5.0f);
+						b->move(m+l*5.0f);
+					}
+				}
+			}
+		}
+}
+
+vector<Person*> GameScene::getPeopleSeen(Character* c, SearchType st)
+{
+	float r = 180;
+	
+	vec2 min = c->m_position - vec2(r, r);
+	vec2 max = c->m_position + vec2(r, r);
+	int xmin = min.x / 64;
+	int ymin = min.y / 64;
+	int xmax = max.x / 64;
+	int ymax = max.y / 64;
+//	cout<<xmin<<" "<<xmax<<" "<<ymin<<" "<<ymax<<endl;
+	if(xmin < 0) xmin = 0;
+        if(ymin < 0) ymin = 0;
+	if(xmax >= city.getTW()) xmax = city.getTW()-1;
+	if(ymax >= city.getTH()) ymax = city.getTH()-1;
+	
+	vector<Person*> res;
+	for(int x = xmin; x <= xmax; x++)
+		for(int y = ymin; y <= ymax; y++)
+		{
+			vector<Person*>& v = estructuraPepinoPeople[x][y];
+			for(int i = 0; i < v.size(); i++)
+				if( (st == SEARCH_ANY || 
+					(st == SEARCH_DEAD && !v[i]->is_alive()) || 
+					(st == SEARCH_PANIC && v[i]->getState() == Person::STATE_PANIC))
+						 && c->canSee(v[i]->m_position))
+					res.push_back(v[i]);
+		}
+	return res;
+}
+
 void GameScene::Update() {
 
 	InputEng* input = InputEng::getInstance();
@@ -156,6 +275,20 @@ void GameScene::Update() {
 							   input->getMousePos().x,
 							   input->getMousePos().y),camera));
 
+	estructuraPepinoPeople = vector<vector<vector<Person*> > > (city.getTW(), vector<vector<Person*> >(city.getTH()));
+	estructuraPepinoPolice = vector<vector<vector<Police*> > > (city.getTW(), vector<vector<Police*> >(city.getTH()));
+
+	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
+		vec2i p = city.absoluteToTilePos(it->m_position);
+		if(!city.validTile(p.x, p.y)) continue;
+		estructuraPepinoPeople[p.x][p.y].push_back(&*it);
+	}
+	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
+		vec2i p = city.absoluteToTilePos(it->m_position);
+		if(!city.validTile(p.x, p.y)) continue;
+		estructuraPepinoPolice[p.x][p.y].push_back(&*it);
+	}
+	
 	//Player update
 	player.Update();
 
@@ -174,6 +307,13 @@ void GameScene::Update() {
 		it->Update();
 	}
 
+	//COLLISIONS !!!!
+	collide(&player);
+	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
+		collide(&*it);
+	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
+		collide(&*it);
+		
 	//Delete persons
 	for (std::list<Person>::iterator it = personList.begin(); it != personList.end();) {
 		if(it->isToBeDeleted())
@@ -236,24 +376,6 @@ void GameScene::Draw() {
 		v.push_back(&*it);
 	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
 		v.push_back(&*it);
-
-	for(int i = 0; i < v.size(); i++)
-		for(int j = i+1; j < v.size(); j++)
-		{
-			Character* a = (Character*)v[i];
-			Character* b = (Character*)v[j];
-			if(Utils::distance(a->m_position, b->m_position) < 10)
-			{
-				vec2 l = b->m_position - a->m_position;
-				if(Utils::norm(l) == 0) continue;
-				
-				Utils::normalize(l);
-				vec2 m = (b->m_position + a->m_position) / 2.0f;
-				a->move(m-l*5.0f);
-				b->move(m+l*5.0f);
-			}
-		}
-
 	for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it)
 		v.push_back(&*it);
 

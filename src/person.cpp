@@ -6,7 +6,7 @@
 #include "game_reg.h"
 #include "utils.h"
 #include "animation.h"
-
+#include "game_scene.h"
 #include <SFML/Audio.hpp>
 
 void Person::Init() {
@@ -29,6 +29,7 @@ void Person::Init() {
     transHit = NULL;
 
     m_origin = sf::Vector2f(16, 16);
+    m_confuseCooldown = 0.0f;
 
 
     AnimationData* ad = new AnimationData();
@@ -40,11 +41,11 @@ void Person::Init() {
     else if (rand == 1) ad->Load("anim/tupe.anim");
     else if (rand == 2) ad->Load("anim/gordo.anim");
     else if (rand == 3) ad->Load("anim/moderno.anim");
-    else {
-        if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
-        else  ad->Load("anim/morenaca.anim");
+    else ad->Load("anim/rubiaca.anim");
+    //    if (Utils::randomInt(0, 1)) ad->Load("anim/rubiaca.anim");
+    //    else  ad->Load("anim/morenaca.anim");
 
-    }
+    //}
 
 
     if (m_anim == NULL) m_anim = new Animation();
@@ -65,22 +66,19 @@ void Person::Init() {
 
 float Person::getClosestMenace(vec2 pos, vec2& menacePos)
 {
-    City &city = *GameReg::getInstance()->city;
-    std::list<Person>* personList = GameReg::getInstance()->personList;
-
     menacePos = m_lastSawPlayer;
     float d = Utils::distance(pos, menacePos)/2;
 
-    for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++)
-        if (!it->is_alive())
+    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
+	for(int i = 0; i < v.size(); i++)
+    {
+        float d2 = Utils::distance(pos, v[i]->getPosition());
+        if(d2 < d)
         {
-            float d2 = Utils::distance(pos, it->getPosition());
-            if(d2 < d)
-            {
-                d = d2;
-                menacePos = it->getPosition();
-            }
+            d = d2;
+            menacePos = v[i]->getPosition();
         }
+    }
 
     return d;
 }
@@ -93,10 +91,10 @@ void Person::Update() {
     float delta = input->getFrameTime().asSeconds();
 
     City &city = *GameReg::getInstance()->city;
-    std::list<Person>* personList = GameReg::getInstance()->personList;
 
     vec2 currPlayerPosition = GameReg::getInstance()->player->getPosition();
     bool seesPlayerNow = canSee(currPlayerPosition);
+    Player* p = GameReg::getInstance()->player;
     if(seesPlayerNow)
     	m_lastSawPlayer = currPlayerPosition;
 	
@@ -116,22 +114,36 @@ void Person::Update() {
             m_panicTime = m_startPanicTime;
         }
 
-        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++)
-            if (!it->is_alive() && canSee(it->m_position))
-            {
-                m_state = STATE_PANIC;
-                m_panicTime = m_startPanicTime;
+	    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
+		for(int i = 0; i < v.size(); i++)
+        {
+            m_state = STATE_PANIC;
+            m_panicTime = m_startPanicTime;
 
-                if (Utils::distance(it->m_position, m_lastSawPlayer) < 70) knows_player = true;
-            }
+            if (Utils::distance(v[i]->m_position, m_lastSawPlayer) < 70) knows_player = true;
+        }
 
-        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_CONFUSED; it++)
-            if (it->m_state == STATE_PANIC && canSee(it->m_position))
+	    v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_PANIC);
+                //cout<<v.size()<<endl;
+        if (m_confuseCooldown <= 0.0f) {
+            m_confuseCooldown = Utils::randomInt(10,15);
+            for(int i = 0; i < v.size(); i++)
             {
                 m_state = STATE_CONFUSED;
-                m_confusedTime = Utils::randomInt(5, 10);
-                m_confusedTimeFacing = Utils::randomInt(1, 2);
+                m_confusedTime = Utils::randomInt(1,2);
+                m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
             }
+        }
+        else {
+            m_confuseCooldown -= delta;
+        }
+
+        if(canSee(p->getPosition())) {
+            if (p->isDoingAction()) {
+                m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
+            }
+        }
     }
         break;
 
@@ -181,8 +193,9 @@ void Person::Update() {
     }
     break;
 
-    case STATE_CONFUSED:
+    case STATE_CONFUSED: {
         m_mark = MARK_BLUE_QUESTION;
+
         m_vel = 20.0f;
         m_confusedTime -= delta;
         m_confusedTimeFacing -= delta;
@@ -194,28 +207,35 @@ void Person::Update() {
 
         if (m_confusedTimeFacing < 0) {
             lookAtRandomPlace();
-            m_confusedTimeFacing = Utils::randomInt(1, 2);
+	    m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
         }
 
-        for (std::list<Person>::iterator it = personList->begin(); it != personList->end() && m_state != STATE_PANIC; it++)
-            if (!it->is_alive() && canSee(it->m_position))
-            {
-                m_state = STATE_PANIC;
-                m_panicTime = m_startPanicTime;
+	    vector<Person*> v = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_DEAD);
+		for(int i = 0; i < v.size(); i++)
+        {
+            m_state = STATE_PANIC;
+            m_panicTime = m_startPanicTime;
 
-                if (Utils::distance(it->m_position, m_lastSawPlayer) < 70) knows_player = true;
-            }
+            if (Utils::distance(v[i]->m_position, m_lastSawPlayer) < 70) knows_player = true;
+        }
 
         if (knows_player) {
-            Player* p = GameReg::getInstance()->player;
             if(canSee(p->getPosition())) {
                 m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
+            }
+        }
+
+        if(canSee(p->getPosition())) {
+            if (p->isDoingAction()) {
+                m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
             }
         }
 
         break;
-
-    case STATE_DEAD:
+	}
+    case STATE_DEAD: {
         if (m_faceDir == FACE_UP) ensureAnim("DeadUp");
         else if (m_faceDir == FACE_DOWN) ensureAnim("DeadDown");
         else if (m_faceDir == FACE_LEFT) ensureAnim("DeadLeft");
@@ -227,6 +247,7 @@ void Person::Update() {
         	markForDelete();
 
         break;
+    }
     }
 
     if (m_state != STATE_DEAD) {
@@ -291,11 +312,12 @@ void Person::lookAtRandomPlace()
     City &city = *GameReg::getInstance()->city;
     vec2i v = city.absoluteToTilePos(m_position);
 
+    int lastFaceDir = m_faceDir;
     int i = 0;
-    while(i < 4) {
+    while(i < 8) {
         m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
         vec2i v2 = v + dirInc[m_faceDir];
-        if(!city.occupedIJ(v2.x, v2.y)) break;
+	if(!city.occupedIJ(v2.x, v2.y) && m_faceDir != lastFaceDir) break;
         i++;
     }
 }

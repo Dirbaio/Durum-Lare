@@ -3,6 +3,7 @@
 
 #include "game_reg.h"
 #include "input_engine.h"
+#include "game_scene.h"
 #include "defines.h"
 
 void Police::Init() {
@@ -32,10 +33,13 @@ void Police::Update() {
 	InputEng* input = InputEng::getInstance();
 	float delta = input->getFrameTime().asSeconds();
 	City &city = *GameReg::getInstance()->city;
+	Player* p = GameReg::getInstance()->player;
 
-	std::list<Person>* personList = GameReg::getInstance()->personList;
-	for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++) {
-		Person &person = *it;
+
+	std::vector<Person*> personList = GameReg::getInstance()->scene->getPeopleSeen(this, SEARCH_ANY);
+	for (std::vector<Person*>::iterator it = personList.begin(); it != personList.end(); it++) {
+		Person &person = *(*it);
+
 		if (canSee(person.getPosition())) {
 			switch(person.getState())
 			{
@@ -43,28 +47,97 @@ void Police::Update() {
 			{
 				if(m_state == STATE_PATROL_MOVING ||
 				   m_state == STATE_PATROL_WATCHING) {
-					m_state = STATE_CONFUSE;
-					m_alertTime = 15;
-					m_lastAlertPos = person.getPosition();
-					setGoal(m_lastAlertPos);
+					if (person.knowsPlayer())
+					{
+						m_state = STATE_ALERT;
+						m_alertTime = 20;
+						m_lastAlertPos = person.getPosition();
+						setGoal(m_lastAlertPos);
+					}
+					else
+					{
+						m_state = STATE_CONFUSE;
+						m_alertTime = 15;
+						m_lastAlertPos = person.getPosition();
+						setGoal(m_lastAlertPos);
+					}
 				}
 				break;
 			}
 			case Person::STATE_DEAD:
+			{
+				m_knowPlayer = m_knowPlayer || (canSee(p->m_position) &&
+				    Utils::distance(person.m_position, p->m_position) < 70);
+				if (m_knowPlayer)
+				{
+					if(m_state == STATE_PATROL_MOVING ||
+					   m_state == STATE_PATROL_WATCHING ||
+					   m_state == STATE_CONFUSE) {
+						m_state = STATE_ALERT;
+						m_alertTime = 20;
+						m_lastAlertPos = person.getPosition();
+						setGoal(m_lastAlertPos);
+					}
+				}
+				else
+				{
+					if(m_state == STATE_PATROL_MOVING ||
+					   m_state == STATE_PATROL_WATCHING ||
+					   m_state == STATE_CONFUSE) {
+						m_state = STATE_CONFUSE;
+						m_alertTime = 20;
+						m_lastAlertPos = person.getPosition();
+						setGoal(m_lastAlertPos);
+					}
+				}
+
+				break;
+			}
+			}
+		}
+	}
+
+	std::list<Police>* policeList = GameReg::getInstance()->policeList;
+	for (std::list<Police>::iterator it = policeList->begin(); it != policeList->end(); it++) {
+		Police &police = *it;
+		if (canSee(police.getPosition())) {
+			switch(police.m_state)
+			{
+			case Police::STATE_ALERT:
 				if(m_state == STATE_PATROL_MOVING ||
 				   m_state == STATE_PATROL_WATCHING ||
 				   m_state == STATE_CONFUSE) {
 					m_state = STATE_ALERT;
-					m_alertTime = 20;
-					m_lastAlertPos = person.getPosition();
+					m_alertTime = police.m_alertTime;
+					m_lastAlertPos = police.m_lastAlertPos;
 					setGoal(m_lastAlertPos);
+				}
+				break;
+			case Police::STATE_CONFUSE:
+				if(m_state == STATE_PATROL_MOVING ||
+				   m_state == STATE_PATROL_WATCHING) {
+					m_state = STATE_CONFUSE;
+					m_alertTime = police.m_alertTime;
+					m_lastAlertPos = police.m_lastAlertPos;
+					setGoal(m_lastAlertPos);
+				}
+				break;
+			case Police::STATE_CHASING_PLAYER:
+			case Police::STATE_PLAYER_LOST:
+				if(m_state == STATE_PATROL_MOVING ||
+				   m_state == STATE_PATROL_WATCHING ||
+				   m_state == STATE_CONFUSE) {
+					m_state = STATE_ALERT;
+					m_alertTime = 30;
+					m_lastAlertPos = m_lastPosSawPlayer;
+					setGoal(m_lastPosSawPlayer);
 				}
 				break;
 			}
 		}
 	}
 
-	std::list<Police>* policeList = GameReg::getInstance()->policeList;
+        //std::list<Police>* policeList = GameReg::getInstance()->policeList;
 	for (std::list<Police>::iterator it = policeList->begin(); it != policeList->end(); it++) {
 		Police &police = *it;
 		if (canSee(police.getPosition())) {
@@ -121,8 +194,12 @@ void Police::Update() {
 		moveTowardsGoal();
 
 		Player* p = GameReg::getInstance()->player;
+                /*if(canSee(p->getPosition())) {
+                        if (p->isDoingAction()) m_knowPlayer = true;*/
+
 		if(canSee(p->getPosition())) {
-			if (p->isDoingAction()) m_knowPlayer = true;
+			m_knowPlayer = m_knowPlayer || p->isDoingAction();
+
 			if (m_knowPlayer) {
 				m_lastPosSawPlayer = p->getPosition();
 				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
@@ -149,15 +226,25 @@ void Police::Update() {
 			m_watchingTimeFacing = Utils::randomInt(1, 2);
 		}
 
-		if (m_knowPlayer) {
-			Player* p = GameReg::getInstance()->player;
-			if(canSee(p->getPosition())) {
+		if(canSee(p->getPosition())) {
+			m_knowPlayer = m_knowPlayer || p->isDoingAction();
+			if (m_knowPlayer) {
 				m_lastPosSawPlayer = p->getPosition();
 				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
 				m_lastPosSawTime = 5;
 				m_state = STATE_CHASING_PLAYER;
 			}
 		}
+
+        if(canSee(p->getPosition())) {
+            if (p->isDoingAction()) m_knowPlayer = true;
+            if (m_knowPlayer) {
+                m_lastPosSawPlayer = p->getPosition();
+                m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
+                m_lastPosSawTime = 5;
+                m_state = STATE_CHASING_PLAYER;
+            }
+        }
 
 		break;
 	case STATE_ALERT:
@@ -199,6 +286,16 @@ void Police::Update() {
 		moveTowardsGoal();
 		if (m_alertTime < 0) {
 			m_state = STATE_PATROL_MOVING;
+		}
+
+		if(canSee(p->getPosition())) {
+			m_knowPlayer = m_knowPlayer || p->isDoingAction();
+			if (m_knowPlayer) {
+				m_lastPosSawPlayer = p->getPosition();
+				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
+				m_lastPosSawTime = 5;
+				m_state = STATE_CHASING_PLAYER;
+			}
 		}
 
 		break;

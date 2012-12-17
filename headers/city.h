@@ -17,6 +17,7 @@ public:
 	int getH();
 	int getTW();
 	int getTH();
+	bool validTile(int i, int j);
 	bool occupedXY(int x, int y);
 	bool occupedIJ(int i, int j);
 	bool occupedRect(sf::IntRect rect);
