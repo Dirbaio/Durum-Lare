@@ -6,6 +6,8 @@
 #include "game_scene.h"
 #include "defines.h"
 
+AnimationData* s_police_data = NULL;
+
 void Police::Init() {
 
 	GraphEng* graphics = GraphEng::getInstance();
@@ -19,10 +21,13 @@ void Police::Init() {
 	m_knowPlayer = false;
 	m_state = STATE_PATROL_WATCHING;
 
-	AnimationData* ad = new AnimationData();
-	ad->Load("anim/poli.anim");
+	if (s_police_data == NULL) {
+		s_police_data = new AnimationData();
+		s_police_data->Load("anim/poli.anim");
+	}
+
 	if (m_anim == NULL) m_anim = new Animation();
-	m_anim->setAnimData(ad);
+	m_anim->setAnimData(s_police_data);
 	m_anim->SelectAnim("IdleDown");
 }
 

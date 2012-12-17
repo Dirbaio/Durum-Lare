@@ -11,7 +11,7 @@
 
 #define NUM_ANIMS_DATA 6
 
-AnimationData* s_data[NUM_ANIMS_DATA] = {
+AnimationData* s_person_data[NUM_ANIMS_DATA] = {
 	NULL,
 	NULL,
 	NULL,
@@ -20,7 +20,7 @@ AnimationData* s_data[NUM_ANIMS_DATA] = {
 	NULL
 };
 
-char* s_dataFilenames[NUM_ANIMS_DATA] = {
+char* s_person_dataFilenames[NUM_ANIMS_DATA] = {
 	"anim/calvo.anim",
 	"anim/tupe.anim",
 	"anim/gordo.anim",
@@ -50,12 +50,12 @@ void Person::Init() {
     m_confuseCooldown = 0.0f;
 
     int rand = Utils::randomInt(0, NUM_ANIMS_DATA-1);
-    if (s_data[rand] == NULL) {
-	    s_data[rand] = new AnimationData();
-	    s_data[rand]->Load(s_dataFilenames[rand]);
+    if (s_person_data[rand] == NULL) {
+	    s_person_data[rand] = new AnimationData();
+	    s_person_data[rand]->Load(s_person_dataFilenames[rand]);
     }
 
-    AnimationData* ad = s_data[rand];
+    AnimationData* ad = s_person_data[rand];
     if (m_anim == NULL) m_anim = new Animation();
     m_anim->setAnimData(ad);
     m_anim->SelectAnim("Walking");
