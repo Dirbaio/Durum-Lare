@@ -28,6 +28,7 @@ void Police::Init() {
 void Police::Update() {
 
 	Npc::Update();
+	m_collided = false;
 	InputEng* input = InputEng::getInstance();
 	float delta = input->getFrameTime().asSeconds();
 	City &city = *GameReg::getInstance()->city;
@@ -35,11 +36,6 @@ void Police::Update() {
 	std::list<Person>* personList = GameReg::getInstance()->personList;
 	for (std::list<Person>::iterator it = personList->begin(); it != personList->end(); it++) {
 		Person &person = *it;
-		vec2 pos = person.getPosition();
-		vec2 dir_corpse = pos - m_position;
-		vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
-		Utils::normalize(dir_corpse);
-		Utils::normalize(dir_facing);
 		if (canSee(person.getPosition())) {
 			switch(person.getState())
 			{
@@ -68,9 +64,50 @@ void Police::Update() {
 		}
 	}
 
+	std::list<Police>* policeList = GameReg::getInstance()->policeList;
+	for (std::list<Police>::iterator it = policeList->begin(); it != policeList->end(); it++) {
+		Police &police = *it;
+		if (canSee(police.getPosition())) {
+			switch(police.m_state)
+			{
+			case Police::STATE_ALERT:
+				if(m_state == STATE_PATROL_MOVING ||
+				   m_state == STATE_PATROL_WATCHING ||
+				   m_state == STATE_CONFUSE) {
+					m_state = STATE_ALERT;
+					m_alertTime = police.m_alertTime;
+					m_lastAlertPos = police.m_lastAlertPos;
+					setGoal(m_lastAlertPos);
+				}
+				break;
+			case Police::STATE_CONFUSE:
+				if(m_state == STATE_PATROL_MOVING ||
+				   m_state == STATE_PATROL_WATCHING) {
+					m_state = STATE_CONFUSE;
+					m_alertTime = police.m_alertTime;
+					m_lastAlertPos = police.m_lastAlertPos;
+					setGoal(m_lastAlertPos);
+				}
+				break;
+			case Police::STATE_CHASING_PLAYER:
+			case Police::STATE_PLAYER_LOST:
+				if(m_state == STATE_PATROL_MOVING ||
+				   m_state == STATE_PATROL_WATCHING ||
+				   m_state == STATE_CONFUSE) {
+					m_state = STATE_ALERT;
+					m_alertTime = 30;
+					m_lastAlertPos = m_lastPosSawPlayer;
+					setGoal(m_lastPosSawPlayer);
+				}
+				break;
+			}
+		}
+	}
+
 	switch(m_state)
 	{
 	case STATE_PATROL_MOVING:
+	{
 		m_mark = MARK_NONE;
 		m_vel = 20.0f;
 		if (!m_hasGoal) {
@@ -82,9 +119,11 @@ void Police::Update() {
 		}
 
 		moveTowardsGoal();
-		if (m_knowPlayer) {
-			Player* p = GameReg::getInstance()->player;
-			if(canSee(p->getPosition())) {
+
+		Player* p = GameReg::getInstance()->player;
+		if(canSee(p->getPosition())) {
+			if (p->isDoingAction()) m_knowPlayer = true;
+			if (m_knowPlayer) {
 				m_lastPosSawPlayer = p->getPosition();
 				m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
 				m_lastPosSawTime = 5;
@@ -93,6 +132,7 @@ void Police::Update() {
 		}
 
 		break;
+	}
 	case STATE_PATROL_WATCHING:
 		m_mark = MARK_NONE;
 		m_vel = 20.0f;
@@ -176,17 +216,14 @@ void Police::Update() {
 		}
 
 		moveInDir(m_lastPosSawPlayer-m_position);
-		sf::FloatRect rect = getBoundBox();
-		if (rect.contains(m_lastPosSawPlayer))
+		if (Utils::distance(m_position, p->m_position) <= 12)
 		{
-			if (rect.intersects(p->getBoundBox()))
-			{
-				GameReg::getInstance()->eventQueue.push(new EventGameOver());
-			}
-			else
-			{
-				m_state = STATE_PLAYER_LOST;
-			}
+			GameReg::getInstance()->eventQueue.push(new EventGameOver());
+		}
+
+		if (Utils::distance(m_position, m_lastPosSawPlayer) <= 12)
+		{
+			m_state = STATE_PLAYER_LOST;
 		}
 
 		if (m_lastPosSawTime < 0)
@@ -199,6 +236,7 @@ void Police::Update() {
 		break;
 	}
 	case STATE_PLAYER_LOST:
+	{
 		m_vel = 60.0f;
 		m_mark = MARK_QUESTION;
 		m_lastPosSawTime -= delta;
@@ -222,6 +260,7 @@ void Police::Update() {
 		}
 
 		break;
+	}
 	}
 
 	if (m_state == STATE_PATROL_WATCHING) {
@@ -302,41 +341,26 @@ void Police::Draw() {
 
 }
 
-void Police::noLeftCollision()
-{
-	m_collided = false;
-}
-
-void Police::noRightCollision()
-{
-	m_collided = false;
-}
-
-void Police::noUpCollision()
-{
-	m_collided = false;
-}
-void Police::noDownCollision()
-{
-	m_collided = false;
-}
-
 bool Police::onLeftCollision(int x, int j)
 {
+	m_collided = true;
 	return m_state != STATE_CHASING_PLAYER;
 }
 
 bool Police::onRightCollision(int x, int j)
 {
+	m_collided = true;
 	return m_state != STATE_CHASING_PLAYER;
 }
 
 bool Police::onUpCollision(int x, int j)
 {
+	m_collided = true;
 	return m_state != STATE_CHASING_PLAYER;
 }
 
 bool Police::onDownCollision(int x, int j)
 {
+	m_collided = true;
 	return m_state != STATE_CHASING_PLAYER;
 }
