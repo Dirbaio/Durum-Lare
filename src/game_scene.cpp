@@ -1,25 +1,30 @@
 #include "game_scene.h"
-#include "defines.h"
-#include "input_engine.h"
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include <iostream>
 #include <vector>
+#include <list>
 #include <sstream>
+
+#include "defines.h"
 #include "utils.h"
-#include "game_reg.h"
+#include "input_engine.h"
 #include "graphics_engine.h"
+
+#include "game_reg.h"
 #include "generator.h"
-#include <SFML/Audio.hpp>
+
 #include "player.h"
 #include "person.h"
 #include "police.h"
-#include <list>
+
 #include "hud.h"
 #include "item.h"
 #include "item_factory.h"
 #include "menu_scene.h"
 
-GameScene::GameScene() {
+GameScene::GameScene(){
 
 }
 
@@ -44,20 +49,18 @@ void GameScene::initThread() {
 	player.Init();
 	player.setPosition(city.getRandomStreet());
 
-
 	//Init camera
 	camera.reset(sf::FloatRect(0, 0,
-				   graphics->getCurrentVideoMode().width,
-				   graphics->getCurrentVideoMode().height));
+				   (float) graphics->getCurrentVideoMode().width,
+				   (float) graphics->getCurrentVideoMode().height));
 
 	//Init NPCS
-
-    for (int i = 0; i < 600; ++i) spawnNewPerson();
-    for (int i = 0; i < 30; ++i) spawnNewPolice();
+	for (int i = 0; i < 600; ++i) spawnNewPerson();
+	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
 	//Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
-        camera.zoom(0.5f);
+	camera.zoom(0.5f);
 
 	//Init background music
 	bg_music.openFromFile("audio/surrounding.ogg");
@@ -72,224 +75,225 @@ void GameScene::initThread() {
 }
 
 bool GameScene::Init() {
-	initThreadDone = false;
 
+	initThreadDone = false;
 	GraphEng* graphics = graphics->getInstance();
-       /*
+
+	/*
 	sf::Sprite loadScene;
 	loadScene.setTexture(*graphics->getTexture("img/loading.png"));
 	loadScene.setPosition(App->getView().getSize().x*0.5f - loadScene.getTexture()->getSize().x*0.5f,
 			      App->getView().getSize().y*0.5f - loadScene.getTexture()->getSize().y*0.5f);
-	loadingText = sf::Text("Loading...");
-*/
+	loadingText = sf::Text("Loading...");*/
+
 	sf::Text titleText;
 	titleText.setColor(sf::Color::Yellow);
 	titleText.setStyle(sf::Text::Bold);
 	titleText.setString("DURUM, DALE");
 	titleText.setScale(3, 3);
-	titleText.setPosition(App->getSize().x*0.25f, App->getSize().y*0.1f);
+	titleText.setPosition(
+				(float) App->getSize().x*0.25f,
+				(float) App->getSize().y*0.1f);
 
 	sf::Clock timer;
 	timer.restart();
-
 
 	/*
 	sf::Thread thr_init(&GameScene::initThread, this);
 	thr_init.launch();
 	while (!initThreadDone) {
-	loadingText.setPosition(App->getSize().x*0.35f, App->getSize().y*0.75f);
-	loadingText.setColor(sf::Color::Red);
-	if (timer.getElapsedTime().asSeconds() > 2) {
-	loadingText.setString(loadingText.getString()+".");
-		timer.restart();
-	}
+		loadingText.setPosition(App->getSize().x*0.35f, App->getSize().y*0.75f);
+		loadingText.setColor(sf::Color::Red);
+		if (timer.getElapsedTime().asSeconds() > 2) {
+			loadingText.setString(loadingText.getString()+".");
+			timer.restart();
+		}
 
-	App->clear(sf::Color(255,255,255));
-	graphics->Draw(&loadScene, GraphEng::GRAPH_LAYER_HUD);
-	graphics->Draw(titleText);
-	graphics->Draw(loadingText);
-	graphics->DrawAll();
-	App->display();
-    }*/
+		App->clear(sf::Color(255,255,255));
+		graphics->Draw(&loadScene, GraphEng::GRAPH_LAYER_HUD);
+		graphics->Draw(titleText);
+		graphics->Draw(loadingText);
+		graphics->DrawAll();
+		App->display();
+	}*/
 
 	initThread();
-
 	return true;
 }
 
 void GameScene::spawnNewMoney(sf::Vector2f pos) {
 	Item* item = ItemFactory::MakeNewItem(ItemFactory::ITEM_MONEY);
 	item->setPosition(pos);
-	item->setTransPos(pos, pos + sf::Vector2f(Utils::randomInt(-16, 16), Utils::randomInt(-16, 16)));
+	item->setTransPos(pos, pos + sf::Vector2f(
+				  (float) Utils::randomInt(-16, 16),
+				  (float) Utils::randomInt(-16, 16)));
 	itemList.push_back(*item);
 	delete item;
 }
 
 
 void GameScene::spawnNewPerson() {
-
 	Person p;
 	p.Init();
 	p.setPosition(city.getRandomStreet());
-
 	personList.push_back(p);
-
 }
 
 void GameScene::spawnNewPolice() {
-
 	Police p;
 	p.Init();
 	p.setPosition(city.getRandomStreet());
-
 	policeList.push_back(p);
 }
 
-vector<Person*> GameScene::getPeopleAround(vec2 pos, float r, SearchType st)
+vector<Person*> GameScene::getPeopleAround(sf::Vector2f pos, float r, SearchType st)
 {
-	vec2 min = pos - vec2(r, r);
-	vec2 max = pos + vec2(r, r);
-	int xmin = min.x / 64;
-	int ymin = min.y / 64;
-	int xmax = max.x / 64;
-	int ymax = max.y / 64;
+	sf::Vector2f min = pos - sf::Vector2f(r, r);
+	sf::Vector2f max = pos + sf::Vector2f(r, r);
+	int xmin = (int) (min.x / 64.0f);
+	int ymin = (int) (min.y / 64.0f);
+	int xmax = (int) (max.x / 64.0f);
+	int ymax = (int) (max.y / 64.0f);
 	if(xmin < 0) xmin = 0;
 	if(ymin < 0) ymin = 0;
 	if(xmax >= city.getTW()) xmax = city.getTW()-1;
 	if(ymax >= city.getTH()) ymax = city.getTH()-1;
 
 	vector<Person*> res;
-	for(int x = xmin; x <= xmax; x++)
+	for(int x = xmin; x <= xmax; x++) {
 		for(int y = ymin; y <= ymax; y++)
 		{
 			vector<Person*>& v = estructuraPepinoPeople[x][y];
-			for(int i = 0; i < v.size(); i++)
-				if( (st == SEARCH_ANY || 
-					(st == SEARCH_DEAD && !v[i]->is_alive()) || 
-					(st == SEARCH_PANIC && v[i]->getState() == Person::STATE_PANIC))
-						 && Utils::distance(pos, v[i]->m_position) <= r)
+			for(int i = 0; i < (int) v.size(); i++)
+				if( (st == SEARCH_ANY ||
+				     (st == SEARCH_DEAD && !v[i]->is_alive()) ||
+				     (st == SEARCH_PANIC && v[i]->getState() == Person::STATE_PANIC))
+				    && Utils::distance(pos, v[i]->m_position) <= r)
 					res.push_back(v[i]);
 		}
+	}
+
 	return res;
 }
 
 void GameScene::collide(Character* a)
 {
-	vec2 pos = a->m_position;
+	sf::Vector2f pos = a->m_position;
 	float r = 10;
-	
-	vec2 min = pos - vec2(r, r);
-	vec2 max = pos + vec2(r, r);
-	int xmin = min.x / 64;
-	int ymin = min.y / 64;
-	int xmax = max.x / 64;
-	int ymax = max.y / 64;
+
+	sf::Vector2f min = pos - sf::Vector2f(r, r);
+	sf::Vector2f max = pos + sf::Vector2f(r, r);
+	int xmin = (int) (min.x / 64.0f);
+	int ymin = (int) (min.y / 64.0f);
+	int xmax = (int) (max.x / 64.0f);
+	int ymax = (int) (max.y / 64.0f);
 	if(xmin < 0) xmin = 0;
 	if(ymin < 0) ymin = 0;
 	if(xmax >= city.getTW()) xmax = city.getTW()-1;
 	if(ymax >= city.getTH()) ymax = city.getTH()-1;
 
-	for(int x = xmin; x <= xmax; x++)
+	for(int x = xmin; x <= xmax; x++) {
 		for(int y = ymin; y <= ymax; y++)
 		{
 			{
 				vector<Person*>& v = estructuraPepinoPeople[x][y];
-				for(int i = 0; i < v.size(); i++)
+				for(int i = 0; i < (int) v.size(); i++)
 				{
 					Character* b = v[i];
-				
+
 					if(Utils::distance(pos, b->m_position) < 10)
 					{
-						vec2 l = b->m_position - a->m_position;
+						sf::Vector2f l = b->m_position - a->m_position;
 						if(Utils::norm(l) == 0) continue;
-				
+
 						Utils::normalize(l);
-						vec2 m = (b->m_position + a->m_position) / 2.0f;
+						sf::Vector2f m = (b->m_position + a->m_position) / 2.0f;
 						a->move(m-l*5.0f);
 						b->move(m+l*5.0f);
 					}
 				}
 			}
-			
+
 			{
 				vector<Police*>& v = estructuraPepinoPolice[x][y];
-				for(int i = 0; i < v.size(); i++)
+				for(int i = 0; i < (int) v.size(); i++)
 				{
 					Character* b = v[i];
-				
+
 					if(Utils::distance(pos, b->m_position) < 10)
 					{
-						vec2 l = b->m_position - a->m_position;
+						sf::Vector2f l = b->m_position - a->m_position;
 						if(Utils::norm(l) == 0) continue;
-				
+
 						Utils::normalize(l);
-						vec2 m = (b->m_position + a->m_position) / 2.0f;
+						sf::Vector2f m = (b->m_position + a->m_position) / 2.0f;
 						a->move(m-l*5.0f);
 						b->move(m+l*5.0f);
 					}
 				}
 			}
 		}
+	}
 }
 
 vector<Person*> GameScene::getPeopleSeen(Character* c, SearchType st)
 {
 	float r = 180;
-	
-	vec2 min = c->m_position - vec2(r, r);
-	vec2 max = c->m_position + vec2(r, r);
-	int xmin = min.x / 64;
-	int ymin = min.y / 64;
-	int xmax = max.x / 64;
-	int ymax = max.y / 64;
-//	cout<<xmin<<" "<<xmax<<" "<<ymin<<" "<<ymax<<endl;
+
+	sf::Vector2f min = c->m_position - sf::Vector2f(r, r);
+	sf::Vector2f max = c->m_position + sf::Vector2f(r, r);
+	int xmin = (int) (min.x / 64.0f);
+	int ymin = (int) (min.y / 64.0f);
+	int xmax = (int) (max.x / 64.0f);
+	int ymax = (int) (max.y / 64.0f);
+
 	if(xmin < 0) xmin = 0;
-        if(ymin < 0) ymin = 0;
+	if(ymin < 0) ymin = 0;
 	if(xmax >= city.getTW()) xmax = city.getTW()-1;
 	if(ymax >= city.getTH()) ymax = city.getTH()-1;
-	
+
 	vector<Person*> res;
-	for(int x = xmin; x <= xmax; x++)
+	for(int x = xmin; x <= xmax; x++) {
 		for(int y = ymin; y <= ymax; y++)
 		{
 			vector<Person*>& v = estructuraPepinoPeople[x][y];
-			for(int i = 0; i < v.size(); i++)
-				if( (st == SEARCH_ANY || 
-					(st == SEARCH_DEAD && !v[i]->is_alive()) || 
-					(st == SEARCH_PANIC && v[i]->getState() == Person::STATE_PANIC))
-						 && c->canSee(v[i]->m_position))
+			for(int i = 0; i < (int) v.size(); i++)
+				if( (st == SEARCH_ANY ||
+				     (st == SEARCH_DEAD && !v[i]->is_alive()) ||
+				     (st == SEARCH_PANIC && v[i]->getState() == Person::STATE_PANIC))
+				    && c->canSee(v[i]->m_position))
 					res.push_back(v[i]);
 		}
+	}
+
 	return res;
 }
 
 void GameScene::Update() {
 
 	InputEng* input = InputEng::getInstance();
-
-
 	if (input->getKeyDown(InputEng::NEW_SCENE))
 		this->nextScene = new GameScene();
 
 	input->setGlobalMousePos(
-				App->convertCoords(sf::Vector2i(
-							   input->getMousePos().x,
-							   input->getMousePos().y),camera));
+		App->convertCoords(sf::Vector2i(
+			(int) input->getMousePos().x,
+			(int) input->getMousePos().y), camera));
 
 	estructuraPepinoPeople = vector<vector<vector<Person*> > > (city.getTW(), vector<vector<Person*> >(city.getTH()));
 	estructuraPepinoPolice = vector<vector<vector<Police*> > > (city.getTW(), vector<vector<Police*> >(city.getTH()));
 
 	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
-		vec2i p = city.absoluteToTilePos(it->m_position);
+		sf::Vector2i p = city.absoluteToTilePos(it->m_position);
 		if(!city.validTile(p.x, p.y)) continue;
 		estructuraPepinoPeople[p.x][p.y].push_back(&*it);
 	}
 	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
-		vec2i p = city.absoluteToTilePos(it->m_position);
+		sf::Vector2i p = city.absoluteToTilePos(it->m_position);
 		if(!city.validTile(p.x, p.y)) continue;
 		estructuraPepinoPolice[p.x][p.y].push_back(&*it);
 	}
-	
+
 	//Player update
 	player.Update();
 
@@ -314,7 +318,7 @@ void GameScene::Update() {
 		collide(&*it);
 	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
 		collide(&*it);
-		
+
 	//Delete persons
 	for (std::list<Person>::iterator it = personList.begin(); it != personList.end();) {
 		if(it->isToBeDeleted())
@@ -346,20 +350,16 @@ void GameScene::Update() {
 
 bool comp(Object* a, Object* b)
 {
-	if(a->m_prio == b->m_prio)
-	{
+	if(a->m_prio == b->m_prio) {
 		int ya = int(a->getPosition().y+0.1);
 		int yb = int(b->getPosition().y+0.1);
-		if(ya == yb)
-			return a->getUniqueID() < b->getUniqueID();
+		if(ya == yb) return a->getUniqueID() < b->getUniqueID();
 		return ya < yb;
 	}
-	else
-		return a->m_prio < b->m_prio;
+	else return a->m_prio < b->m_prio;
 }
 
 void GameScene::Draw() {
-	InputEng* input = InputEng::getInstance();
 	GraphEng* graphics = GraphEng::getInstance();
 
 	camera.setCenter(player.getPosition());
@@ -370,7 +370,6 @@ void GameScene::Draw() {
 	graphics->DrawAll();
 
 	vector<Object*> v;
-
 	v.push_back(&player);
 
 	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
@@ -381,7 +380,7 @@ void GameScene::Draw() {
 		v.push_back(&*it);
 
 	sort(v.begin(), v.end(), comp);
-	for(int i = 0; i < v.size(); i++)
+	for(int i = 0; i < (int) v.size(); i++)
 	{
 		v[i]->Draw();
 		v[i]->DrawMark();
@@ -389,34 +388,14 @@ void GameScene::Draw() {
 
 	//Map draw
 	city.renderTop();
-
 	graphics->DrawAll();
-
 	App->setView(App->getDefaultView());
-
 	hud.Draw();
-
-
-	/*
-	//Display mouse position
-
-	std::stringstream ss2(std::stringstream::in | std::stringstream::out);
-		ss2 << "MousePos: ";
-		ss2 << input->getGlobalMousePos().x;
-		ss2 << ", ";
-		ss2 << input->getGlobalMousePos().y;
-	sf::Text str_mousePos(ss2.str());
-	str_mousePos.setColor(sf::Color::Red);
-	str_mousePos.setPosition(10, 80);
-	//App->draw(str_mousePos);
-
-	*/
 }
 
 void GameScene::Destroy() {
 
 }
-
 
 void GameScene::HandleCamInput() {
 	InputEng* input = InputEng::getInstance();
@@ -429,79 +408,9 @@ void GameScene::HandleCamInput() {
 		camera.move(-input->getFrameTime().asSeconds()*2000, 0);
 	if (input->getKeyState(InputEng::CAM_RIGHT))
 		camera.move(input->getFrameTime().asSeconds()*2000, 0);
-
-	/*
-	if (input->getKeyDown(InputEng::F5)) {
-		if (camTrans.x != NULL) {
-			camera.setSize(sf::Vector2f(camTrans.x->getGoPos(), camera.getSize().y));
-			delete camTrans.x;
-		}
-		TransitionLinear* tlx = new TransitionLinear();
-		tlx->setPos(camera.getSize().x);
-		tlx->goPos(camera.getSize().x*0.5f);
-		tlx->setTime(0.2f);
-		camTrans.x = tlx;
-
-		if (camTrans.y != NULL) {
-			camera.setSize(sf::Vector2f(camera.getSize().x, camTrans.y->getGoPos()));
-			delete camTrans.y;
-		}
-		TransitionLinear* tly = new TransitionLinear();
-		tly = new TransitionLinear();
-		tly->setPos(camera.getSize().y);
-		tly->goPos(camera.getSize().y*0.5f);
-		tly->setTime(0.2f);
-		camTrans.y = tly;
-	}
-	else if (input->getKeyDown(InputEng::F6)) {
-		if (camTrans.x != NULL) {
-			camera.setSize(sf::Vector2f(camTrans.x->getGoPos(), camera.getSize().y));
-			delete camTrans.x;
-		}
-		TransitionLinear* tlx = new TransitionLinear();
-		tlx->setPos(camera.getSize().x);
-		tlx->goPos(camera.getSize().x*2.0f);
-		tlx->setTime(0.2f);
-		camTrans.x = tlx;
-
-		if (camTrans.y != NULL) {
-			camera.setSize(sf::Vector2f(camera.getSize().x, camTrans.y->getGoPos()));
-			delete camTrans.y;
-		}
-		TransitionLinear* tly = new TransitionLinear();
-		tly = new TransitionLinear();
-		tly->setPos(camera.getSize().y);
-		tly->goPos(camera.getSize().y*2.0f);
-		tly->setTime(0.2f);
-		camTrans.y = tly;
-	}
-
-	if (camTrans.x != NULL) {
-		camTrans.x->update(input->getFrameTime().asSeconds());
-		camera.setSize(camTrans.x->getPos(), camera.getSize().y);
-		if (camTrans.x->reached()) {
-			delete camTrans.x;
-			camTrans.x = NULL;
-		}
-	}
-
-	if (camTrans.y != NULL) {
-		camTrans.y->update(input->getFrameTime().asSeconds());
-		camera.setSize(camera.getSize().x, camTrans.y->getPos());
-		if (camTrans.y->reached()) {
-			delete camTrans.y;
-			camTrans.y = NULL;
-		}
-	}*/
 }
 
-
-
-
 void GameScene::HandleEvents() {
-	InputEng* input = InputEng::getInstance();
-	GraphEng* graphics = GraphEng::getInstance();
-
 	while (!gameReg->eventQueue.empty()) {
 		Event* e = gameReg->eventQueue.front();
 		gameReg->eventQueue.pop();
@@ -509,12 +418,10 @@ void GameScene::HandleEvents() {
 
 		case EVENT_PLAYER_ACTION:
 		{
-			EventPlayerAction* ev = (EventPlayerAction*)e;
+			//EventPlayerAction* ev = (EventPlayerAction*)e;
 
 			player.hitAction();
-
 			std::vector<Person*> persons = getPeopleAround(player.getPosition(), 20, SEARCH_ANY);
-//			std::vector<Person*> persons = getPeopleSeen(&player, SEARCH_ANY);
 			for (std::vector<Person*>::iterator it = persons.begin(); it != persons.end(); ++it) {
 				if (!(*it)->is_alive()) continue;
 				player.setKills(player.getKills()+1);
@@ -526,7 +433,7 @@ void GameScene::HandleEvents() {
 			break;
 		}
 
-/*
+		/*
 		case EVENT_DELETE_PERSON: {
 			EventDeletePerson* ev = (EventDeletePerson*)e;
 
@@ -553,67 +460,15 @@ void GameScene::HandleEvents() {
 			}
 
 			break;
-		}*/
+		}
+		*/
 
 		case EVENT_GAME_OVER: {
-			EventGameOver* ev = (EventGameOver*)e;
-
+			//EventGameOver* ev = (EventGameOver*)e;
 			MenuScene::setNewScore(player.getScore());
 			nextScene = new MenuScene();
 			break;
 		}
-
-			/*
-		case EVENT_MOVE: {
-			EventMove* ev = (EventMove*)e;
-
-			//Get Position
-			sf::Vector2f oldPos = ev->obj->getPosition();
-			sf::Vector2f newPos (
-						ev->obj->getPosition().x + ((input->getFrameTime().asSeconds() * ev->velocity.x) * ev->direction.x),
-						ev->obj->getPosition().y + ((input->getFrameTime().asSeconds() * ev->velocity.y) * ev->direction.y));
-
-			//Bounding box
-			std::vector<sf::Vector2f> boxPoints;
-			boxPoints.push_back(sf::Vector2f(newPos.x - (ev->obj->getLocalBounds().width/2), newPos.y));
-			boxPoints.push_back(sf::Vector2f(newPos.x + (ev->obj->getLocalBounds().width/2), newPos.y));
-			boxPoints.push_back(sf::Vector2f(newPos.x, newPos.y - (ev->obj->getLocalBounds().height/2)));
-			boxPoints.push_back(sf::Vector2f(newPos.x, newPos.y + (ev->obj->getLocalBounds().height/2)));
-			boxPoints.push_back(sf::Vector2f(newPos.x - (ev->obj->getLocalBounds().width/2),
-							 newPos.y - (ev->obj->getLocalBounds().height/2)));
-			boxPoints.push_back(sf::Vector2f(newPos.x - (ev->obj->getLocalBounds().width/2),
-							 newPos.y + (ev->obj->getLocalBounds().height/2)));
-			boxPoints.push_back(sf::Vector2f(newPos.x + (ev->obj->getLocalBounds().width/2),
-							 newPos.y - (ev->obj->getLocalBounds().height/2)));
-			boxPoints.push_back(sf::Vector2f(newPos.x + (ev->obj->getLocalBounds().width/2),
-							 newPos.y + (ev->obj->getLocalBounds().height/2)));
-
-			//Check if points collide
-			bool canMove = true;
-			//for (int i = 0; i < boxPoints.size(); ++i) {
-			const sf::Vector2f& point = newPos;
-
-			//Tile Collision
-			if (!gameReg->scenario->isTilePassable(point)) canMove = false;
-
-			//Point vs Object Boxes Collision
-			if (gameReg->objMan->isColliding(point) &&
-			    gameReg->objMan->getColliding(point)->canCollide()) {
-				if (gameReg->objMan->isColliding(oldPos) &&
-				    gameReg->objMan->getColliding(oldPos)->canCollide()) {
-					canMove = true;
-				}
-				else canMove = false;
-			}
-			//}
-
-			//All right, officer?
-			if (canMove) ev->obj->setPosition(newPos);
-
-			break;
-		}*/
-
-
 		default:
 			//Nothing
 			break;

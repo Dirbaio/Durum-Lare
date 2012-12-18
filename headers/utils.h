@@ -7,47 +7,35 @@
 #include "defines.h"
 #include <iostream>
 
-typedef sf::Vector2f vec2;
-typedef sf::Vector2i vec2i;
-
 struct Utils {
 
 	//Returns random between [min, max]
 	static int randomInt(int min, int max) {
-        if (min >= max) return min;
-/*
-		if (min < 0) {
-			int dist = -min;
-			min = 0;
-			max += dist;
-			return (rand()%((max-min)+1) + min) - dist;
-        }*/
+		if (min >= max) return min;
 		return (rand()%((max-min)+1)) + min;
 	}
 
-    static float vec2fToDeg(const vec2& vector) {
-		return (atan(vector.y/vector.x))*M_PI*2.0f;
+	static float vec2fToDeg(const sf::Vector2f& vector) {
+		return ((float)atan(vector.y/vector.x)) * (float) M_PI * 2.0f;
 	}
 
-    static float norm(const vec2& v)
-    {
-        return sqrt(v.x*v.x + v.y*v.y);
-    }
+	static float norm(const sf::Vector2f& v) {
+		return (float) sqrt(v.x * v.x + v.y * v.y);
+	}
 
-    static void normalize(vec2& v)
-    {
-        v /= norm(v);
-    }
+	static void normalize(sf::Vector2f& v) {
+		v /= norm(v);
+	}
 
-    static float dot2(const vec2& a, const vec2& b) {
-        return a.x*b.x + a.y*b.y;
-    }
+	static float dot2(const sf::Vector2f& a, const sf::Vector2f& b) {
+		return a.x*b.x + a.y*b.y;
+	}
 
 	static bool rectTouchesCircle(const sf::FloatRect& r,
-                      const vec2& c, const float& rad) {
-        vec2 cDist;
-		cDist.x = abs(c.x - r.left);
-		cDist.y = abs(c.y - r.top);
+				      const sf::Vector2f& c, const float& rad) {
+		sf::Vector2f cDist;
+		cDist.x = (float) abs((int) c.x - (int) r.left);
+		cDist.y = (float) abs((int) c.y - (int) r.top);
 
 		if (cDist.x > (r.width/2 + rad)) return false;
 		if (cDist.y > (r.height/2 + rad)) return false;
@@ -56,14 +44,14 @@ struct Utils {
 		if (cDist.y <= (r.height)/2) return true;
 
 		float cornerDist_sq = (cDist.x - r.width/2)*(cDist.x - r.width/2) +
-				      (cDist.y - r.height/2)*(cDist.y - r.height/2);
+				(cDist.y - r.height/2)*(cDist.y - r.height/2);
 
 		return (cornerDist_sq <= (rad*rad));
 
 	}
 
-    static float distance(const vec2& p1, const vec2& p2) {
-		return sqrt( (p2.x - p1.x)*(p2.x - p1.x) + (p2.y - p1.y)*(p2.y - p1.y) );
+	static float distance(const sf::Vector2f& p1, const sf::Vector2f& p2) {
+		return norm(p2 - p1);
 	}
 
 	static std::string intToString(int n) {
@@ -77,17 +65,9 @@ struct Utils {
 
 		return c - '0';
 	}
-/*
-	//ESTO DA UN GUARNIN
-	
-	static void safeDel(void* &ptr) {
-		if (ptr != NULL) delete ptr;
-		ptr = NULL;
-	}
-*/
 
 	//Returns true if point r is counterclockwise over line pq
-    static bool orientationTest(vec2 p, vec2 q, vec2 r) {
+	static bool orientationTest(sf::Vector2f p, sf::Vector2f q, sf::Vector2f r) {
 		return (((p.x-r.x)*(q.y-r.y) - (q.x-r.x)*(p.y-r.y)) > 0 );
 	}
 
@@ -120,17 +100,10 @@ struct Utils {
 		return true;
 	}
 
-
-	/*
-	static int getNewUniqueID() {
-		return ++globalDef::_____IDCOUNT;
-	}
-*/
 	//Returns unitary vector of direction (from) -> (to)
-    static vec2 getDirection(const vec2& from, const vec2& to) {
-        vec2 direction = to - from;
-
-		float magnitude = sqrt((direction.x*direction.x)+(direction.y*direction.y));
+	static sf::Vector2f getDirection(const sf::Vector2f& from, const sf::Vector2f& to) {
+		sf::Vector2f direction = to - from;
+		float magnitude = (float) sqrt((direction.x*direction.x)+(direction.y*direction.y));
 		direction.x = direction.x/magnitude;
 		direction.y = direction.y/magnitude;
 		/*
@@ -143,7 +116,5 @@ struct Utils {
 		return direction;
 	}
 };
-
-
 
 #endif // UTILS_H

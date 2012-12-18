@@ -14,6 +14,7 @@ class Item : public Object {
 public:
 
     Item() {}
+    virtual ~Item() {}
 
     virtual void Init();
     virtual void Update();

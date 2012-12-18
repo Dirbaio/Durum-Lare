@@ -5,61 +5,61 @@
 class Transition;
 
 struct Transition2D {
-        Transition* x;
-        Transition* y;
+	Transition* x;
+	Transition* y;
 };
 
 class Transition {
 public:
-        Transition();
-        ~Transition(){}
+	Transition();
+	virtual ~Transition() {}
 
-        virtual void setPos(float _pos){pos = posToGo = _pos;}
-        virtual void goPos(float _pos){posToGo = _pos;}
+	virtual void setPos(float _pos){pos = posToGo = _pos;}
+	virtual void goPos(float _pos){posToGo = _pos;}
 
 
-        virtual void update(float dTime) = 0;
+	virtual void update(float dTime) = 0;
 
-        virtual float getPos() {return pos;}
-        virtual float getGoPos() {return posToGo;}
-        virtual bool reached() {return pos == posToGo;}
+	virtual float getPos() {return pos;}
+	virtual float getGoPos() {return posToGo;}
+	virtual bool reached() {return pos == posToGo;}
 
 protected:
-        sf::Clock timer;
-        float pos;
-        float posToGo;
+	sf::Clock timer;
+	float pos;
+	float posToGo;
 
 };
 
 class TransitionVelConst : public Transition {
 public:
-        TransitionVelConst() : vel(1.0f) {}
-        ~TransitionVelConst() {}
+	TransitionVelConst() : vel(1.0f) {}
+	virtual ~TransitionVelConst() {}
 
-        void update(float dTime);
+	void update(float dTime);
 
-        void setVel(float secsTotal) {vel = secsTotal;}
+	void setVel(float secsTotal) {vel = secsTotal;}
 
 protected:
 
-        float vel;
+	float vel;
 };
 
 class TransitionLinear : public Transition {
 public:
 
-        TransitionLinear(): time(1.0f), percent(1.0f) {}
-        ~TransitionLinear() {}
+	TransitionLinear(): time(1.0f), percent(1.0f) {}
+	virtual ~TransitionLinear() {}
 
-        void setPos(float _pos);
-        void goPos(float _pos);
-        void update(float dTime);
+	void setPos(float _pos);
+	void goPos(float _pos);
+	void update(float dTime);
 
-        void setTime(float timeToReach) {time = timeToReach;}
+	void setTime(float timeToReach) {time = timeToReach;}
 
 protected:
 
-        float time;
-        float percent;
-        float initPos;
+	float time;
+	float percent;
+	float initPos;
 };

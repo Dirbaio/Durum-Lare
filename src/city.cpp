@@ -93,7 +93,7 @@ float City::tileRightPos(int x)
 	return float(x+1)*tw;
 }
 
-int City::getTileAt(vec2 pt)
+int City::getTileAt(sf::Vector2f pt)
 {
 	int i = int(pt.x/tw);
 	int j = int(pt.y/th);
@@ -102,7 +102,7 @@ int City::getTileAt(vec2 pt)
 }
 
 //Dice si una persona en FROM ve a una persona en TO
-bool City::visible(vec2 from, vec2 to)
+bool City::visible(sf::Vector2f from, sf::Vector2f to)
 {
     bool fromGrass = getTileAt(from) == 11;
     bool toGrass = getTileAt(to) == 11;
@@ -116,7 +116,7 @@ bool City::visible(vec2 from, vec2 to)
 	
     for(int i = 0; i <= 20; i++)
     {
-        vec2 pt = (from*float(i) + to*float(20-i))/20.0f;
+        sf::Vector2f pt = (from*float(i) + to*float(20-i))/20.0f;
         //Si los dos dentro, ha de ser todo grass.
         if(fromGrass && getTileAt(pt) != 11)
         	return false;

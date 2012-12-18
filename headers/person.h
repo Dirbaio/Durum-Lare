@@ -10,55 +10,48 @@
 #include <list>
 
 class Person : public Npc {
-  public:
-    Person() {}
+public:
+	Person() {}
 
-    void Init();
-    void Update();
-    void Draw();
+	void Init();
+	void Update();
+	void Draw();
 
-    void doDeath();
-    void onHit();
+	void doDeath();
+	void onHit();
+	bool is_alive();
 
-    bool is_alive();
+	enum State {
+		STATE_WALKING,
+		STATE_PANIC,
+		STATE_DEAD,
+		STATE_CONFUSED
+	};
 
+	int getState() { return m_state; }
+	bool knowsPlayer();
 
-    enum State {
-        STATE_WALKING,
-        STATE_PANIC,
-        STATE_DEAD,
-        STATE_CONFUSED
-    };
+private:
+	float getClosestMenace(sf::Vector2f pos, sf::Vector2f& menacePos);
+	void lookAtRandomPlace();
 
-    int getState() { return m_state; }
-    bool knowsPlayer();
+	int ix, iy;
+	bool m_knowsPlayer;
+	float m_dissappearTime;
+	float m_deathTimer;
+	float m_panicTime, m_startPanicTime;
+	float m_walkingTime;
+	float m_confuseCooldown;
+	float m_confusedTime;
+	float m_confusedTimeFacing;
 
-  private:
-    int ix, iy;
+	sf::Vector2f m_lastSawPlayer;
+	State m_state;
 
-    float DISSAPPEAR_TIME;
-
-    float deathTimer;
-
-	float getClosestMenace(vec2 pos, vec2& menacePos);
-    sf::SoundBuffer dieSoundBuff;
-    sf::Sound dieSound;
-
-    float m_panicTime, m_startPanicTime;
-	vec2 m_lastSawPlayer;
-    State m_state;
-    void lookAtRandomPlace();
-
-    sf::Sprite bloodSpr;
-    float m_walkingTime;
-
-    float m_confuseCooldown;
-
-    float m_confusedTime;
-    float m_confusedTimeFacing;
-
-    bool knows_player;
-    TransitionLinear* transHit;
+	TransitionLinear* m_transHit;
+	sf::Sprite m_bloodSpr;
+	//sf::SoundBuffer m_dieSoundBuff;
+	//sf::Sound m_dieSound;
 };
 
 #endif // PERSON_H

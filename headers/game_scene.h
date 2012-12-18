@@ -1,28 +1,31 @@
 #ifndef GAMESCENE_H
 #define GAMESCENE_H
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include <vector>
 #include <queue>
-#include "scene.h"
-#include <SFML/Graphics.hpp>
-#include "event.h"
+#include <list>
+
 #include "game_reg.h"
+#include "scene.h"
+#include "event.h"
 #include "map.h"
-#include "player.h"
 #include "city.h"
 
-#include <list>
+#include "player.h"
 #include "person.h"
 #include "police.h"
 
 #include "hud.h"
 #include "item.h"
-#include <SFML/Audio.hpp>
+
 
 enum SearchType {
-    SEARCH_ANY,
-    SEARCH_DEAD,
-    SEARCH_PANIC
+	SEARCH_ANY,
+	SEARCH_DEAD,
+	SEARCH_PANIC
 };
 
 class GameScene : public Scene {
@@ -35,7 +38,7 @@ public:
 	void Draw();
 	void Destroy();
 
-	vector<Person*> getPeopleAround(vec2 pos, float r, SearchType st);
+	vector<Person*> getPeopleAround(sf::Vector2f pos, float r, SearchType st);
 	vector<Person*> getPeopleSeen(Character* c, SearchType st);
 
 private:
@@ -48,7 +51,7 @@ private:
 	//Map map;
 	void spawnNewPerson();
 	void spawnNewPolice();
-    void spawnNewMoney(sf::Vector2f pos);
+	void spawnNewMoney(sf::Vector2f pos);
 
 	void collide(Character* a);
 	vector<vector<vector<Person*> > > estructuraPepinoPeople;
@@ -61,14 +64,14 @@ private:
 	sf::View camera;
 	Player player;
 	City city;
-    Hud hud;
+	Hud hud;
 
 	//Managers
 	std::list<Person> personList;
 	std::list<Police> policeList;
-    std::list<Item> itemList;
+	std::list<Item> itemList;
 
-    sf::Music bg_music;
+	sf::Music bg_music;
 };
 
 #endif // GAMESCENE_H

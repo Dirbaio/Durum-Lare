@@ -22,7 +22,7 @@ public:
 	virtual ~Character() {}
 
 	void move(sf::Vector2f posf);
-    bool canSee(const vec2& pos);
+    bool canSee(const sf::Vector2f& pos);
 protected:
 
 
@@ -31,13 +31,13 @@ protected:
 	virtual void noUpCollision()   {}
 	virtual void noDownCollision() {}
 
-	virtual bool onLeftCollision(int x, int j) {return true;}
-	virtual bool onRightCollision(int x, int j){return true;}
-	virtual bool onUpCollision(int x, int j)   {return true;}
-	virtual bool onDownCollision(int x, int j) {return true;}
+    virtual bool onLeftCollision(int x, int j);
+    virtual bool onRightCollision(int x, int j);
+    virtual bool onUpCollision(int x, int j);
+    virtual bool onDownCollision(int x, int j);
 
-	queue<vec2> m_path;
-	vec2 m_goal;
+	queue<sf::Vector2f> m_path;
+	sf::Vector2f m_goal;
 	bool m_hasGoal;
 
 	float m_vel;
@@ -46,9 +46,9 @@ protected:
 
     void DrawMark();
 
-	void setGoal(vec2 goal);
+	void setGoal(sf::Vector2f goal);
 	void moveTowardsGoal();
-    void moveInDir(vec2 dir);
+    void moveInDir(sf::Vector2f dir);
 };
 
 #endif // CHARACTER_H

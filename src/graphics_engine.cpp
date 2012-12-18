@@ -45,7 +45,7 @@ void GraphEng::init() {
 
         //App->Create(m_videoModes[0], "Durum dale");
         App->create(m_videoModes[0], "Durum dale", sf::Style::Close);
-        //App->create(sf::VideoMode(1024, 768), "Durum dale", sf::Style::Fullscreen);
+        App->create(sf::VideoMode(800, 600), "Durum dale");
 
         //worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
        // whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
@@ -143,7 +143,7 @@ void GraphEng::DrawAll() {
                         sf::View old_view = App->getView();
                         App->setView(App->getDefaultView());
 
-                        for (int i = 0; i < drawVec.size(); ++i)
+                        for (int i = 0; i < (int) drawVec.size(); ++i)
                                 App->draw(*drawVec[i]);
 
                         App->setView(old_view);
@@ -152,7 +152,7 @@ void GraphEng::DrawAll() {
                 //World map rendering
                 else {
                       //  worldRendTex.setView(App->getView());
-                        for (int i = 0; i < drawVec.size(); ++i) {
+                        for (int i = 0; i < (int) drawVec.size(); ++i) {
                                    //     worldRendTex.draw(*drawVec[i]);
                         }
                 }

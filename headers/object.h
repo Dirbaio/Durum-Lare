@@ -55,7 +55,7 @@ public:
 	bool isTaken() {return m_isTaken;}
 	void setTaken(bool taken) {m_isTaken = taken;}
 	bool isTakeable() { return m_isTakeable; }
-	void setTakeable(bool isTakeable) { m_isTakeable = isTakeable; }
+    void setTakeable (bool _isTakeable) { m_isTakeable = _isTakeable; }
 	bool isUsable() { return m_isUsable; }
 	bool isToBeDeleted() { return m_toBeDeleted; }
 	void markForDelete() { m_toBeDeleted = true; }

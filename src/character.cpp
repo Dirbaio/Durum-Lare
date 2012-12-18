@@ -130,36 +130,36 @@ void Character::DrawMark()
     if(m_mark == MARK_EXCLAMATION)
     {
         spriteExc.setScale(1+t/10, 1-t/20);
-        spriteExc.setPosition(m_position+vec2(0, -22+t));
+	spriteExc.setPosition(m_position+sf::Vector2f(0, -22+t));
         App->draw(spriteExc);
     }
     else if(m_mark == MARK_QUESTION)
     {
         spriteQuest.setScale(1+t/10, 1-t/20);
-        spriteQuest.setPosition(m_position+vec2(0, -22+t));
+	spriteQuest.setPosition(m_position+sf::Vector2f(0, -22+t));
         App->draw(spriteQuest);
     }
     else if(m_mark == MARK_BLUE_QUESTION)
     {
         spriteBlueQuest.setScale(1+t/10, 1-t/20);
-        spriteBlueQuest.setPosition(m_position+vec2(0, -22+t));
+	spriteBlueQuest.setPosition(m_position+sf::Vector2f(0, -22+t));
         App->draw(spriteBlueQuest);
     }
     else if(m_mark == MARK_RED_EXCLAMATION)
     {
         spriteRedExc.setScale(1+t/10, 1-t/20);
-        spriteRedExc.setPosition(m_position+vec2(0, -22+t));
+	spriteRedExc.setPosition(m_position+sf::Vector2f(0, -22+t));
         App->draw(spriteRedExc);
     }
 }
 
-void Character::setGoal(vec2 goal) {
+void Character::setGoal(sf::Vector2f goal) {
     m_goal = goal;
 
     City &city = *GameReg::getInstance()->city;
 
-    vec2i from = city.absoluteToTilePos(m_position);
-    vec2i to = city.absoluteToTilePos(m_goal);
+    sf::Vector2i from = city.absoluteToTilePos(m_position);
+    sf::Vector2i to = city.absoluteToTilePos(m_goal);
 	
 	if(city.occupedIJ(from.x, from.y)) {
 		cout<<"Pathfinding: Current pos is solid. "<<endl;
@@ -178,7 +178,7 @@ void Character::setGoal(vec2 goal) {
 
 	bool end = false;
 	
-    queue<vec2i> q;
+    queue<sf::Vector2i> q;
     q.push(to);
     while(!q.empty() && !end)
     {
@@ -195,7 +195,7 @@ void Character::setGoal(vec2 goal) {
             if(city.occupedIJ(x2, y2)) continue;
             if(vis[x2][y2] != -1) continue;
             vis[x2][y2] = i;
-            vec2i v2 (x2, y2);
+	    sf::Vector2i v2 (x2, y2);
             if(v2 == from)
             	end = true;
             q.push(v2);
@@ -208,24 +208,24 @@ void Character::setGoal(vec2 goal) {
     }
     
 	m_hasGoal = true;
-	vector<vec2i> v;
+	vector<sf::Vector2i> v;
 
 	while(from != to)
 	{
 		v.push_back(from);
-		vec2i from2 = from;
+		sf::Vector2i from2 = from;
 		from.x -= dx[vis[from2.x][from2.y]];
 		from.y -= dy[vis[from2.x][from2.y]];
 	}
 	v.push_back(from);
 
-	m_path = queue<vec2>();
+	m_path = queue<sf::Vector2f>();
 
-	vec2i ant(-1, -1);
-	vec2 antf(16, 16);
+	sf::Vector2i ant(-1, -1);
+	sf::Vector2f antf(16, 16);
 	for(int i = 0; i < v.size(); i++)
 	{
-		vec2 p (v[i].x*64+Utils::randomInt(8, 56), v[i].y*64+Utils::randomInt(8, 56));
+		sf::Vector2f p (v[i].x*64+Utils::randomInt(8, 56), v[i].y*64+Utils::randomInt(8, 56));
 		if(v[i].x == ant.x)
 			p.x = antf.x;
 		if(v[i].y == ant.y)
@@ -250,11 +250,11 @@ void Character::moveTowardsGoal()
         return;
     }
 
-    vec2 to = m_path.front();
+    sf::Vector2f to = m_path.front();
     moveInDir(to-m_position);
 }
 
-void Character::moveInDir(vec2 dir)
+void Character::moveInDir(sf::Vector2f dir)
 {
     if (Utils::norm(dir) == 0) return;
     Utils::normalize(dir);
@@ -269,14 +269,20 @@ void Character::moveInDir(vec2 dir)
     move(m_position + dir*delta*m_vel);
 }
 
-bool Character::canSee(const vec2& pos)
+bool Character::canSee(const sf::Vector2f& pos)
 {
 
-    vec2 dir_corpse = pos-m_position;
-    vec2 dir_facing (dirInc[m_faceDir].x,dirInc[m_faceDir].y);
+    sf::Vector2f dir_corpse = pos-m_position;
+    sf::Vector2f dir_facing((float) dirInc[m_faceDir].x, (float) dirInc[m_faceDir].y);
     Utils::normalize(dir_corpse);
     Utils::normalize(dir_facing);
 
     City &city = *GameReg::getInstance()->city;
     return Utils::dot2(dir_corpse,dir_facing) >= 0.0f && city.visible(m_position, pos);
 }
+
+
+bool Character::onLeftCollision(int x, int j) {return true;}
+bool Character::onRightCollision(int x, int j){return true;}
+bool Character::onUpCollision(int x, int j)   {return true;}
+bool Character::onDownCollision(int x, int j) {return true;}

@@ -55,13 +55,13 @@ void Game::Go() {
 
 			//Framerate
 			if (clock2.getElapsedTime().asMilliseconds() > 100) {
-				framerate = (float(frames) / clock2.getElapsedTime().asMilliseconds())*1000;
+                framerate = ((float) frames / (float) clock2.getElapsedTime().asMilliseconds())*1000.0f;
 				clock2.restart();
 				frames = 0;
 			}
 			std::stringstream ss(std::stringstream::in | std::stringstream::out);
 			framerate*=100;
-			framerate=(int)framerate;
+            framerate= floor(framerate);
 			framerate/=100;
 			ss << "FPS: " << framerate;
 			sf::Text fpsText(ss.str());
@@ -73,7 +73,7 @@ void Game::Go() {
 			       (((int)sceneTimeElapsed.getElapsedTime().asSeconds())%60) << " . " <<
 			       sceneTimeElapsed.getElapsedTime().asMilliseconds()%1000;
 			sf::Text timeText(ss2.str());
-			timeText.setPosition(App->getSize().x*0.8f, 10);
+            timeText.setPosition(0.8f * (float) App->getSize().x, 10.0f);
 			timeText.setColor(sf::Color::White);
 
 
