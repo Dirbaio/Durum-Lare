@@ -255,7 +255,7 @@ void Police::Update() {
 	case STATE_ALERT:
 	{
 		m_vel = 60.0f;
-		m_mark = MARK_QUESTION;
+                m_mark = MARK_QUESTION;
 		m_alertTime -= delta;
 
 		if (!m_hasGoal) {
@@ -281,7 +281,7 @@ void Police::Update() {
 	case STATE_CONFUSE:
 	{
 		m_vel = 30.0f;
-		m_mark = MARK_QUESTION;
+                m_mark = MARK_QUESTION;
 		m_alertTime -= delta;
 
 		if (!m_hasGoal) {
@@ -326,7 +326,7 @@ void Police::Update() {
 
 		if (Utils::distance(m_position, m_lastPosSawPlayer) <= 12)
 		{
-			m_state = STATE_PLAYER_LOST;
+                        m_state = STATE_PLAYER_LOST;
 		}
 
 		if (m_lastPosSawTime < 0)
@@ -341,7 +341,7 @@ void Police::Update() {
 	case STATE_PLAYER_LOST:
 	{
 		m_vel = 60.0f;
-		m_mark = MARK_QUESTION;
+                m_mark = MARK_QUESTION;
 		m_lastPosSawTime -= delta;
 		Player* p = GameReg::getInstance()->player;
 		if(canSee(p->getPosition())) {
@@ -352,7 +352,12 @@ void Police::Update() {
 		}
 		else
 		{
-			moveInDir(m_lastDirSawPlayer);
+                    if (m_collided) {
+                        m_lastDirSawPlayer.x = m_lastDirSawPlayer.x*(-1);
+                        m_lastDirSawPlayer.y = m_lastDirSawPlayer.y*(-1);
+                    }
+                    moveInDir(m_lastDirSawPlayer);
+
 			if (m_lastPosSawTime < 0 || m_collided)
 			{
 				m_state = STATE_ALERT;

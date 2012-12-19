@@ -36,7 +36,7 @@ void Person::Init() {
 	m_bloodSpr.setOrigin((float) m_bloodSpr.getTextureRect().width *0.5f,
 			   (float) m_bloodSpr.getTextureRect().height*0.5f);
 
-	m_dissappearTime = 12.0f;
+        m_dissappearTime = 30.0f;
 	m_walkingTime = 0.0f;
 
 	life = 1;

@@ -60,7 +60,7 @@ void GameScene::initThread() {
 
 	//Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
-	camera.zoom(0.5f);
+        camera.zoom(0.4f);
 
 	//Init background music
 	bg_music.openFromFile("audio/surrounding.ogg");
@@ -89,7 +89,7 @@ bool GameScene::Init() {
 	sf::Text titleText;
 	titleText.setColor(sf::Color::Yellow);
 	titleText.setStyle(sf::Text::Bold);
-	titleText.setString("DURUM, DALE");
+        titleText.setString("GiTA");
 	titleText.setScale(3, 3);
 	titleText.setPosition(
 				(float) App->getSize().x*0.25f,
