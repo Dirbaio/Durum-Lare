@@ -45,7 +45,6 @@ void GraphEng::init() {
 
         //App->Create(m_videoModes[0], "Durum dale");
         App->create(m_videoModes[0], "Durum dale", sf::Style::Close);
-        //App->create(sf::VideoMode(1024, 780), "GiTA", sf::Style::Close);
 
         //worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
        // whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
