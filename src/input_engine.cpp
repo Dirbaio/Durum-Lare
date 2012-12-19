@@ -21,6 +21,9 @@ InputEng::InputEng()
     KeyMap[CAM_LEFT] = sf::Keyboard::Left;
     KeyMap[CAM_RIGHT] = sf::Keyboard::Right;
 
+    KeyMap[CAM_ZOOM_IN] = sf::Keyboard::F1;
+    KeyMap[CAM_ZOOM_OUT] = sf::Keyboard::F2;
+
     KeyMap[NEW_SCENE] = sf::Keyboard::Return;
 
     KeyMap[PLAYER_ACTION] = sf::Keyboard::Space;

@@ -54,13 +54,17 @@ void GameScene::initThread() {
 				   (float) graphics->getCurrentVideoMode().width,
 				   (float) graphics->getCurrentVideoMode().height));
 
+
+        m_camViewportOrg.x =  (float) graphics->getCurrentVideoMode().width;
+        m_camViewportOrg.y = (float) graphics->getCurrentVideoMode().height;
+
 	//Init NPCS
 	for (int i = 0; i < 600; ++i) spawnNewPerson();
 	for (int i = 0; i < 30; ++i) spawnNewPolice();
 
 	//Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
-        camera.zoom(0.4f);
+        m_camZoom = 0.5f;
 
 	//Init background music
 	bg_music.openFromFile("audio/surrounding.ogg");
@@ -272,6 +276,7 @@ vector<Person*> GameScene::getPeopleSeen(Character* c, SearchType st)
 void GameScene::Update() {
 
 	InputEng* input = InputEng::getInstance();
+        float delta = input->getFrameTime().asSeconds();
 	if (input->getKeyDown(InputEng::NEW_SCENE))
 		this->nextScene = new GameScene();
 
@@ -279,6 +284,24 @@ void GameScene::Update() {
 		App->convertCoords(sf::Vector2i(
 			(int) input->getMousePos().x,
 			(int) input->getMousePos().y), camera));
+
+
+        //Camera Zoom
+        if (input->getKeyDown(InputEng::CAM_ZOOM_IN)) {
+            m_camZoomTrans.setPos(m_camZoom);
+            m_camZoomTrans.goPos(0.4f);
+            m_camZoomTrans.setTime(0.2f);
+        }
+        if (input->getKeyDown(InputEng::CAM_ZOOM_OUT)) {
+            m_camZoomTrans.setPos(m_camZoom);
+            m_camZoomTrans.goPos(0.5f);
+            m_camZoomTrans.setTime(0.2f);
+        }
+        if (!m_camZoomTrans.reached()) {
+            m_camZoomTrans.update(delta);
+            m_camZoom = m_camZoomTrans.getPos();
+        }
+
 
 	estructuraPepinoPeople = vector<vector<vector<Person*> > > (city.getTW(), vector<vector<Person*> >(city.getTH()));
 	estructuraPepinoPolice = vector<vector<vector<Police*> > > (city.getTW(), vector<vector<Police*> >(city.getTH()));
@@ -362,7 +385,9 @@ bool comp(Object* a, Object* b)
 void GameScene::Draw() {
 	GraphEng* graphics = GraphEng::getInstance();
 
-	camera.setCenter(player.getPosition());
+        camera.setSize(m_camViewportOrg.x*m_camZoom, m_camViewportOrg.y*m_camZoom);
+        camera.setCenter(player.getPosition());
+
 	App->setView(camera);
 
 	//Map draw

@@ -72,6 +72,10 @@ private:
 	std::list<Item> itemList;
 
 	sf::Music bg_music;
+
+        TransitionLinear m_camZoomTrans;
+        float m_camZoom;
+        sf::Vector2f m_camViewportOrg; //Original viewport
 };
 
 #endif // GAMESCENE_H

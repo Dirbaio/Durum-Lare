@@ -11,9 +11,10 @@ public:
 	{
 		PLAYER_UP, PLAYER_DOWN, PLAYER_LEFT, PLAYER_RIGHT,
 		PLAYER_ACTION,
-		CAM_UP, CAM_DOWN, CAM_LEFT, CAM_RIGHT,
+                CAM_UP, CAM_DOWN, CAM_LEFT, CAM_RIGHT,
+                CAM_ZOOM_IN, CAM_ZOOM_OUT,
 		EXIT, NEW_SCENE,
-        MENU_START,
+                MENU_START,
 		K_SIZE
 	};
 

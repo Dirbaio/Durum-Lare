@@ -239,11 +239,6 @@ void Person::Update() {
 		break;
 	}
 	case STATE_DEAD: {
-		if      (m_faceDir == FACE_UP)    ensureAnim("DeadUp");
-		else if (m_faceDir == FACE_DOWN)  ensureAnim("DeadDown");
-		else if (m_faceDir == FACE_LEFT)  ensureAnim("DeadLeft");
-		else if (m_faceDir == FACE_RIGHT) ensureAnim("DeadRight");
-
 		m_mark = MARK_NONE;
 		m_prio = -1;
 		m_deathTimer -= input->getFrameTime().asSeconds();
@@ -252,7 +247,19 @@ void Person::Update() {
 	}
 	}
 
-	if (m_state != STATE_DEAD) {
+        if (m_state == STATE_DEAD) {
+            if      (m_faceDir == FACE_UP)    ensureAnim("DeadUp");
+            else if (m_faceDir == FACE_DOWN)  ensureAnim("DeadDown");
+            else if (m_faceDir == FACE_LEFT)  ensureAnim("DeadLeft");
+            else if (m_faceDir == FACE_RIGHT) ensureAnim("DeadRight");
+        }
+        else if (m_state == STATE_CONFUSED) {
+            if      (m_faceDir == FACE_UP)    ensureAnim("IdleUp");
+            else if (m_faceDir == FACE_DOWN)  ensureAnim("IdleDown");
+            else if (m_faceDir == FACE_LEFT)  ensureAnim("IdleLeft");
+            else if (m_faceDir == FACE_RIGHT) ensureAnim("IdleRight");
+        }
+        else {
 		if      (m_faceDir == FACE_UP)    ensureAnim("WalkingUp");
 		else if (m_faceDir == FACE_DOWN)  ensureAnim("WalkingDown");
 		else if (m_faceDir == FACE_LEFT)  ensureAnim("WalkingLeft");
