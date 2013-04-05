@@ -1,6 +1,8 @@
 #include "game_scene.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Network.hpp>
+
 
 #include <iostream>
 #include <vector>
@@ -92,6 +94,9 @@ void GameScene::initThread() {
 }
 
 bool GameScene::Init() {
+
+    serverIp = sf::IpAddress("192.168.1.100");
+    connSocket.connect(serverIp, 6174);
 
 	initThreadDone = false;
 	GraphEng* graphics = graphics->getInstance();
@@ -299,6 +304,35 @@ vector<Person*> GameScene::getPeopleSeen(Character* c, SearchType st)
 	return res;
 }
 
+void GameScene::sendInputToServer() {
+
+
+    sf::Packet packet;
+    InputEng* input = InputEng::getInstance();
+
+    packet << input->encodeToString();
+
+    connSocket.send(packet);
+
+}
+
+void GameScene::receiveServerInfo() {
+
+    sf::Packet packet;
+    if (connSocket.receive(packet) == sf::Socket::Done) {
+        std::string str;
+        packet >> str;
+        InputEng* input = InputEng::getInstance();
+        input->decodeFromString(str);
+    }
+    else {
+        cout << "[ERROR] PACKET COSAS CHUNGAS" << endl;
+        nextScene = new MenuScene();
+    }
+
+
+}
+
 void GameScene::Update() {
 
 	InputEng* input = InputEng::getInstance();
@@ -351,8 +385,14 @@ void GameScene::Update() {
 		estructuraPepinoPolice[p.x][p.y].push_back(&*it);
 	}
 
-	//Player update
+    //Player update
+
+    sendInputToServer();
+    receiveServerInfo();
+
 	player.Update();
+
+
 
 	//Persons update
 	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {

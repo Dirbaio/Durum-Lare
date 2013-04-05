@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Network.hpp>
 
 #include <vector>
 #include <queue>
@@ -42,6 +43,9 @@ public:
 	vector<Person*> getPeopleAround(sf::Vector2f pos, float r, SearchType st);
 	vector<Person*> getPeopleSeen(Character* c, SearchType st);
 
+    void sendInputToServer();
+    void receiveServerInfo();
+
 private:
 	void initThread();
 	bool initThreadDone;
@@ -68,7 +72,7 @@ private:
 
 	//Statics
 	sf::View camera;
-	Player player;
+    Player player;
 	City city;
 	Hud hud;
 
@@ -83,6 +87,10 @@ private:
         TransitionLinear m_camZoomTrans;
         float m_camZoom;
         sf::Vector2f m_camViewportOrg; //Original viewport
+
+
+    sf::IpAddress serverIp;
+    sf::TcpSocket connSocket;
 };
 
 #endif // GAMESCENE_H

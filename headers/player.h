@@ -5,6 +5,8 @@
 #include "item.h"
 #include <set>
 
+#include <input_engine.h>
+
 class Player : public Character {
 public:
 	Player() {}
@@ -28,6 +30,8 @@ public:
 
     const std::set<int>& getSpecialItems() {return m_specialItems;}
 
+    void updateInput(InputEng input);
+
 private:
 	sf::Sprite mySpr;
 	sf::Vector2f myVel;
@@ -39,6 +43,8 @@ private:
     int myKills;
 
     std::set<int> m_specialItems;
+
+    InputEng myInputEng;
 };
 
 #endif // PLAYER_H

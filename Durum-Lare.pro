@@ -5,7 +5,7 @@ CONFIG -= qt
 QMAKE_CXXFLAGS += -pg -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow
 QMAKE_LDFLAGS += -pg
 
-LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio
+LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network
 
 SOURCES += src/main.cpp \
     src/game.cpp \

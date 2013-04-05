@@ -39,6 +39,8 @@ public:
 
 	sf::Time getFrameTime();
 
+    std::string encodeToString();
+    void decodeFromString(std::string str);
 
 private:
 	static InputEng *m_pInstance;

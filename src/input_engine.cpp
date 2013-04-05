@@ -50,6 +50,28 @@ InputEng* InputEng::getInstance() {
 }
 
 
+std::string InputEng::encodeToString() {
+
+    std::string encoded(K_SIZE*3, ' ');
+
+    for (int i = 0; i < K_SIZE; ++i) {
+        encoded[3*i]   = KeyUp[i] ? '1' : '0';
+        encoded[3*i+1] = KeyDown[i] ? '1' : '0';
+        encoded[3*i+2] = KeyState[i] ? '1' : '0';
+    }
+
+    return encoded;
+}
+
+void InputEng::decodeFromString(std::string encoded) {
+
+    for (int i = 0; i < K_SIZE; ++i) {
+        KeyUp[i] = encoded[3*i] == '1';
+        KeyDown[i] = encoded[3*i+1] == '1';
+        KeyState[i] = encoded[3*i+2] == '1';
+    }
+}
+
 void InputEng::Update() {
 
     for (int i = 0; i < K_SIZE; i++)
