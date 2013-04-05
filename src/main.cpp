@@ -6,8 +6,12 @@ using namespace std;
 #include <iostream>
 
 int main(int argc, char *argv[]) {
+
     Game game;
-    if (!game.Init()) std::cerr << "Error: Juego no iniciado" << std::endl;
+
+    if (!game.Init())
+        std::cerr << "Error: Juego no iniciado" << std::endl;
+
     else game.Go();
 
     return 0;

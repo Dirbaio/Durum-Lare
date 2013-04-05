@@ -24,6 +24,8 @@
 #include "item_factory.h"
 #include "menu_scene.h"
 
+#include "shop.h"
+
 GameScene::GameScene(){
 
 }
@@ -33,18 +35,21 @@ GameScene::~GameScene() {
 }
 
 void GameScene::initThread() {
+        //Link things to Game Reg
 	gameReg = GameReg::getInstance();
 	gameReg->city = &city;
 	gameReg->personList = &personList;
 	gameReg->policeList = &policeList;
 	gameReg->itemList = &itemList;
+        gameReg->shopList = &shopList;
 	gameReg->player = &player;
 	gameReg->scene = this;
+
 
 	GraphEng* graphics = GraphEng::getInstance();
 
 	//Init map
-	city.init(99,99, 64,64);
+        city.init(99,99, 64, 64);
 	//Init player
 	player.Init();
 	player.setPosition(city.getRandomStreet());
@@ -60,7 +65,10 @@ void GameScene::initThread() {
 
 	//Init NPCS
 	for (int i = 0; i < 600; ++i) spawnNewPerson();
-	for (int i = 0; i < 30; ++i) spawnNewPolice();
+        for (int i = 0; i < 30; ++i) spawnNewPolice();
+
+        //Init Shops
+        for (int i = 0; i < 5; ++i) spawnNewShop();
 
 	//Init Camera
 	camera.setCenter(sf::Vector2f(0, 0));
@@ -73,6 +81,11 @@ void GameScene::initThread() {
 
 	//Init hud
 	hud.Init();
+
+        //Init statistics
+        m_killedPeople = 0;
+
+        m_timerSpawnPolice = 60.0f;
 
 	//Le oc
 	initThreadDone = true;
@@ -125,8 +138,21 @@ bool GameScene::Init() {
 	return true;
 }
 
+ void GameScene::spawnNewShop() {
+
+     Shop shop;
+
+     shop.Init();
+     shop.setPosition(city.getRandomClearing());
+
+     shopList.push_back(shop);
+
+ }
+
 void GameScene::spawnNewMoney(sf::Vector2f pos) {
-	Item* item = ItemFactory::MakeNewItem(ItemFactory::ITEM_MONEY);
+        Item* item;
+        if (Utils::randomInt(1, 20) == 1) item =  ItemFactory::MakeNewItem(ITEM_BIG_MONEY);
+        else item =  ItemFactory::MakeNewItem(ITEM_MONEY);
 	item->setPosition(pos);
 	item->setTransPos(pos, pos + sf::Vector2f(
 				  (float) Utils::randomInt(-16, 16),
@@ -203,11 +229,11 @@ void GameScene::collide(Character* a)
 				vector<Person*>& v = estructuraPepinoPeople[x][y];
 				for(int i = 0; i < (int) v.size(); i++)
 				{
-					Character* b = v[i];
+                                        Character* b = v[i];
 
-					if(Utils::distance(pos, b->m_position) < 10)
+                                        if(Utils::distance(pos, b->m_position) < 10)
 					{
-						sf::Vector2f l = b->m_position - a->m_position;
+                                                sf::Vector2f l = b->m_position - a->m_position;
 						if(Utils::norm(l) == 0) continue;
 
 						Utils::normalize(l);
@@ -277,6 +303,14 @@ void GameScene::Update() {
 
 	InputEng* input = InputEng::getInstance();
         float delta = input->getFrameTime().asSeconds();
+
+        //Timers
+        m_timerSpawnPolice -= delta;
+        if (m_timerSpawnPolice <= 0) {
+            m_timerSpawnPolice = 60.0f;
+            spawnNewPolice();
+        }
+
 	if (input->getKeyDown(InputEng::NEW_SCENE))
 		this->nextScene = new GameScene();
 
@@ -335,6 +369,11 @@ void GameScene::Update() {
 		it->Update();
 	}
 
+        //Shops update
+        for (std::list<Shop>::iterator it = shopList.begin(); it != shopList.end(); ++it) {
+                it->Update();
+        }
+
 	//COLLISIONS !!!!
 	collide(&player);
 	for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
@@ -392,7 +431,6 @@ void GameScene::Draw() {
 
 	//Map draw
 	city.render();
-	graphics->DrawAll();
 
 	vector<Object*> v;
 	v.push_back(&player);
@@ -401,8 +439,10 @@ void GameScene::Draw() {
 		v.push_back(&*it);
 	for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
 		v.push_back(&*it);
-	for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it)
-		v.push_back(&*it);
+        for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it)
+                v.push_back(&*it);
+        for (std::list<Shop>::iterator it = shopList.begin(); it != shopList.end(); ++it)
+                v.push_back(&*it);
 
 	sort(v.begin(), v.end(), comp);
 	for(int i = 0; i < (int) v.size(); i++)
@@ -450,6 +490,7 @@ void GameScene::HandleEvents() {
 			for (std::vector<Person*>::iterator it = persons.begin(); it != persons.end(); ++it) {
 				if (!(*it)->is_alive()) continue;
 				player.setKills(player.getKills()+1);
+                                if ((++m_killedPeople)%5 == 0) spawnNewPolice();
 				(*it)->onHit();
 				int n_moneys = Utils::randomInt(1, 3);
 				for (int i = 0; i < n_moneys; ++i) spawnNewMoney((*it)->getPosition());
@@ -490,7 +531,7 @@ void GameScene::HandleEvents() {
 
 		case EVENT_GAME_OVER: {
 			//EventGameOver* ev = (EventGameOver*)e;
-			MenuScene::setNewScore(player.getScore());
+                        MenuScene::setNewScore(player.getMoney());
 			nextScene = new MenuScene();
 			break;
 		}

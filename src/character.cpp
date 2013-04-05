@@ -162,11 +162,11 @@ void Character::setGoal(sf::Vector2f goal) {
     sf::Vector2i to = city.absoluteToTilePos(m_goal);
 	
 	if(city.occupedIJ(from.x, from.y)) {
-		cout<<"Pathfinding: Current pos is solid. "<<endl;
+                //cout<<"Pathfinding: Current pos is solid. "<<endl;
 		return;
 	}
 	if(city.occupedIJ(to.x, to.y)) {
-		cout<<"Pathfinding: Goal is solid."<<endl;
+                //cout<<"Pathfinding: Goal is solid."<<endl;
 		return;
 	}
 

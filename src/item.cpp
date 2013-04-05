@@ -15,6 +15,8 @@ void Item::Init() {
     flagDie = false;
     dieTimer = 0.0f;
 
+    m_scale = sf::Vector2f(1, 1);
+
     spawnTimer = 0.5f;
     m_isTakeable = false; //Es falso al principio para que no
                           //se coja hasta que acabe la transicion de spawnear
@@ -73,6 +75,7 @@ void Item::Update() {
         }
     }
 
+    m_rotation = scene_total_time.asSeconds()*360;
 
 
 }
@@ -90,10 +93,16 @@ void Item::Draw() {
 
     mySpr.setPosition(m_position);
     if (transScale != NULL) mySpr.setScale(transScale->getPos(), transScale->getPos());
-    else mySpr.setScale(1.0f, 1.0f);
+    else mySpr.setScale(m_scale.x, m_scale.y);
+    mySpr.setOrigin(8, 8);
+    mySpr.setRotation(m_rotation);
+
     App->draw(mySpr);
 
+
 }
+
+
 
 void Item::setSprite(sf::Sprite spr) {
     mySpr = spr;

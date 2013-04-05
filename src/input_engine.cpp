@@ -24,6 +24,10 @@ InputEng::InputEng()
     KeyMap[CAM_ZOOM_IN] = sf::Keyboard::F1;
     KeyMap[CAM_ZOOM_OUT] = sf::Keyboard::F2;
 
+    KeyMap[SHOP_BUY_1] = sf::Keyboard::Num1;
+    KeyMap[SHOP_BUY_2] = sf::Keyboard::Num2;
+    KeyMap[SHOP_BUY_3] = sf::Keyboard::Num3;
+
     KeyMap[NEW_SCENE] = sf::Keyboard::Return;
 
     KeyMap[PLAYER_ACTION] = sf::Keyboard::Space;

@@ -30,8 +30,8 @@ public:
 
 	virtual void Init() = 0;
 	virtual void Update() = 0;
-    virtual void Draw() = 0;
-    virtual void DrawMark() {}
+        virtual void Draw() = 0;
+        virtual void DrawMark() {}
 
 	void updateBBox();
 
@@ -39,10 +39,14 @@ public:
 	virtual void setPosition(const sf::Vector2f& pos) {
 		m_position = pos;
 	}
-    sf::Vector2f getPosition() { return m_position; }
-	sf::Vector2f getOrigin() { return m_origin; }
+        sf::Vector2f getPosition() { return m_position; }
 
-    sf::Vector2f getCenter() {return m_center;}
+        sf::Vector2f getScale() { return m_scale; }
+        void setScale(sf::Vector2f sca) { m_scale = sca; }
+
+        sf::Vector2f getOrigin() { return m_origin; }
+
+        sf::Vector2f getCenter() {return m_center;}
 
 	sf::FloatRect getLocalBounds() {
 		return mySpr.getLocalBounds();
@@ -55,7 +59,7 @@ public:
 	bool isTaken() {return m_isTaken;}
 	void setTaken(bool taken) {m_isTaken = taken;}
 	bool isTakeable() { return m_isTakeable; }
-    void setTakeable (bool _isTakeable) { m_isTakeable = _isTakeable; }
+        void setTakeable (bool _isTakeable) { m_isTakeable = _isTakeable; }
 	bool isUsable() { return m_isUsable; }
 	bool isToBeDeleted() { return m_toBeDeleted; }
 	void markForDelete() { m_toBeDeleted = true; }
@@ -69,7 +73,7 @@ public:
 
 	//Events
 	virtual void onUse() {}
-	virtual void onTake() {}
+        virtual void onBuy() {}
 	virtual void onGameTick() {}
 	virtual void onCollide() {}
 
@@ -77,10 +81,10 @@ public:
 
     void ensureAnim(std::string anim);
 
-	sf::Vector2f m_position;
+sf::Vector2f m_position;
 
 protected:
-    static int idCount;
+        static int idCount;
 	int uniqueID;
 
 	bool m_toBeDeleted;
@@ -89,6 +93,7 @@ protected:
 
         Animation* m_anim;
         sf::Sprite mySpr;
+
 
 	sf::Vector2f m_origin;
 	sf::Vector2f m_scale;

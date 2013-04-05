@@ -25,7 +25,7 @@ bool Game::Init() {
 	graphics = GraphEng::getInstance();
 	graphics->init();
 
-        scene = new MenuScene();
+    scene = new MenuScene();
 
 	frames = 0;
 
@@ -91,6 +91,7 @@ void Game::Go() {
 
             App->draw(fpsText);
             //App->draw(timeText);
+
 			App->display();
 
 			frames++;

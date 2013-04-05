@@ -28,7 +28,7 @@ void Player::Init() {
         ensureAnim("IdleDown");
 	m_actionDelay = 0;
 
-    myScore = 0;
+    myMoney = 999;
     myKills = 0;
 }
 
@@ -49,6 +49,18 @@ void Player::LoadAnims() {
 void Player::hitAction()
 {
     m_actionDelay = 0.18f;
+}
+
+void Player::onBuy(Item item) {
+    if (item.getItemType() == ITEM_SHOE &&
+        (m_specialItems.find(ITEM_SHOE) == m_specialItems.end())) {
+            myVel.x*= 1.5f;
+            myVel.y*= 1.5f;
+            m_specialItems.insert(ITEM_SHOE);
+    }
+
+    myMoney -= item.getValue();
+
 }
 
 void Player::Update() {
@@ -127,7 +139,7 @@ void Player::Update() {
 
             if (Utils::rectCollision(it->getBoundBox(), moneyBox)) {
                 it->takeAction();
-                myScore += it->getScore();
+                myMoney += it->getValue();
             }
         }
     }
@@ -138,6 +150,7 @@ void Player::Draw() {
 
         if (spr == NULL) return;
 
+        //spr->setOrigin(sf::Vector2f(16, 32));
         spr->setPosition(m_position);
         App->draw(*spr);
 }

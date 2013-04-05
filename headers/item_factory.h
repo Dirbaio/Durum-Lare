@@ -5,14 +5,6 @@
 
 namespace ItemFactory {
 
-    enum ItemType {
-
-        ITEM_MONEY,
-
-        ITEM_TYPE_SIZE
-
-    };
-
     Item* MakeNewItem(int type);
 
 

@@ -29,7 +29,8 @@ SOURCES += src/main.cpp \
     src/hud.cpp \
     src/item_factory.cpp \
     src/menu_scene.cpp \
-    src/score_scene.cpp
+    src/score_scene.cpp \
+    src/shop.cpp
 
 
 
@@ -59,7 +60,8 @@ HEADERS += headers/game.h \
     headers/hud.h \
     headers/item_factory.h \
     headers/menu_scene.h \
-    headers/score_scene.h
+    headers/score_scene.h \
+    headers/shop.h
 
 INCLUDEPATH += src \
                headers

@@ -5,15 +5,22 @@
 #include "transition.h"
 
 enum eItemType {
+    ITEM_NONE = 0,
     ITEM_MONEY,
+    ITEM_BIG_MONEY,
 
-    ITEM_TYPE_SIZEs
+    ITEM_SHOE,
+    ITEM_GLASSES,
+
+    ITEM_BURGER,
+
+    ITEM_TYPE_SIZE
 };
 
 class Item : public Object {
 public:
 
-    Item() {}
+    Item(int type) : myItemType(type) {}
     virtual ~Item() {}
 
     virtual void Init();
@@ -21,8 +28,8 @@ public:
     virtual void Draw();
 
     void setSprite(sf::Sprite spr);
-    void setScore(int n) {myScore = n;}
-    int getScore() {return myScore;}
+    void setValue(int n) {myValue = n;}
+    int getValue() {return myValue;}
 
     void setTransPos(sf::Vector2f from, sf::Vector2f to);
     void setTransScale(float from, float to, float time);
@@ -31,9 +38,13 @@ public:
 
     bool isSpawning() {return flagSpawning;}
 
+    int getItemType() {return myItemType;}
+
 protected:
 
-    int myScore;
+    int myValue;
+
+    int myItemType;
 
     TransitionLinear* transPosX;
     TransitionLinear* transPosY;

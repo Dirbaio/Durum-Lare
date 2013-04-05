@@ -13,19 +13,101 @@ namespace ItemFactory{
 
         switch(type) {
 
-            case ITEM_MONEY:
+            case ITEM_NONE: {
 
-                Item* item = new Item();
+                Item* item = new Item(ITEM_NONE);
                 item->Init();
 
                 sf::Sprite spr;
-                spr.setTexture(*graphics->getTexture("img/money.png"));
-                spr.setOrigin(spr.getTextureRect().width/2, spr.getTextureRect().height/2);
+                spr.setTexture(*graphics->getTexture("img/items.png"));
+                spr.setOrigin(8, 8);
+                spr.setTextureRect(sf::IntRect(0*16, 0*16, 16, 16));
                 item->setSprite(spr);
-                item->setScore(Utils::randomInt(1, 3));
+                item->setValue( 0 );
                 return item;
 
                 break;
+            }
+
+            case ITEM_MONEY: {
+
+                Item* item = new Item(ITEM_MONEY);
+                item->Init();
+
+                sf::Sprite spr;
+                spr.setTexture(*graphics->getTexture("img/items.png"));
+                spr.setOrigin(8, 8);
+                spr.setTextureRect(sf::IntRect(0*16, 0*16, 16, 16));
+                item->setSprite(spr);
+                item->setValue( 1 );
+                return item;
+
+                break;
+            }
+
+            case ITEM_BIG_MONEY: {
+
+                Item* item = new Item(ITEM_BIG_MONEY);
+                item->Init();
+
+                sf::Sprite spr;
+                spr.setTexture(*graphics->getTexture("img/items.png"));
+                spr.setOrigin(8, 8);
+                spr.setTextureRect(sf::IntRect(1*16, 0*16, 16, 16));
+                item->setSprite(spr);
+                item->setValue( 5 );
+                return item;
+
+                break;
+            }
+
+            case ITEM_SHOE: {
+
+                Item* item = new Item(ITEM_SHOE);
+                item->Init();
+
+                sf::Sprite spr;
+                spr.setTexture(*graphics->getTexture("img/items.png"));
+                spr.setOrigin(8, 8);
+                spr.setTextureRect(sf::IntRect(0*16, 1*16, 16, 16));
+                item->setSprite(spr);
+                item->setValue( 150 );
+                return item;
+
+                break;
+            }
+
+        case ITEM_GLASSES: {
+
+            Item* item = new Item(ITEM_GLASSES);
+            item->Init();
+
+            sf::Sprite spr;
+            spr.setTexture(*graphics->getTexture("img/items.png"));
+            spr.setOrigin(8, 8);
+            spr.setTextureRect(sf::IntRect(1*16, 1*16, 16, 16));
+            item->setSprite(spr);
+            item->setValue( 200 );
+            return item;
+
+            break;
+        }
+
+        case ITEM_BURGER: {
+
+            Item* item = new Item(ITEM_BURGER);
+            item->Init();
+
+            sf::Sprite spr;
+            spr.setTexture(*graphics->getTexture("img/items.png"));
+            spr.setOrigin(8, 8);
+            spr.setTextureRect(sf::IntRect(1*16, 2*16, 16, 16));
+            item->setSprite(spr);
+            item->setValue( 45 );
+            return item;
+
+            break;
+        }
 
         }
 

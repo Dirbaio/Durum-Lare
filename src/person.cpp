@@ -46,8 +46,6 @@ void Person::Init() {
 	m_knowsPlayer = false;
 
 	m_transHit = NULL;
-
-	m_origin = sf::Vector2f(16, 16);
 	m_confuseCooldown = 0.0f;
 
 	int rand = Utils::randomInt(0, NUM_ANIMS_DATA-1);
@@ -304,8 +302,8 @@ void Person::Draw() {
 	//if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
 	//else spr->setScale(sf::Vector2f(1.0f, 1.0f));
 
-	spr->setOrigin(m_origin);
-	spr->setPosition(m_position);
+       // spr->setOrigin(sf::Vector2f(16, 32));
+        spr->setPosition(m_position);
 	spr->setScale(m_scale);
 	App->draw(*spr);
 

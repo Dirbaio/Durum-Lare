@@ -57,6 +57,18 @@ sf::Vector2f City::getRandomStreet() {
     }
 }
 
+//!!! Esta funcion deberia devolver un tile de esplanada !!!1!!!1
+//!!! Ahora no lo hace bien !!!!!!!!!!!!
+sf::Vector2f City::getRandomClearing() {
+    while(1) {
+        int x = rand()%(map.m[0].size()*64);
+        int y = rand()%(map.m.size()*64);
+        int w=64, h=64;
+        sf::IntRect rect(x, y, w, h);
+        if (!occupedRect(rect)) return sf::Vector2f(x+w/2., y+h/2.);
+    }
+}
+
 sf::Vector2i City::absoluteToTilePos(const sf::Vector2f &pos)
 {
 	return sf::Vector2i((int) std::floor(pos.x/tw), (int) std::floor(pos.y/th));

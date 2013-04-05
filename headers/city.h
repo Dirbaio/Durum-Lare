@@ -22,6 +22,7 @@ public:
 	bool occupedIJ(int i, int j);
 	bool occupedRect(sf::IntRect rect);
 	sf::Vector2f getRandomStreet();
+        sf::Vector2f getRandomClearing();
 
 	sf::Vector2i absoluteToTilePos(const sf::Vector2f &pos);
 	int absoluteToTilePosX(float x);

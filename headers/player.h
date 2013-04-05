@@ -2,6 +2,8 @@
 #define PLAYER_H
 
 #include "character.h"
+#include "item.h"
+#include <set>
 
 class Player : public Character {
 public:
@@ -12,15 +14,19 @@ public:
 	void Draw();
 
     void LoadAnims();
-	void hitAction();
+    void hitAction();
 
-    int getScore(){return myScore;}
-    void setScore(int sc) {myScore = sc;}
+    int getMoney(){return myMoney;}
+    void setMoney(int sc) {myMoney = sc;}
 
     int getKills() {return myKills;}
     void setKills(int k) {myKills = k;}
 
     bool isDoingAction() { return m_actionDelay > 0; }
+
+    void onBuy(Item item);
+
+    const std::set<int>& getSpecialItems() {return m_specialItems;}
 
 private:
 	sf::Sprite mySpr;
@@ -29,8 +35,10 @@ private:
     std::string currentAnim;
 	float m_actionDelay;
 
-    int myScore;
+    int myMoney;
     int myKills;
+
+    std::set<int> m_specialItems;
 };
 
 #endif // PLAYER_H

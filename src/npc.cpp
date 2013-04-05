@@ -4,7 +4,8 @@
 #include "input_engine.h"
 
 Npc::Npc() {
-
+    m_origin.x = 16;
+    m_origin.y = 32;
 }
 
 void Npc::Init() {
@@ -21,6 +22,7 @@ void Npc::Draw() {
 
     //sf::Sprite* spr = m_anim->getCurrentFrame();
     mySpr.setPosition(m_position);
+    mySpr.setOrigin(m_origin);
     App->draw(mySpr);
 }
 

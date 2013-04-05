@@ -17,6 +17,7 @@
 #include "player.h"
 #include "person.h"
 #include "police.h"
+#include "shop.h"
 
 #include "hud.h"
 #include "item.h"
@@ -51,7 +52,12 @@ private:
 	//Map map;
 	void spawnNewPerson();
 	void spawnNewPolice();
+        void spawnNewShop();
 	void spawnNewMoney(sf::Vector2f pos);
+
+
+        int m_killedPeople;
+        float m_timerSpawnPolice;
 
 	void collide(Character* a);
 	vector<vector<vector<Person*> > > estructuraPepinoPeople;
@@ -70,6 +76,7 @@ private:
 	std::list<Person> personList;
 	std::list<Police> policeList;
 	std::list<Item> itemList;
+        std::list<Shop> shopList;
 
 	sf::Music bg_music;
 

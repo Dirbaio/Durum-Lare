@@ -7,6 +7,7 @@
 #include "police.h"
 #include "item.h"
 #include "person.h"
+#include "shop.h"
 
 #include <list>
 
@@ -29,6 +30,7 @@ public:
         std::list<Person>* personList;
         std::list<Police>* policeList;
         std::list<Item>* itemList;
+        std::list<Shop>* shopList;
 
 private:
         static GameReg* myInstance;
