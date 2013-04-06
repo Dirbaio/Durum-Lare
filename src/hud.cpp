@@ -3,7 +3,6 @@
 #include "defines.h"
 #include "utils.h"
 #include "shop.h"
-#include "game_reg.h"
 #include "item_factory.h"
 
 void Hud::Init() {
@@ -28,7 +27,6 @@ void Hud::Init() {
 
 void Hud::Draw() {
 
-    GameReg* gameReg = GameReg::getInstance();
     sf::Vector2u scr_size = App->getSize();
 
 /*

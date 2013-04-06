@@ -1,7 +1,6 @@
 #include "shop.h"
 #include "defines.h"
 #include "graphics_engine.h"
-#include "game_reg.h"
 #include <iostream>
 #include "utils.h"
 #include "item.h"

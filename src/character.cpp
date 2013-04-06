@@ -3,7 +3,6 @@
 #include <cassert>
 
 #include "utils.h"
-#include "game_reg.h"
 #include "input_engine.h"
 #include "graphics_engine.h"
 #include "game_scene.h"
@@ -29,7 +28,7 @@ Character::Character(GameScene* sc) : Object(sc)
 void Character::move(sf::Vector2f posf)
 {
 	const sf::Vector2f &pos0 = m_position;
-	City &city = *GameReg::getInstance()->city;
+
 	sf::Vector2f sizs = sf::Vector2f(10, 5);
 	sf::Vector2f cens = sf::Vector2f(5, 4);
 
@@ -39,17 +38,17 @@ void Character::move(sf::Vector2f posf)
 	if (direction.y < 0) //Vamos hacia abajo
 	{
 		//le restamos a la Y la mitad de su tamaño para obtener la Y inferior del sprite
-		int yo = city.absoluteToTilePosY(pos0.y - scen.y),
-		    yn = city.absoluteToTilePosY(posf.y - scen.y),
-		    xl = city.absoluteToTilePosX(pos0.x - cens.x + 2),
-		    xr = city.absoluteToTilePosX(pos0.x + scen.x - 2);
+		int yo = scene->city.absoluteToTilePosY(pos0.y - scen.y),
+		    yn = scene->city.absoluteToTilePosY(posf.y - scen.y),
+		    xl = scene->city.absoluteToTilePosX(pos0.x - cens.x + 2),
+		    xr = scene->city.absoluteToTilePosX(pos0.x + scen.x - 2);
 		for (int y = yo; y >= yn; y--)
 		{
 			for (int x = xl; x <= xr; x++)
 			{
-				if (city.occupedIJ(x,y) && onDownCollision(x, y))
+				if (scene->city.occupedIJ(x,y) && onDownCollision(x, y))
 				{
-					posf.y = city.tileTopPos(y) + scen.y;
+					posf.y = scene->city.tileTopPos(y) + scen.y;
 					goto vert_exit;
 				}
 			}
@@ -60,17 +59,17 @@ void Character::move(sf::Vector2f posf)
 	else if (direction.y > 0) //Vamos hacia arriba
 	{
 		//le sumamos a la Y la mitad de su tamaño para obtener la Y superior del sprite
-		int yo = city.absoluteToTilePosY(pos0.y + cens.y),
-		    yn = city.absoluteToTilePosY(posf.y + cens.y),
-		    xl = city.absoluteToTilePosX(pos0.x - cens.x + 2),
-		    xr = city.absoluteToTilePosX(pos0.x + scen.x - 2);
+		int yo = scene->city.absoluteToTilePosY(pos0.y + cens.y),
+		    yn = scene->city.absoluteToTilePosY(posf.y + cens.y),
+		    xl = scene->city.absoluteToTilePosX(pos0.x - cens.x + 2),
+		    xr = scene->city.absoluteToTilePosX(pos0.x + scen.x - 2);
 		for (int y = yo; y <= yn; y++)
 		{
 			for (int x = xl; x <= xr; x++)
 			{
-				if (city.occupedIJ(x,y) && onUpCollision(x, y))
+				if (scene->city.occupedIJ(x,y) && onUpCollision(x, y))
 				{
-					posf.y = city.tileBottomPos(y) - cens.y;
+					posf.y = scene->city.tileBottomPos(y) - cens.y;
 					goto vert_exit;
 				}
 			}
@@ -82,17 +81,17 @@ vert_exit:
 
 	if (direction.x < 0) //Vamos hacia la izquierda
 	{
-		int xo = city.absoluteToTilePosX(pos0.x - cens.x),
-		    xn = city.absoluteToTilePosX(posf.x - cens.x),
-		    yb = city.absoluteToTilePosY(pos0.y - scen.y + 2),
-		    yt = city.absoluteToTilePosY(pos0.y + cens.y - 2);
+		int xo = scene->city.absoluteToTilePosX(pos0.x - cens.x),
+		    xn = scene->city.absoluteToTilePosX(posf.x - cens.x),
+		    yb = scene->city.absoluteToTilePosY(pos0.y - scen.y + 2),
+		    yt = scene->city.absoluteToTilePosY(pos0.y + cens.y - 2);
 		for (int x = xo; x >= xn; x--)
 		{
 			for (int y = yb; y <= yt; y++)
 			{
-				if (city.occupedIJ(x,y) && onLeftCollision(x, y))
+				if (scene->city.occupedIJ(x,y) && onLeftCollision(x, y))
 				{
-					posf.x = city.tileRightPos(x) +cens.x;
+					posf.x = scene->city.tileRightPos(x) +cens.x;
 					goto horz_exit;
 				}
 			}
@@ -102,17 +101,17 @@ vert_exit:
 	}
 	else if (direction.x > 0) //Vamos hacia la derecha
 	{
-		int xo = city.absoluteToTilePosX(pos0.x + scen.x),
-				xn = city.absoluteToTilePosX(posf.x + scen.x),
-				yb = city.absoluteToTilePosY(pos0.y - scen.y + 2),
-				yt = city.absoluteToTilePosY(pos0.y + cens.y - 2);
+		int xo = scene->city.absoluteToTilePosX(pos0.x + scen.x),
+				xn = scene->city.absoluteToTilePosX(posf.x + scen.x),
+				yb = scene->city.absoluteToTilePosY(pos0.y - scen.y + 2),
+				yt = scene->city.absoluteToTilePosY(pos0.y + cens.y - 2);
 		for (int x = xo; x <= xn; x++)
 		{
 			for (int y = yb; y <= yt; y++)
 			{
-				if (city.occupedIJ(x,y) && onRightCollision(x, y))
+				if (scene->city.occupedIJ(x,y) && onRightCollision(x, y))
 				{
-					posf.x = city.tileLeftPos(x) - scen.x;
+					posf.x = scene->city.tileLeftPos(x) - scen.x;
 					goto horz_exit;
 				}
 			}
@@ -158,16 +157,14 @@ void Character::DrawMark()
 void Character::setGoal(sf::Vector2f goal) {
     m_goal = goal;
 
-    City &city = *GameReg::getInstance()->city;
-
-    sf::Vector2i from = city.absoluteToTilePos(m_position);
-    sf::Vector2i to = city.absoluteToTilePos(m_goal);
+    sf::Vector2i from = scene->city.absoluteToTilePos(m_position);
+    sf::Vector2i to = scene->city.absoluteToTilePos(m_goal);
 	
-	if(city.occupedIJ(from.x, from.y)) {
+	if(scene->city.occupedIJ(from.x, from.y)) {
                 //cout<<"Pathfinding: Current pos is solid. "<<endl;
 		return;
 	}
-	if(city.occupedIJ(to.x, to.y)) {
+	if(scene->city.occupedIJ(to.x, to.y)) {
                 //cout<<"Pathfinding: Goal is solid."<<endl;
 		return;
 	}
@@ -194,7 +191,7 @@ void Character::setGoal(sf::Vector2f goal) {
             int y2 = y + dy[i];
             if(x2 < 0 || x2 >= TILESIZE) continue;
             if(y2 < 0 || y2 >= TILESIZE) continue;
-            if(city.occupedIJ(x2, y2)) continue;
+            if(scene->city.occupedIJ(x2, y2)) continue;
             if(vis[x2][y2] != -1) continue;
             vis[x2][y2] = i;
 	    sf::Vector2i v2 (x2, y2);
@@ -278,8 +275,7 @@ bool Character::canSee(const sf::Vector2f& pos)
     Utils::normalize(dir_corpse);
     Utils::normalize(dir_facing);
 
-    City &city = *GameReg::getInstance()->city;
-    return Utils::dot2(dir_corpse,dir_facing) >= 0.0f && city.visible(m_position, pos);
+    return Utils::dot2(dir_corpse,dir_facing) >= 0.0f && scene->city.visible(m_position, pos);
 }
 
 

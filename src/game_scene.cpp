@@ -14,7 +14,6 @@
 #include "input_engine.h"
 #include "graphics_engine.h"
 
-#include "game_reg.h"
 #include "generator.h"
 
 #include "player.h"
@@ -97,15 +96,7 @@ bool GameScene::Init() {
         App->display();
     }*/
 
-    //Link things to Game Reg
-    gameReg = GameReg::getInstance();
-    gameReg->city = &city;
-    gameReg->personList = &personList;
-    gameReg->policeList = &policeList;
-    gameReg->itemList = &itemList;
-    gameReg->shopList = &shopList;
-
-
+    
     GraphEng* graphics = GraphEng::getInstance();
 
     //Init map
@@ -336,7 +327,7 @@ void GameScene::receiveServerInfo() {
 
     sf::Packet packet = receivePacket();
 
-    for(int i = 0; i < players.size(); i++)
+    for(int i = 0; i < (int)players.size(); i++)
     {
         std::string str;
         packet >> str;
@@ -400,7 +391,7 @@ void GameScene::Update() {
     sendInputToServer();
     receiveServerInfo();
 
-    for(int i = 0; i < players.size(); i++)
+    for(int i = 0; i < (int) players.size(); i++)
        players[i].Update();
 
 
@@ -426,7 +417,7 @@ void GameScene::Update() {
     }
 
     //COLLISIONS !!!!
-    for(int i = 0; i < players.size(); i++)
+    for(int i = 0; i < (int) players.size(); i++)
         collide(&players[i]);
     for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
         collide(&*it);
@@ -458,8 +449,6 @@ void GameScene::Update() {
         else ++it;
     }
 
-    HandleCamInput();
-    HandleEvents();
 }
 
 bool comp(Object* a, Object* b)
@@ -485,7 +474,7 @@ void GameScene::Draw() {
     city.render();
 
     vector<Object*> v;
-    for(int i = 0; i < players.size(); i++)
+    for(int i = 0; i < (int)players.size(); i++)
         v.push_back(&players[i]);
     for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
         v.push_back(&*it);
@@ -515,33 +504,7 @@ void GameScene::Destroy() {
     connSocket->disconnect();
 }
 
-void GameScene::HandleCamInput() {
-    if (input.getKeyState(InputEng::CAM_UP))
-        camera.move(0, -input.getFrameTime().asSeconds()*2000);
-    if (input.getKeyState(InputEng::CAM_DOWN))
-        camera.move(0, input.getFrameTime().asSeconds()*2000);
-    if (input.getKeyState(InputEng::CAM_LEFT))
-        camera.move(-input.getFrameTime().asSeconds()*2000, 0);
-    if (input.getKeyState(InputEng::CAM_RIGHT))
-        camera.move(input.getFrameTime().asSeconds()*2000, 0);
-}
-
-void GameScene::HandleEvents() {
-    while (!gameReg->eventQueue.empty()) {
-        Event* e = gameReg->eventQueue.front();
-        gameReg->eventQueue.pop();
-        switch(e->type) {
-
-        case EVENT_GAME_OVER: {
-            //EventGameOver* ev = (EventGameOver*)e;
-            MenuScene::setNewScore(1337); //player.getMoney());
-            nextScene = new MenuScene();
-            break;
-        }
-        default:
-            //Nothing
-            break;
-        }
-        delete e;
-    }
+void GameScene::gameOver() {
+    MenuScene::setNewScore(1337); //player.getMoney());
+    nextScene = new MenuScene();
 }

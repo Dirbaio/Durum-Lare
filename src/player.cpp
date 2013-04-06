@@ -3,10 +3,10 @@
 #include "graphics_engine.h"
 #include "defines.h"
 #include "input_engine.h"
-#include "game_reg.h"
 #include "animation.h"
 #include <GL/gl.h>
 #include "game_scene.h"
+
 AnimationData* s_animData = NULL;
 
 void Player::Init() {
@@ -133,8 +133,7 @@ void Player::Update() {
 
     m_anim->Update(playerInput.getFrameTime().asSeconds());
 
-    std::list<Item>* itemList = GameReg::getInstance()->itemList;
-    for (std::list<Item>::iterator it = itemList->begin(); it != itemList->end(); ++it) {
+    for (std::list<Item>::iterator it = scene->itemList.begin(); it != scene->itemList.end(); ++it) {
         if (it->isTakeable()) {
 
             sf::FloatRect moneyBox = this->getBoundBox();

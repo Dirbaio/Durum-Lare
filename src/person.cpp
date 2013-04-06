@@ -3,7 +3,6 @@
 #include "npc.h"
 #include "defines.h"
 #include "input_engine.h"
-#include "game_reg.h"
 #include "utils.h"
 #include "animation.h"
 #include "game_scene.h"
@@ -92,8 +91,6 @@ void Person::Update() {
 
     float delta = scene->input.getFrameTime().asSeconds();
 
-    City &city = *GameReg::getInstance()->city;
-
     //TODO: Multiple player logic.
     Player* p = &scene->players[0];
     sf::Vector2f currPlayerPosition = p->getPosition();
@@ -108,7 +105,7 @@ void Person::Update() {
         m_mark = MARK_NONE;
 
         if(!m_hasGoal)
-            setGoal(city.getRandomStreet());
+            setGoal(scene->city.getRandomStreet());
         moveTowardsGoal();
 
         if (m_knowsPlayer && seesPlayerNow)
@@ -162,7 +159,7 @@ void Person::Update() {
         if (m_knowsPlayer && seesPlayerNow)
             m_panicTime = m_startPanicTime;
 
-        sf::Vector2i now = city.absoluteToTilePos(m_position);
+        sf::Vector2i now = scene->city.absoluteToTilePos(m_position);
         sf::Vector2i best = now;
         sf::Vector2f menacePos;
         float bestd = getClosestMenace(m_position, menacePos);
@@ -177,7 +174,7 @@ void Person::Update() {
             for(int i = 0; i < 4; i++)
             {
                 sf::Vector2i lol = now + dirInc[i];
-                if(city.occupedIJ(lol.x, lol.y)) continue;
+                if(scene->city.occupedIJ(lol.x, lol.y)) continue;
 
                 float d = getClosestMenace(sf::Vector2f(lol.x * 64.0f + 32.0f,
                                                         lol.y * 64.0f + 32.0f),
@@ -203,13 +200,13 @@ void Person::Update() {
         m_confusedTimeFacing -= delta;
 
         if (m_confusedTime < 0) {
-            setGoal(city.getRandomStreet());
+            setGoal(scene->city.getRandomStreet());
             m_state = STATE_WALKING;
         }
 
         if (m_confusedTimeFacing < 0) {
             lookAtRandomPlace();
-            m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0;
+            m_confusedTimeFacing = Utils::randomInt(1, 3)/4.0f;
         }
 
         vector<Person*> v = scene->getPeopleSeen(this, SEARCH_DEAD);
@@ -311,15 +308,14 @@ void Person::Draw() {
 }
 
 void Person::lookAtRandomPlace() {
-    City &city = *GameReg::getInstance()->city;
-    sf::Vector2i v = city.absoluteToTilePos(m_position);
+    sf::Vector2i v = scene->city.absoluteToTilePos(m_position);
 
     int lastFaceDir = m_faceDir;
     int i = 0;
     while(i < 8) {
         m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
         sf::Vector2i v2 = v + dirInc[m_faceDir];
-        if(!city.occupedIJ(v2.x, v2.y) && m_faceDir != lastFaceDir) break;
+        if(!scene->city.occupedIJ(v2.x, v2.y) && m_faceDir != lastFaceDir) break;
         i++;
     }
 }

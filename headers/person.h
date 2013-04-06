@@ -3,7 +3,6 @@
 
 #include "npc.h"
 #include "transition.h"
-#include "game_reg.h"
 #include "utils.h"
 
 #include <SFML/Audio.hpp>

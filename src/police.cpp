@@ -1,7 +1,6 @@
 #include "police.h"
 #include "graphics_engine.h"
 
-#include "game_reg.h"
 #include "input_engine.h"
 #include "game_scene.h"
 #include "defines.h"
@@ -36,7 +35,6 @@ void Police::Update() {
     Npc::Update();
     m_collided = false;
     float delta = scene->input.getFrameTime().asSeconds();
-    City &city = *GameReg::getInstance()->city;
 
     //TODO Multiplayer logic
     Player* p = &scene->players[0];
@@ -103,8 +101,7 @@ void Police::Update() {
         }
     }
 
-    std::list<Police>* policeList = GameReg::getInstance()->policeList;
-    for (std::list<Police>::iterator it = policeList->begin(); it != policeList->end(); it++) {
+    for (std::list<Police>::iterator it = scene->policeList.begin(); it != scene->policeList.end(); it++) {
         Police &police = *it;
         if (canSee(police.getPosition())) {
             switch(police.m_state)
@@ -143,8 +140,7 @@ void Police::Update() {
         }
     }
 
-    //std::list<Police>* policeList = GameReg::getInstance()->policeList;
-    for (std::list<Police>::iterator it = policeList->begin(); it != policeList->end(); it++) {
+    for (std::list<Police>::iterator it = scene->policeList.begin(); it != scene->policeList.end(); it++) {
         Police &police = *it;
         if (canSee(police.getPosition())) {
             switch(police.m_state)
@@ -309,7 +305,7 @@ void Police::Update() {
         m_vel = 75.0f;
         m_mark = MARK_RED_EXCLAMATION;
         m_lastPosSawTime -= delta;
-        if(city.visible(m_position, p->getPosition())) {
+        if(scene->city.visible(m_position, p->getPosition())) {
             m_lastDirSawPlayer = p->getPosition()-m_lastPosSawPlayer;
             m_lastPosSawPlayer = p->getPosition();
             m_lastPosSawTime = 5;
@@ -318,9 +314,7 @@ void Police::Update() {
         moveInDir(m_lastPosSawPlayer-m_position);
 
         if (Utils::distance(m_position, p->m_position) <= 12)
-        {
-            GameReg::getInstance()->eventQueue.push(new EventGameOver());
-        }
+        	scene->gameOver();
 
         if (Utils::distance(m_position, m_lastPosSawPlayer) <= 12)
         {
@@ -389,8 +383,7 @@ sf::Vector2f Police::getNewGoal(sf::Vector2f pos)
     int distGoal = 5;
     std::vector<sf::Vector2i> goals;
 
-    City &city = *GameReg::getInstance()->city;
-    sf::Vector2i from = city.absoluteToTilePos(pos);
+    sf::Vector2i from = scene->city.absoluteToTilePos(pos);
 
     vector<vector<int> > vis(TILESIZE, vector<int>(TILESIZE, -1));
 
@@ -411,7 +404,7 @@ sf::Vector2f Police::getNewGoal(sf::Vector2f pos)
             sf::Vector2i v2 = v + dirInc[i];
             if(v2.x < 0 || v2.x >= TILESIZE) continue;
             if(v2.y < 0 || v2.y >= TILESIZE) continue;
-            if(city.occupedIJ(v2.x, v2.y)) continue;
+            if(scene->city.occupedIJ(v2.x, v2.y)) continue;
             if(vis[v2.x][v2.y] != -1) continue;
             vis[v2.x][v2.y] = dist+1;
             q.push(v2);
@@ -425,14 +418,13 @@ sf::Vector2f Police::getNewGoal(sf::Vector2f pos)
 
 void Police::lookAtRandomPlace()
 {
-    City &city = *GameReg::getInstance()->city;
-    sf::Vector2i v = city.absoluteToTilePos(m_position);
+    sf::Vector2i v = scene->city.absoluteToTilePos(m_position);
 
     int i = 0;
     while(i < 4) {
         m_faceDir = Utils::randomInt(FACE_UP, FACE_RIGHT);
         sf::Vector2i v2 = v + dirInc[m_faceDir];
-        if(!city.occupedIJ(v2.x, v2.y)) break;
+        if(!scene->city.occupedIJ(v2.x, v2.y)) break;
         i++;
     }
 }

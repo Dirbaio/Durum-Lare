@@ -1,8 +1,8 @@
 #include "item.h"
 #include "defines.h"
 #include "input_engine.h"
-#include "game_reg.h"
 #include "game_scene.h"
+
 void Item::Init() {
 
     transPosX = NULL;

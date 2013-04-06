@@ -13,7 +13,6 @@ SOURCES += src/main.cpp \
     src/graphics_engine.cpp \
     src/scene.cpp \
     src/game_scene.cpp \
-    src/game_reg.cpp \
     src/map.cpp \
     src/person.cpp \
     src/object.cpp \
@@ -43,7 +42,6 @@ HEADERS += headers/game.h \
     headers/defines.h \
     headers/game_scene.h \
     headers/event.h \
-    headers/game_reg.h \
     headers/utils.h \
     headers/person.h \
     headers/object.h \

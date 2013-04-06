@@ -7,8 +7,6 @@
 #include <iostream>
 #include <algorithm>
 
-#include "game_reg.h"
-
 GraphEng* GraphEng::m_pInstance = 0;
 bool GraphEng::m_bInstanced = false;
 

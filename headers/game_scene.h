@@ -9,7 +9,6 @@
 #include <queue>
 #include <list>
 
-#include "game_reg.h"
 #include "scene.h"
 #include "event.h"
 #include "map.h"
@@ -52,8 +51,7 @@ public:
     void initThread();
     bool initThreadDone;
     sf::Text loadingText;
-    void HandleEvents();
-    void HandleCamInput();
+    void gameOver();
     sf::Packet receivePacket();
 
     //Map map;
@@ -62,17 +60,12 @@ public:
     void spawnNewShop();
     void spawnNewMoney(sf::Vector2f pos);
 
-private:
-
     int m_killedPeople;
     float m_timerSpawnPolice;
 
     void collide(Character* a);
     vector<vector<vector<Person*> > > estructuraPepinoPeople;
     vector<vector<vector<Police*> > > estructuraPepinoPolice;
-
-    //Registry
-    GameReg* gameReg;
 
     //Statics
     sf::View camera;
@@ -91,7 +84,6 @@ private:
     TransitionLinear m_camZoomTrans;
     float m_camZoom;
     sf::Vector2f m_camViewportOrg; //Original viewport
-
 
     sf::TcpSocket* connSocket;
 };
