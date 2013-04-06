@@ -4,11 +4,7 @@
 
 #include <cmath>
 
-bool City::init(int w, int h, int _tw, int _th) {
-
-	tw = _tw;
-	th = _th;
-
+bool City::init(int w, int h) {
 	vector<vector<bool> > v = generateMap();
 	map.load(v);
 	return true;
@@ -23,11 +19,9 @@ void City::renderTop() {
 
 int City::getW() {return map.m[0].size();}
 int City::getH() {return map.m.size();}
-int City::getTW() {return tw;}
-int City::getTH() {return th;}
 bool City::occupedXY(int x, int y) {
 	//std::cerr << "XY: " << x << " " << y << std::endl;
-	return occupedIJ(x/tw, y/th);
+    return occupedIJ(x/TILESIZE, y/TILESIZE);
 }
 
 bool City::validTile(int i, int j) {
@@ -71,44 +65,44 @@ sf::Vector2f City::getRandomClearing() {
 
 sf::Vector2i City::absoluteToTilePos(const sf::Vector2f &pos)
 {
-	return sf::Vector2i((int) std::floor(pos.x/tw), (int) std::floor(pos.y/th));
+    return sf::Vector2i((int) std::floor(pos.x/TILESIZE), (int) std::floor(pos.y/TILESIZE));
 }
 
 int City::absoluteToTilePosX(float x)
 {
-	return (int) std::floor(x/tw);
+    return (int) std::floor(x/TILESIZE);
 }
 
 int City::absoluteToTilePosY(float y)
 {
-	return (int) std::floor(y/th);
+    return (int) std::floor(y/TILESIZE);
 }
 
 
 float City::tileTopPos(int y)
 {
-	return float(y+1)*th;
+    return float(y+1)*TILESIZE;
 }
 
 float City::tileBottomPos(int y)
 {
-	return float(y)*th;
+    return float(y)*TILESIZE;
 }
 
 float City::tileLeftPos(int x)
 {
-	return float(x)*tw;
+    return float(x)*TILESIZE;
 }
 
 float City::tileRightPos(int x)
 {
-	return float(x+1)*tw;
+    return float(x+1)*TILESIZE;
 }
 
 int City::getTileAt(sf::Vector2f pt)
 {
-	int i = int(pt.x/tw);
-	int j = int(pt.y/th);
+    int i = int(pt.x/TILESIZE);
+    int j = int(pt.y/TILESIZE);
 	if(!validTile(i, j)) return true;
 	return map.m[i][j].tileNum;
 }

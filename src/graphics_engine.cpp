@@ -33,6 +33,9 @@ void GraphEng::deleteInstance()
         if (m_pInstance) delete m_pInstance;
 }
 
+
+int window_width = 800;
+int window_height = 480;
 void GraphEng::init() {
 
         //sf::Texture* img = getTexture("img/logo.png");
@@ -45,6 +48,7 @@ void GraphEng::init() {
 
         //App->Create(m_videoModes[0], "Durum dale");
         App->create(m_videoModes[0], "Durum dale", sf::Style::Close);
+        App->create(sf::VideoMode(window_width, window_height, 32), "Durum dale", sf::Style::Close);
 
         //worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
        // whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);

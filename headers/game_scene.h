@@ -54,6 +54,7 @@ public:
     sf::Text loadingText;
     void HandleEvents();
     void HandleCamInput();
+    sf::Packet receivePacket();
 
     //Map map;
     void spawnNewPerson();

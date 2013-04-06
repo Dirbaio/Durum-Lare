@@ -392,7 +392,7 @@ sf::Vector2f Police::getNewGoal(sf::Vector2f pos)
     City &city = *GameReg::getInstance()->city;
     sf::Vector2i from = city.absoluteToTilePos(pos);
 
-    vector<vector<int> > vis(city.getTW(), vector<int>(city.getTH(), -1));
+    vector<vector<int> > vis(TILESIZE, vector<int>(TILESIZE, -1));
 
     queue<sf::Vector2i> q;
     q.push(from);
@@ -409,8 +409,8 @@ sf::Vector2f Police::getNewGoal(sf::Vector2f pos)
         for(int i = 0; i < 4; i++)
         {
             sf::Vector2i v2 = v + dirInc[i];
-            if(v2.x < 0 || v2.x >= city.getTW()) continue;
-            if(v2.y < 0 || v2.y >= city.getTH()) continue;
+            if(v2.x < 0 || v2.x >= TILESIZE) continue;
+            if(v2.y < 0 || v2.y >= TILESIZE) continue;
             if(city.occupedIJ(v2.x, v2.y)) continue;
             if(vis[v2.x][v2.y] != -1) continue;
             vis[v2.x][v2.y] = dist+1;

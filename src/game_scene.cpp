@@ -38,66 +38,6 @@ GameScene::~GameScene() {
 
 void GameScene::initThread() {
 
-    //Link things to Game Reg
-    gameReg = GameReg::getInstance();
-    gameReg->city = &city;
-    gameReg->personList = &personList;
-    gameReg->policeList = &policeList;
-    gameReg->itemList = &itemList;
-    gameReg->shopList = &shopList;
-
-
-    GraphEng* graphics = GraphEng::getInstance();
-
-    //Init map
-    city.init(99,99, 64, 64);
-
-    //Init player
-    int playerCount = 1;
-    players = vector<Player> (playerCount, Player(this));
-    for(int i = 0; i < playerCount; i++)
-    {
-        players[i].Init();
-        players[i].setPosition(city.getRandomStreet());
-    }
-
-    playerNum = 0;
-
-    //Init camera
-    camera.reset(sf::FloatRect(0, 0,
-                               (float) graphics->getCurrentVideoMode().width,
-                               (float) graphics->getCurrentVideoMode().height));
-
-
-    m_camViewportOrg.x =  (float) graphics->getCurrentVideoMode().width;
-    m_camViewportOrg.y = (float) graphics->getCurrentVideoMode().height;
-
-    //Init NPCS
-    for (int i = 0; i < 600; ++i) spawnNewPerson();
-    for (int i = 0; i < 30; ++i) spawnNewPolice();
-
-    //Init Shops
-    for (int i = 0; i < 5; ++i) spawnNewShop();
-
-    //Init Camera
-    camera.setCenter(sf::Vector2f(0, 0));
-    m_camZoom = 0.5f;
-
-    //Init background music
-    bg_music.openFromFile("audio/surrounding.ogg");
-    bg_music.setLoop(true);
-    //	bg_music.play();
-
-    //Init hud
-    hud.Init();
-
-    //Init statistics
-    m_killedPeople = 0;
-
-    m_timerSpawnPolice = 60.0f;
-
-    //Le oc
-    initThreadDone = true;
 }
 
 bool GameScene::Init() {
@@ -110,10 +50,16 @@ bool GameScene::Init() {
         exit(1);
     }
 
-    initThreadDone = false;
-    GraphEng* graphics = graphics->getInstance();
+    int playerCount = 1;
+
+    sf::Packet packet = receivePacket();
+    int mapSize, personCount, policeCount, seed;
+    packet >> playerNum >> playerCount >> mapSize >> personCount >> policeCount >> seed;
+    srand(seed); //VERRRY IMPORRRRRTANT
 
     /*
+    GraphEng* graphics = graphics->getInstance();
+
     sf::Sprite loadScene;
     loadScene.setTexture(*graphics->getTexture("img/loading.png"));
     loadScene.setPosition(App->getView().getSize().x*0.5f - loadScene.getTexture()->getSize().x*0.5f,
@@ -151,7 +97,62 @@ bool GameScene::Init() {
         App->display();
     }*/
 
-    initThread();
+    //Link things to Game Reg
+    gameReg = GameReg::getInstance();
+    gameReg->city = &city;
+    gameReg->personList = &personList;
+    gameReg->policeList = &policeList;
+    gameReg->itemList = &itemList;
+    gameReg->shopList = &shopList;
+
+
+    GraphEng* graphics = GraphEng::getInstance();
+
+    //Init map
+    city.init(mapSize, mapSize);
+
+    //Init player
+    players = vector<Player> (playerCount, Player(this));
+    for(int i = 0; i < playerCount; i++)
+    {
+        players[i].Init();
+        players[i].setPosition(city.getRandomStreet());
+    }
+
+
+    //Init camera
+    camera.reset(sf::FloatRect(0, 0,
+                               (float) graphics->getCurrentVideoMode().width,
+                               (float) graphics->getCurrentVideoMode().height));
+
+
+    m_camViewportOrg.x =  (float) graphics->getCurrentVideoMode().width;
+    m_camViewportOrg.y = (float) graphics->getCurrentVideoMode().height;
+
+    //Init NPCS
+    for (int i = 0; i < personCount; ++i) spawnNewPerson();
+    for (int i = 0; i < policeCount; ++i) spawnNewPolice();
+
+    //Init Shops
+//    for (int i = 0; i < 5; ++i) spawnNewShop();
+
+    //Init Camera
+    camera.setCenter(sf::Vector2f(0, 0));
+    m_camZoom = 0.5f;
+
+    //Init background music
+    bg_music.openFromFile("audio/surrounding.ogg");
+    bg_music.setLoop(true);
+    //	bg_music.play();
+
+    //Init hud
+    hud.Init();
+
+    //Init statistics
+    m_killedPeople = 0;
+
+    m_timerSpawnPolice = 60.0f;
+
     return true;
 }
 
@@ -203,8 +204,8 @@ vector<Person*> GameScene::getPeopleAround(sf::Vector2f pos, float r, SearchType
     int ymax = (int) (max.y / 64.0f);
     if(xmin < 0) xmin = 0;
     if(ymin < 0) ymin = 0;
-    if(xmax >= city.getTW()) xmax = city.getTW()-1;
-    if(ymax >= city.getTH()) ymax = city.getTH()-1;
+    if(xmax >=TILESIZE) xmax =TILESIZE-1;
+    if(ymax >=TILESIZE) ymax =TILESIZE-1;
 
     vector<Person*> res;
     for(int x = xmin; x <= xmax; x++) {
@@ -236,8 +237,8 @@ void GameScene::collide(Character* a)
     int ymax = (int) (max.y / 64.0f);
     if(xmin < 0) xmin = 0;
     if(ymin < 0) ymin = 0;
-    if(xmax >= city.getTW()) xmax = city.getTW()-1;
-    if(ymax >= city.getTH()) ymax = city.getTH()-1;
+    if(xmax >=TILESIZE) xmax =TILESIZE-1;
+    if(ymax >=TILESIZE) ymax =TILESIZE-1;
 
     for(int x = xmin; x <= xmax; x++) {
         for(int y = ymin; y <= ymax; y++)
@@ -296,8 +297,8 @@ vector<Person*> GameScene::getPeopleSeen(Character* c, SearchType st)
 
     if(xmin < 0) xmin = 0;
     if(ymin < 0) ymin = 0;
-    if(xmax >= city.getTW()) xmax = city.getTW()-1;
-    if(ymax >= city.getTH()) ymax = city.getTH()-1;
+    if(xmax >=TILESIZE) xmax =TILESIZE-1;
+    if(ymax >=TILESIZE) ymax =TILESIZE-1;
 
     vector<Person*> res;
     for(int x = xmin; x <= xmax; x++) {
@@ -322,17 +323,24 @@ void GameScene::sendInputToServer() {
     connSocket->send(packet);
 }
 
-void GameScene::receiveServerInfo() {
-
+sf::Packet GameScene::receivePacket() {
     sf::Packet packet;
-    if (connSocket->receive(packet) == sf::Socket::Done) {
-        std::string str;
-        packet >> str;
-        input.decodeFromString(str);
-    }
-    else {
+    if (connSocket->receive(packet) != sf::Socket::Done) {
         cout << "[ERROR] PACKET COSAS CHUNGAS" << endl;
         nextScene = new MenuScene();
+    }
+    return packet;
+}
+
+void GameScene::receiveServerInfo() {
+
+    sf::Packet packet = receivePacket();
+
+    for(int i = 0; i < players.size(); i++)
+    {
+        std::string str;
+        packet >> str;
+        players[i].playerInput.decodeFromString(str);
     }
 }
 
@@ -373,8 +381,8 @@ void GameScene::Update() {
 
 
 
-    estructuraPepinoPeople = vector<vector<vector<Person*> > > (city.getTW(), vector<vector<Person*> >(city.getTH()));
-    estructuraPepinoPolice = vector<vector<vector<Police*> > > (city.getTW(), vector<vector<Police*> >(city.getTH()));
+    estructuraPepinoPeople = vector<vector<vector<Person*> > > (TILESIZE, vector<vector<Person*> >(TILESIZE));
+    estructuraPepinoPolice = vector<vector<vector<Police*> > > (TILESIZE, vector<vector<Police*> >(TILESIZE));
 
     for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it) {
         sf::Vector2i p = city.absoluteToTilePos(it->m_position);

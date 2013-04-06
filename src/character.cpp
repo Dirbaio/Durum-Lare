@@ -173,7 +173,7 @@ void Character::setGoal(sf::Vector2f goal) {
 	}
 
     //Calculate the path!
-    vector<vector<int> > vis(city.getTW(), vector<int>(city.getTH(), -1));
+    vector<vector<int> > vis(TILESIZE, vector<int>(TILESIZE, -1));
 
     int dx[] = {0, 0, 1, -1};
     int dy[] = {1, -1, 0, 0};
@@ -192,8 +192,8 @@ void Character::setGoal(sf::Vector2f goal) {
         {
             int x2 = x + dx[i];
             int y2 = y + dy[i];
-            if(x2 < 0 || x2 >= city.getTW()) continue;
-            if(y2 < 0 || y2 >= city.getTH()) continue;
+            if(x2 < 0 || x2 >= TILESIZE) continue;
+            if(y2 < 0 || y2 >= TILESIZE) continue;
             if(city.occupedIJ(x2, y2)) continue;
             if(vis[x2][y2] != -1) continue;
             vis[x2][y2] = i;

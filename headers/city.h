@@ -5,18 +5,17 @@
 #include <SFML/Graphics.hpp>
 #include "map.h"
 
+#define TILESIZE 64
 class City {
 public:
 	City() {}
 
-	bool init(int w, int h, int tw, int th);
+    bool init(int w, int h);
 	void render();
 	void renderTop();
 
     int getW();
-	int getH();
-	int getTW();
-	int getTH();
+    int getH();
 	bool validTile(int i, int j);
 	bool occupedXY(int x, int y);
 	bool occupedIJ(int i, int j);
@@ -35,7 +34,6 @@ public:
 	int getTileAt(sf::Vector2f pt);
     bool visible(sf::Vector2f from, sf::Vector2f to);
 private:
-	int tw, th;
 	Map map;
 };
 

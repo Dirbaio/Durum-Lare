@@ -14,7 +14,6 @@ struct Calle {
 
 vector<vector<bool> > generateMap()
 {
-    srand(time(NULL));
 	int tx, ty;
 	tx = rand()%30 + 30;
 	ty = tx + rand()%11 - 5;

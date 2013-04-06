@@ -16,6 +16,8 @@ sf::RenderWindow* App;
 sf::Time global_frametime;
 sf::Time scene_total_time;
 
+int frameLimit = 30;
+
 bool Game::Init() {
 
 	App = new sf::RenderWindow();
@@ -26,6 +28,7 @@ bool Game::Init() {
     scene = new MenuScene();
 
 	frames = 0;
+    App->setFramerateLimit(frameLimit);
 
 	return true;
 
@@ -48,6 +51,7 @@ void Game::Go() {
 		while(App->isOpen() && scene->nextScene == NULL) {
 
             global_frametime = clock1.getElapsedTime();
+            global_frametime = sf::microseconds(1000000 / frameLimit); //FIXED framerate.
             scene_total_time = sceneTimeElapsed.getElapsedTime();
             clock1.restart();
 
