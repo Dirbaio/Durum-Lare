@@ -5,7 +5,7 @@
 
 class Npc : public Character {
   public:
-    Npc();
+    Npc(GameScene* sc);
     virtual ~Npc() {}
 
     virtual void Init();

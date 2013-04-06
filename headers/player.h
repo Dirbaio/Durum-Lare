@@ -9,7 +9,7 @@
 
 class Player : public Character {
 public:
-	Player() {}
+    Player(GameScene* sc) : Character(sc) {}
 
 	void Init();
 	void Update();
@@ -30,7 +30,7 @@ public:
 
     const std::set<int>& getSpecialItems() {return m_specialItems;}
 
-    void updateInput(InputEng input);
+    InputEng playerInput;
 
 private:
 	sf::Sprite mySpr;

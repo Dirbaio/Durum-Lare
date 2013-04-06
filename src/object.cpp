@@ -12,7 +12,8 @@ const sf::Vector2i dirInc[] = {
 
 int Object::idCount = 0;
 
-Object::Object() :
+Object::Object(GameScene* sc) :
+    scene(sc),
 	uniqueID(idCount++),
 	m_center(sf::Vector2f(0,0)),
 	m_rotation(0),

@@ -2,7 +2,7 @@
 #include "defines.h"
 #include "input_engine.h"
 #include "game_reg.h"
-
+#include "game_scene.h"
 void Item::Init() {
 
     transPosX = NULL;
@@ -27,8 +27,7 @@ void Item::Update() {
 
     updateBBox();
 
-    InputEng* input = InputEng::getInstance();
-    float delta = input->getFrameTime().asSeconds();
+    float delta = scene->input.getFrameTime().asSeconds();
 
     if (spawnTimer > 0) {
         spawnTimer -= delta;

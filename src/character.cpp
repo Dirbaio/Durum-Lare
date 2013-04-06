@@ -6,7 +6,9 @@
 #include "game_reg.h"
 #include "input_engine.h"
 #include "graphics_engine.h"
-Character::Character()
+#include "game_scene.h"
+
+Character::Character(GameScene* sc) : Object(sc)
 {
     m_hasGoal = false;
     m_mark = MARK_NONE;
@@ -264,8 +266,7 @@ void Character::moveInDir(sf::Vector2f dir)
     if(dir.x >  0.5f) m_faceDir = FACE_RIGHT;
     if(dir.y >  0.5f) m_faceDir = FACE_DOWN;
 
-    InputEng* input = InputEng::getInstance();
-    float delta = input->getFrameTime().asSeconds();
+    float delta = scene->input.getFrameTime().asSeconds();
     move(m_position + dir*delta*m_vel);
 }
 

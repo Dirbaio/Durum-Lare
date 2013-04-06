@@ -5,7 +5,7 @@
 
 class Police : public Npc {
   public:
-    Police() {}
+    Police(GameScene* sc) : Npc(sc) {}
 
 
     void Init();

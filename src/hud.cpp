@@ -31,7 +31,7 @@ void Hud::Draw() {
     GameReg* gameReg = GameReg::getInstance();
     sf::Vector2u scr_size = App->getSize();
 
-
+/*
     //Draw Money-Score
     moneyHud.setPosition(scr_size.x*0.05f, scr_size.y*0.05f);
     App->draw(moneyHud);
@@ -49,7 +49,7 @@ void Hud::Draw() {
     const std::set<int>& specItems = gameReg->player->getSpecialItems();
     int i = 0;
     for (std::set<int>::iterator it = specItems.begin(); it != specItems.end(); ++it) {
-        Item* item = ItemFactory::MakeNewItem((*it));
+        Item* item = ItemFactory::MakeNewItem(gameReg->scene, (*it));
         item->setPosition(sf::Vector2f(scr_size.x*0.3 + i*scr_size.x*0.05, scr_size.y*0.05f));
         item->setScale(sf::Vector2f(4,4));
         item->Draw();
@@ -109,5 +109,5 @@ void Hud::Draw() {
             }
         }
     }
-
+*/
 }

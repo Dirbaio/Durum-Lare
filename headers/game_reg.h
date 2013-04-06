@@ -24,9 +24,7 @@ public:
         std::queue<Event*> eventQueue;
 
         City *city;
-        Player* player;
-        GameScene* scene;
-        
+
         std::list<Person>* personList;
         std::list<Police>* policeList;
         std::list<Item>* itemList;

@@ -25,72 +25,74 @@
 
 
 enum SearchType {
-	SEARCH_ANY,
-	SEARCH_DEAD,
-	SEARCH_PANIC
+    SEARCH_ANY,
+    SEARCH_DEAD,
+    SEARCH_PANIC
 };
 
 class GameScene : public Scene {
 public:
-	GameScene();
-	~GameScene();
+    GameScene();
+    ~GameScene();
 
-	bool Init();
-	void Update();
-	void Draw();
-	void Destroy();
+    bool Init();
+    void Update();
+    void Draw();
+    void Destroy();
 
-	vector<Person*> getPeopleAround(sf::Vector2f pos, float r, SearchType st);
-	vector<Person*> getPeopleSeen(Character* c, SearchType st);
+    vector<Person*> getPeopleAround(sf::Vector2f pos, float r, SearchType st);
+    vector<Person*> getPeopleSeen(Character* c, SearchType st);
 
     void sendInputToServer();
     void receiveServerInfo();
 
+    vector<Player> players;
+    int playerNum;
+
+    void initThread();
+    bool initThreadDone;
+    sf::Text loadingText;
+    void HandleEvents();
+    void HandleCamInput();
+
+    //Map map;
+    void spawnNewPerson();
+    void spawnNewPolice();
+    void spawnNewShop();
+    void spawnNewMoney(sf::Vector2f pos);
+
 private:
-	void initThread();
-	bool initThreadDone;
-	sf::Text loadingText;
-	void HandleEvents();
-	void HandleCamInput();
 
-	//Map map;
-	void spawnNewPerson();
-	void spawnNewPolice();
-        void spawnNewShop();
-	void spawnNewMoney(sf::Vector2f pos);
+    int m_killedPeople;
+    float m_timerSpawnPolice;
 
+    void collide(Character* a);
+    vector<vector<vector<Person*> > > estructuraPepinoPeople;
+    vector<vector<vector<Police*> > > estructuraPepinoPolice;
 
-        int m_killedPeople;
-        float m_timerSpawnPolice;
+    //Registry
+    GameReg* gameReg;
 
-	void collide(Character* a);
-	vector<vector<vector<Person*> > > estructuraPepinoPeople;
-	vector<vector<vector<Police*> > > estructuraPepinoPolice;
+    //Statics
+    sf::View camera;
 
-	//Registry
-	GameReg* gameReg;
+    City city;
+    Hud hud;
 
-	//Statics
-	sf::View camera;
-    Player player;
-	City city;
-	Hud hud;
+    //Managers
+    std::list<Person> personList;
+    std::list<Police> policeList;
+    std::list<Item> itemList;
+    std::list<Shop> shopList;
 
-	//Managers
-	std::list<Person> personList;
-	std::list<Police> policeList;
-	std::list<Item> itemList;
-        std::list<Shop> shopList;
+    sf::Music bg_music;
 
-	sf::Music bg_music;
-
-        TransitionLinear m_camZoomTrans;
-        float m_camZoom;
-        sf::Vector2f m_camViewportOrg; //Original viewport
+    TransitionLinear m_camZoomTrans;
+    float m_camZoom;
+    sf::Vector2f m_camViewportOrg; //Original viewport
 
 
-    sf::IpAddress serverIp;
-    sf::TcpSocket connSocket;
+    sf::TcpSocket* connSocket;
 };
 
 #endif // GAMESCENE_H

@@ -1,3 +1,5 @@
+#include "input_engine.h"
+
 #ifndef SCENE_H
 #define SCENE_H
 
@@ -7,7 +9,7 @@ class Scene
 {
 public:
     Scene();
-    virtual ~Scene() {};
+    virtual ~Scene() {}
 
 
     virtual bool Init() = 0;
@@ -17,6 +19,7 @@ public:
     virtual void Draw() = 0;
 
     Scene* nextScene;
+    InputEng input;
 private:
 
 };

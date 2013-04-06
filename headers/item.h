@@ -20,7 +20,7 @@ enum eItemType {
 class Item : public Object {
 public:
 
-    Item(int type) : myItemType(type) {}
+    Item(GameScene* sc, int type) : Object(sc),  myItemType(type) {}
     virtual ~Item() {}
 
     virtual void Init();

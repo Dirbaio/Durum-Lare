@@ -20,8 +20,6 @@ bool Game::Init() {
 
 	App = new sf::RenderWindow();
 
-	input = InputEng::getInstance();
-
 	graphics = GraphEng::getInstance();
 	graphics->init();
 
@@ -76,15 +74,14 @@ void Game::Go() {
             timeText.setPosition(0.8f * (float) App->getSize().x, 10.0f);
 			timeText.setColor(sf::Color::White);
 
-
 			//Input
-			input->Update();
-			if (input->getKeyDown(InputEng::EXIT)) scene->nextScene = EXIT_SCN;
+            scene->input.Update();
+            if (scene->input.getKeyDown(InputEng::EXIT)) scene->nextScene = EXIT_SCN;
 
-			//Logic
+            //Logic
 			scene->Update();
 
-			//Draw
+            //Draw
 			App->clear(sf::Color(12, 12, 12));
 
 			scene->Draw();
@@ -92,7 +89,7 @@ void Game::Go() {
             App->draw(fpsText);
             //App->draw(timeText);
 
-			App->display();
+            App->display();
 
 			frames++;
 		}
@@ -101,5 +98,7 @@ void Game::Go() {
 		scene = scene->nextScene;
 		aux_scn->Destroy();
 		delete aux_scn;
+
+        cout << "Scene change. " << endl;
 	}
 }

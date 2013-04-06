@@ -5,7 +5,7 @@
 
 namespace ItemFactory {
 
-    Item* MakeNewItem(int type);
+    Item* MakeNewItem(GameScene* sc, int type);
 
 
 };

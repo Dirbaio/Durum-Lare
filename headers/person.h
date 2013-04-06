@@ -11,7 +11,7 @@
 
 class Person : public Npc {
 public:
-	Person() {}
+    Person(GameScene* sc) : Npc(sc) {}
 
 	void Init();
 	void Update();

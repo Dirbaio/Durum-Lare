@@ -19,9 +19,7 @@ public:
 		K_SIZE
 	};
 
-	static InputEng* getInstance();
-	InputEng();
-	~InputEng();
+    InputEng();
 
 	void Update();
 
@@ -43,7 +41,6 @@ public:
     void decodeFromString(std::string str);
 
 private:
-	static InputEng *m_pInstance;
 
 	bool KeyState[K_SIZE];
 	bool KeyUp[K_SIZE];

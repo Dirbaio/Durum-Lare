@@ -39,9 +39,7 @@ bool MenuScene::Init() {
 
 void MenuScene::Update() {
 
-    InputEng* input = InputEng::getInstance();
-
-    float delta = input->getFrameTime().asSeconds();
+    float delta = input.getFrameTime().asSeconds();
 
     textTimer -= delta;
     if (textTimer <= 0) {
@@ -49,7 +47,7 @@ void MenuScene::Update() {
         press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
     }
 
-    if (input->getKeyDown(InputEng::MENU_START)) {
+    if (input.getKeyState(InputEng::MENU_START)) {
 	    nextScene = new GameScene();
     }
 

@@ -6,7 +6,7 @@
 #include "game_reg.h"
 #include "animation.h"
 #include <GL/gl.h>
-
+#include "game_scene.h"
 AnimationData* s_animData = NULL;
 
 void Player::Init() {
@@ -66,8 +66,6 @@ void Player::onBuy(Item item) {
 void Player::Update() {
 	updateBBox();
 
-	InputEng* input = InputEng::getInstance();
-
 	if (m_actionDelay < 0)
 	{
         const sf::Vector2f &pos0 = m_position;
@@ -75,26 +73,26 @@ void Player::Update() {
 
             bool hasMoved = false;
 
-            if (input->getKeyState(InputEng::PLAYER_UP) && !input->getKeyState(InputEng::PLAYER_DOWN)) {
-            posf.y -= myVel.y*input->getFrameTime().asSeconds();
+            if (playerInput.getKeyState(InputEng::PLAYER_UP) && !playerInput.getKeyState(InputEng::PLAYER_DOWN)) {
+            posf.y -= myVel.y*playerInput.getFrameTime().asSeconds();
                     ensureAnim("WalkingUp");
                     m_faceDir = FACE_UP;
                     hasMoved = true;
             }
-            if (input->getKeyState(InputEng::PLAYER_DOWN) && !input->getKeyState(InputEng::PLAYER_UP)) {
-            posf.y += myVel.y*input->getFrameTime().asSeconds();
+            if (playerInput.getKeyState(InputEng::PLAYER_DOWN) && !playerInput.getKeyState(InputEng::PLAYER_UP)) {
+            posf.y += myVel.y*playerInput.getFrameTime().asSeconds();
                     ensureAnim("WalkingDown");
                     m_faceDir = FACE_DOWN;
                     hasMoved = true;
             }
-            if (input->getKeyState(InputEng::PLAYER_LEFT) && !input->getKeyState(InputEng::PLAYER_RIGHT)) {
-            posf.x -= myVel.x*input->getFrameTime().asSeconds();
+            if (playerInput.getKeyState(InputEng::PLAYER_LEFT) && !playerInput.getKeyState(InputEng::PLAYER_RIGHT)) {
+            posf.x -= myVel.x*playerInput.getFrameTime().asSeconds();
 		    if(!hasMoved) ensureAnim("WalkingLeft");
                     m_faceDir = FACE_LEFT;
                     hasMoved = true;
             }
-            if (input->getKeyState(InputEng::PLAYER_RIGHT) && !input->getKeyState(InputEng::PLAYER_LEFT)) {
-            posf.x += myVel.x*input->getFrameTime().asSeconds();
+            if (playerInput.getKeyState(InputEng::PLAYER_RIGHT) && !playerInput.getKeyState(InputEng::PLAYER_LEFT)) {
+            posf.x += myVel.x*playerInput.getFrameTime().asSeconds();
 		    if(!hasMoved) ensureAnim("WalkingRight");
                     m_faceDir = FACE_RIGHT;
                     hasMoved = true;
@@ -111,7 +109,7 @@ void Player::Update() {
 	}
 	else
 	{
-		m_actionDelay -= input->getFrameTime().asSeconds();
+        m_actionDelay -= playerInput.getFrameTime().asSeconds();
 
         if (m_faceDir == FACE_UP)    ensureAnim("AttackUp");
         if (m_faceDir == FACE_DOWN)  ensureAnim("AttackDown");
@@ -119,13 +117,21 @@ void Player::Update() {
         if (m_faceDir == FACE_RIGHT) ensureAnim("AttackRight");
 	}
 
-	if (input->getKeyDown(InputEng::PLAYER_ACTION)) {
-		GameReg* gameReg = GameReg::getInstance();
-		gameReg->eventQueue.push(new EventPlayerAction());
+    if (playerInput.getKeyDown(InputEng::PLAYER_ACTION)) {
+
+        hitAction();
+        std::vector<Person*> persons = scene->getPeopleAround(getPosition(), 20, SEARCH_ANY);
+        for (std::vector<Person*>::iterator it = persons.begin(); it != persons.end(); ++it) {
+            if (!(*it)->is_alive()) continue;
+
+            (*it)->onHit();
+            int n_moneys = Utils::randomInt(1, 3);
+            for (int i = 0; i < n_moneys; ++i) scene->spawnNewMoney((*it)->getPosition());
+        }
 	}
 
 
-    m_anim->Update(input->getFrameTime().asSeconds());
+    m_anim->Update(playerInput.getFrameTime().asSeconds());
 
     std::list<Item>* itemList = GameReg::getInstance()->itemList;
     for (std::list<Item>::iterator it = itemList->begin(); it != itemList->end(); ++it) {

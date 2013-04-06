@@ -7,8 +7,6 @@
 #include "defines.h"
 #include "game.h"
 
-InputEng* InputEng::m_pInstance = NULL;
-
 InputEng::InputEng()
 {
     KeyMap[PLAYER_UP] = sf::Keyboard::W;
@@ -36,17 +34,11 @@ InputEng::InputEng()
 
     KeyMap[EXIT] = sf::Keyboard::Escape;
 
-}
-
-InputEng::~InputEng() { m_pInstance = NULL; }
-
-InputEng* InputEng::getInstance() {
-
-    if(m_pInstance == NULL)
-        m_pInstance = new InputEng();
-
-    return m_pInstance;
-
+    for (int i = 0; i < K_SIZE; ++i) {
+        KeyUp[i] = false;
+        KeyDown[i] = false;
+        KeyState[i] = false;
+    }
 }
 
 
@@ -91,18 +83,18 @@ void InputEng::Update() {
             App->close();
             break;
 
-	case sf::Event::KeyPressed:
-	    for (int i = 0; i < K_SIZE; i++)
-		if (Event.key.code == KeyMap[i]) {
-		    KeyDown[i] = true;
-		    KeyState[i] = true;
-		}
+        case sf::Event::KeyPressed:
+            for (int i = 0; i < K_SIZE; i++)
+                if (Event.key.code == KeyMap[i]) {
+                    KeyDown[i] = true;
+                    KeyState[i] = true;
+                }
 
         case sf::Event::KeyReleased:
             for (int i = 0; i < K_SIZE; i++) {
                 if (Event.key.code == KeyMap[i]) {
-		    KeyUp[i] = true;
-		    KeyState[i] = false;
+                    KeyUp[i] = true;
+                    KeyState[i] = false;
                 }
             }
             break;
@@ -124,8 +116,8 @@ void InputEng::Update() {
             break;
 
             //Resize
-                        case sf::Event::Resized:
-                                //Ignoring this because it causes trouble
+        case sf::Event::Resized:
+            //Ignoring this because it causes trouble
             //App->setSize(Event.Size.width, Event.Size.height);
             break;
 
@@ -139,10 +131,10 @@ void InputEng::Update() {
     MousePos = sf::Mouse::getPosition(*App);
 
     for (int i = 0; i < sf::Mouse::ButtonCount; ++i)
-	MouseState[i] = sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
+        MouseState[i] = sf::Mouse::isButtonPressed((sf::Mouse::Button)i);
 
     for (int i = 0; i < K_SIZE; i++)
-	KeyState[i] = sf::Keyboard::isKeyPressed(KeyMap[i]);
+        KeyState[i] = sf::Keyboard::isKeyPressed(KeyMap[i]);
 
     //Chivato para saber estado de teclas
     /*
@@ -188,10 +180,10 @@ sf::Vector2f InputEng::getGlobalMousePos() {
 }
 
 void InputEng::setGlobalMousePos(const sf::Vector2f& pos) {
-   globalMousePos = pos;
+    globalMousePos = pos;
 }
 
 
 sf::Time InputEng::getFrameTime() {
-        return global_frametime;
+    return global_frametime;
 }

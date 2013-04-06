@@ -18,8 +18,8 @@ enum CharacterMark {
 class Character : public Object
 {
 public:
-	Character();
-	virtual ~Character() {}
+    Character(GameScene* sc);
+    virtual ~Character() {}
 
 	void move(sf::Vector2f posf);
     bool canSee(const sf::Vector2f& pos);

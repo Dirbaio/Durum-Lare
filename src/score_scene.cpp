@@ -23,10 +23,9 @@ bool ScoreScene::Init() {
 
 void ScoreScene::Update() {
 
-    InputEng* input = InputEng::getInstance();
-    float delta = input->getFrameTime().asSeconds();
+    float delta = input.getFrameTime().asSeconds();
 
-    if (input->getKeyDown(InputEng::MENU_START)) nextScene = new GameScene();
+    if (input.getKeyDown(InputEng::MENU_START)) nextScene = new GameScene();
 }
 
 void ScoreScene::Draw() {

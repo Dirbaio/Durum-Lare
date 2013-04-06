@@ -12,7 +12,7 @@ struct ShopStats {
 
 class Shop : public Object {
 public:
-    Shop() {}
+    Shop(GameScene* sc) : Object(sc) {}
     ~Shop() {}
 
     void Init();

@@ -17,7 +17,6 @@ public:
 private:
     Scene* scene;
 
-    InputEng* input;
     GraphEng* graphics;
 
     int frames; //For framerate calc purpose
