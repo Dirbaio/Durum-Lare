@@ -18,6 +18,8 @@ public:
     void LoadAnims();
     void hitAction();
 
+    void gotCaught();
+
     int getMoney(){return myMoney;}
     void setMoney(int sc) {myMoney = sc;}
 
@@ -31,6 +33,8 @@ public:
     const std::set<int>& getSpecialItems() {return m_specialItems;}
 
     InputEng playerInput;
+
+    bool m_jailed;
 
 private:
 	sf::Sprite mySpr;

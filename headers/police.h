@@ -4,15 +4,14 @@
 #include "npc.h"
 
 class Police : public Npc {
-  public:
+public:
     Police(GameScene* sc) : Npc(sc) {}
-
 
     void Init();
     void Update();
     void Draw();
 
-  private:
+private:
 
     sf::Vector2f getNewGoal(sf::Vector2f pos);
     void lookAtRandomPlace();
@@ -23,24 +22,25 @@ class Police : public Npc {
     bool onDownCollision(int x, int j);
 
     enum State  {
-	    STATE_PATROL_MOVING,
-	    STATE_PATROL_WATCHING,
-	    STATE_ALERT,
-	    STATE_CONFUSE,
-	    STATE_CHASING_PLAYER,
-	    STATE_PLAYER_LOST
+        STATE_PATROL_MOVING,
+        STATE_PATROL_WATCHING,
+        STATE_ALERT,
+        STATE_CONFUSE,
+        STATE_CHASING_PLAYER,
+        STATE_PLAYER_LOST
     };
 
     State m_state;
     float m_watchingTime;
     float m_watchingTimeFacing;
     float m_alertTime;
-    float m_lastPosSawTime;
     sf::Vector2f m_lastAlertPos;
-    sf::Vector2f m_lastPosSawPlayer;
-    sf::Vector2f m_lastDirSawPlayer;
 
-    bool m_knowPlayer;
+    vector<float> m_lastPosSawTime;
+    vector<sf::Vector2f> m_lastPosSawPlayer;
+    vector<sf::Vector2f> m_lastDirSawPlayer;
+    vector<bool> m_knowPlayer;
+    int m_chasingPlayerNum;
     bool m_collided;
 };
 

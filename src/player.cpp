@@ -30,6 +30,8 @@ void Player::Init() {
 
     myMoney = 999;
     myKills = 0;
+
+    m_jailed = false;
 }
 
 void Player::LoadAnims() {
@@ -65,6 +67,9 @@ void Player::onBuy(Item item) {
 
 void Player::Update() {
 	updateBBox();
+
+    if(m_jailed)
+        return;
 
 	if (m_actionDelay < 0)
 	{
@@ -160,4 +165,7 @@ void Player::Draw() {
         App->draw(*spr);
 }
 
-
+void Player::gotCaught() {
+    //TODO Die but not game over.
+    m_jailed = true;
+}

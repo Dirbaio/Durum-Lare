@@ -370,6 +370,22 @@ void GameScene::Update() {
         m_camZoom = m_camZoomTrans.getPos();
     }
 
+    if(players[playerNum].m_jailed)
+    {
+        float speed = 200;
+
+        sf::Vector2f center = camera.getCenter();
+        if(input.getKeyState(InputEng::PLAYER_UP)) center.y -= delta*speed;
+        if(input.getKeyState(InputEng::PLAYER_DOWN)) center.y += delta*speed;
+        if(input.getKeyState(InputEng::PLAYER_LEFT)) center.x -= delta*speed;
+        if(input.getKeyState(InputEng::PLAYER_RIGHT)) center.x += delta*speed;
+        camera.setCenter(center);
+
+        if(input.getKeyDown(InputEng::MENU_START))
+            gameOver();
+    }
+    else
+        camera.setCenter(players[playerNum].getPosition());
 
 
     estructuraPepinoPeople = vector<vector<vector<Person*> > > (TILESIZE, vector<vector<Person*> >(TILESIZE));
@@ -466,7 +482,6 @@ void GameScene::Draw() {
     GraphEng* graphics = GraphEng::getInstance();
 
     camera.setSize(m_camViewportOrg.x*m_camZoom, m_camViewportOrg.y*m_camZoom);
-    camera.setCenter(players[playerNum].getPosition());
 
     App->setView(camera);
 
@@ -476,14 +491,22 @@ void GameScene::Draw() {
     vector<Object*> v;
     for(int i = 0; i < (int)players.size(); i++)
         v.push_back(&players[i]);
+
+    bool seeAll = true; //Sino, es una mierda como una casa.
+
+    Player& player = players[playerNum];
     for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
-        v.push_back(&*it);
+        if(seeAll || player.canSee(it->getPosition()))
+            v.push_back(&*it);
     for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
-        v.push_back(&*it);
+        if(seeAll || player.canSee(it->getPosition()))
+            v.push_back(&*it);
     for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it)
-        v.push_back(&*it);
+        if(seeAll || player.canSee(it->getPosition()))
+            v.push_back(&*it);
     for (std::list<Shop>::iterator it = shopList.begin(); it != shopList.end(); ++it)
-        v.push_back(&*it);
+        if(seeAll || player.canSee(it->getPosition()))
+            v.push_back(&*it);
 
     sort(v.begin(), v.end(), comp);
     for(int i = 0; i < (int) v.size(); i++)

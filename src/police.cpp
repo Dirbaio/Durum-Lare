@@ -16,7 +16,12 @@ void Police::Init() {
 
     m_vel = 20.0f;
     m_watchingTime = 0;
-    m_knowPlayer = false;
+
+    m_lastPosSawTime = vector<float> (scene->players.size());
+    m_lastPosSawPlayer = vector<sf::Vector2f> (scene->players.size());
+    m_lastDirSawPlayer = vector<sf::Vector2f> (scene->players.size());
+    m_knowPlayer = vector<bool> (scene->players.size(), false);
+
     m_state = STATE_PATROL_WATCHING;
 
     if (s_police_data == NULL) {
@@ -51,7 +56,7 @@ void Police::Update() {
             {
                 if(m_state == STATE_PATROL_MOVING ||
                         m_state == STATE_PATROL_WATCHING) {
-                    if (person.knowsPlayer())
+                    if (person.knowsPlayer(0))
                     {
                         m_state = STATE_ALERT;
                         m_alertTime = 20;
@@ -70,29 +75,34 @@ void Police::Update() {
             }
             case Person::STATE_DEAD:
             {
-                m_knowPlayer = m_knowPlayer || (canSee(p->m_position) &&
-                                                Utils::distance(person.m_position, p->m_position) < 70);
-                if (m_knowPlayer)
+                for(int i = 0; i < (int)scene->players.size(); i++)
                 {
-                    if(m_state == STATE_PATROL_MOVING ||
-                            m_state == STATE_PATROL_WATCHING ||
-                            m_state == STATE_CONFUSE) {
-                        m_state = STATE_ALERT;
-                        m_alertTime = 20;
-                        m_lastAlertPos = person.getPosition();
-                        setGoal(m_lastAlertPos);
+                    if(scene->players[i].m_jailed) continue;
+                    if(canSee(scene->players[i].getPosition()) &&
+                            Utils::distance(person.getPosition(), scene->players[i].getPosition()))
+                        m_knowPlayer[i] = true;
+
+                    if (m_knowPlayer[i])
+                    {
+                        if(m_state == STATE_PATROL_MOVING ||
+                                m_state == STATE_PATROL_WATCHING ||
+                                m_state == STATE_CONFUSE) {
+                            m_state = STATE_ALERT;
+                            m_alertTime = 20;
+                            m_lastAlertPos = person.getPosition();
+                            setGoal(m_lastAlertPos);
+                            m_chasingPlayerNum = i;
+                        }
                     }
                 }
-                else
-                {
-                    if(m_state == STATE_PATROL_MOVING ||
-                            m_state == STATE_PATROL_WATCHING ||
-                            m_state == STATE_CONFUSE) {
-                        m_state = STATE_CONFUSE;
-                        m_alertTime = 20;
-                        m_lastAlertPos = person.getPosition();
-                        setGoal(m_lastAlertPos);
-                    }
+
+                if(m_state == STATE_PATROL_MOVING ||
+                        m_state == STATE_PATROL_WATCHING ||
+                        m_state == STATE_CONFUSE) {
+                    m_state = STATE_CONFUSE;
+                    m_alertTime = 20;
+                    m_lastAlertPos = person.getPosition();
+                    setGoal(m_lastAlertPos);
                 }
 
                 break;
@@ -113,6 +123,7 @@ void Police::Update() {
                     m_state = STATE_ALERT;
                     m_alertTime = police.m_alertTime;
                     m_lastAlertPos = police.m_lastAlertPos;
+                    m_chasingPlayerNum = police.m_chasingPlayerNum;
                     setGoal(m_lastAlertPos);
                 }
                 break;
@@ -122,6 +133,7 @@ void Police::Update() {
                     m_state = STATE_CONFUSE;
                     m_alertTime = police.m_alertTime;
                     m_lastAlertPos = police.m_lastAlertPos;
+                    m_chasingPlayerNum = police.m_chasingPlayerNum;
                     setGoal(m_lastAlertPos);
                 }
                 break;
@@ -132,52 +144,31 @@ void Police::Update() {
                         m_state == STATE_CONFUSE) {
                     m_state = STATE_ALERT;
                     m_alertTime = 30;
-                    m_lastAlertPos = m_lastPosSawPlayer;
-                    setGoal(m_lastPosSawPlayer);
+                    m_chasingPlayerNum = police.m_chasingPlayerNum;
+                    m_lastAlertPos = m_lastPosSawPlayer[m_chasingPlayerNum];
+                    setGoal(m_lastAlertPos);
                 }
                 break;
             }
         }
     }
 
-    for (std::list<Police>::iterator it = scene->policeList.begin(); it != scene->policeList.end(); it++) {
-        Police &police = *it;
-        if (canSee(police.getPosition())) {
-            switch(police.m_state)
-            {
-            case Police::STATE_ALERT:
-                if(m_state == STATE_PATROL_MOVING ||
-                        m_state == STATE_PATROL_WATCHING ||
-                        m_state == STATE_CONFUSE) {
-                    m_state = STATE_ALERT;
-                    m_alertTime = police.m_alertTime;
-                    m_lastAlertPos = police.m_lastAlertPos;
-                    setGoal(m_lastAlertPos);
+    if(m_state != STATE_CHASING_PLAYER)
+        for(int i = 0; i < (int)scene->players.size(); i++)
+        {
+            if(scene->players[i].m_jailed) continue;
+            Player& p = scene->players[i];
+            if(canSee(p.getPosition())) {
+                m_knowPlayer[i] = m_knowPlayer[i] || p.isDoingAction();
+                if (m_knowPlayer[i]) {
+                    m_lastPosSawPlayer[i] = p.getPosition();
+                    m_lastDirSawPlayer[i] = m_lastPosSawPlayer[i] - m_position;
+                    m_lastPosSawTime[i] = 5;
+                    m_chasingPlayerNum = i;
+                    m_state = STATE_CHASING_PLAYER;
                 }
-                break;
-            case Police::STATE_CONFUSE:
-                if(m_state == STATE_PATROL_MOVING ||
-                        m_state == STATE_PATROL_WATCHING) {
-                    m_state = STATE_CONFUSE;
-                    m_alertTime = police.m_alertTime;
-                    m_lastAlertPos = police.m_lastAlertPos;
-                    setGoal(m_lastAlertPos);
-                }
-                break;
-            case Police::STATE_CHASING_PLAYER:
-            case Police::STATE_PLAYER_LOST:
-                if(m_state == STATE_PATROL_MOVING ||
-                        m_state == STATE_PATROL_WATCHING ||
-                        m_state == STATE_CONFUSE) {
-                    m_state = STATE_ALERT;
-                    m_alertTime = 30;
-                    m_lastAlertPos = m_lastPosSawPlayer;
-                    setGoal(m_lastPosSawPlayer);
-                }
-                break;
             }
         }
-    }
 
     switch(m_state)
     {
@@ -194,20 +185,6 @@ void Police::Update() {
         }
 
         moveTowardsGoal();
-
-        /*if(canSee(p->getPosition())) {
-                        if (p->isDoingAction()) m_knowPlayer = true;*/
-
-        if(canSee(p->getPosition())) {
-            m_knowPlayer = m_knowPlayer || p->isDoingAction();
-
-            if (m_knowPlayer) {
-                m_lastPosSawPlayer = p->getPosition();
-                m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
-                m_lastPosSawTime = 5;
-                m_state = STATE_CHASING_PLAYER;
-            }
-        }
 
         break;
     }
@@ -227,25 +204,6 @@ void Police::Update() {
             m_watchingTimeFacing = Utils::randomInt(1, 2);
         }
 
-        if(canSee(p->getPosition())) {
-            m_knowPlayer = m_knowPlayer || p->isDoingAction();
-            if (m_knowPlayer) {
-                m_lastPosSawPlayer = p->getPosition();
-                m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
-                m_lastPosSawTime = 5;
-                m_state = STATE_CHASING_PLAYER;
-            }
-        }
-
-        if(canSee(p->getPosition())) {
-            if (p->isDoingAction()) m_knowPlayer = true;
-            if (m_knowPlayer) {
-                m_lastPosSawPlayer = p->getPosition();
-                m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
-                m_lastPosSawTime = 5;
-                m_state = STATE_CHASING_PLAYER;
-            }
-        }
 
         break;
     case STATE_ALERT:
@@ -261,14 +219,7 @@ void Police::Update() {
         moveTowardsGoal();
         if (m_alertTime < 0) {
             m_state = STATE_PATROL_MOVING;
-            m_knowPlayer = true;
-        }
-
-        if(canSee(p->getPosition())) {
-            m_lastPosSawPlayer = p->getPosition();
-            m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
-            m_lastPosSawTime = 5;
-            m_state = STATE_CHASING_PLAYER;
+//            m_knowPlayer = true;
         }
 
         break;
@@ -288,44 +239,41 @@ void Police::Update() {
             m_state = STATE_PATROL_MOVING;
         }
 
-        if(canSee(p->getPosition())) {
-            m_knowPlayer = m_knowPlayer || p->isDoingAction();
-            if (m_knowPlayer) {
-                m_lastPosSawPlayer = p->getPosition();
-                m_lastDirSawPlayer = m_lastPosSawPlayer - m_position;
-                m_lastPosSawTime = 5;
-                m_state = STATE_CHASING_PLAYER;
-            }
-        }
-
         break;
     }
     case STATE_CHASING_PLAYER:
     {
         m_vel = 75.0f;
         m_mark = MARK_RED_EXCLAMATION;
-        m_lastPosSawTime -= delta;
-        if(scene->city.visible(m_position, p->getPosition())) {
-            m_lastDirSawPlayer = p->getPosition()-m_lastPosSawPlayer;
-            m_lastPosSawPlayer = p->getPosition();
-            m_lastPosSawTime = 5;
+
+        m_lastPosSawTime[m_chasingPlayerNum] -= delta;
+
+        Player& p = scene->players[m_chasingPlayerNum];
+        if(canSee(p.getPosition()))
+        {
+            m_lastDirSawPlayer[m_chasingPlayerNum] = p.getPosition()-m_lastPosSawPlayer[m_chasingPlayerNum];
+            m_lastPosSawPlayer[m_chasingPlayerNum] = p.getPosition();
+            m_lastPosSawTime[m_chasingPlayerNum] = 5;
         }
 
-        moveInDir(m_lastPosSawPlayer-m_position);
+        moveInDir(m_lastPosSawPlayer[m_chasingPlayerNum]-m_position);
 
-        if (Utils::distance(m_position, p->m_position) <= 12)
-        	scene->gameOver();
-
-        if (Utils::distance(m_position, m_lastPosSawPlayer) <= 12)
+        if (Utils::distance(m_position, m_lastPosSawPlayer[m_chasingPlayerNum]) <= 12)
         {
             m_state = STATE_PLAYER_LOST;
         }
 
-        if (m_lastPosSawTime < 0)
+        if (m_lastPosSawTime[m_chasingPlayerNum] < 0)
         {
             m_state = STATE_ALERT;
             m_alertTime = 20;
-            m_lastAlertPos = m_lastPosSawPlayer;
+            m_lastAlertPos = m_lastPosSawPlayer[m_chasingPlayerNum];
+        }
+
+        if (Utils::distance(m_position, p.getPosition()) <= 12)
+        {
+            m_state = STATE_PATROL_MOVING;
+            p.gotCaught();
         }
 
         break;
@@ -334,26 +282,29 @@ void Police::Update() {
     {
         m_vel = 60.0f;
         m_mark = MARK_QUESTION;
-        m_lastPosSawTime -= delta;
-        if(canSee(p->getPosition())) {
-            m_lastDirSawPlayer = m_lastPosSawPlayer-p->getPosition();
-            m_lastPosSawPlayer = p->getPosition();
-            m_lastPosSawTime = 5;
+        m_lastPosSawTime[m_chasingPlayerNum] -= delta;
+
+        Player& p = scene->players[m_chasingPlayerNum];
+        if(canSee(p.getPosition()))
+        {
+            m_lastDirSawPlayer[m_chasingPlayerNum] = p.getPosition()-m_lastPosSawPlayer[m_chasingPlayerNum];
+            m_lastPosSawPlayer[m_chasingPlayerNum] = p.getPosition();
+            m_lastPosSawTime[m_chasingPlayerNum] = 5;
             m_state = STATE_CHASING_PLAYER;
         }
         else
         {
             if (m_collided) {
-                m_lastDirSawPlayer.x = m_lastDirSawPlayer.x*(-1);
-                m_lastDirSawPlayer.y = m_lastDirSawPlayer.y*(-1);
+                m_lastDirSawPlayer[m_chasingPlayerNum].x *= -1;
+                m_lastDirSawPlayer[m_chasingPlayerNum].y *= -1;
             }
-            moveInDir(m_lastDirSawPlayer);
+            moveInDir(m_lastDirSawPlayer[m_chasingPlayerNum]);
 
-            if (m_lastPosSawTime < 0 || m_collided)
+            if (m_lastPosSawTime[m_chasingPlayerNum] < 0 || m_collided)
             {
                 m_state = STATE_ALERT;
                 m_alertTime = 20;
-                m_lastAlertPos = m_lastPosSawPlayer;
+                m_lastAlertPos = m_lastPosSawPlayer[m_chasingPlayerNum];
             }
         }
 

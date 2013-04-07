@@ -32,7 +32,7 @@ bool MenuScene::Init() {
 	anim_takena.setAnimData(ad);
 	anim_takena.SelectAnim("WalkingDown");
 
-	return true;
+    return true;
 }
 
 
@@ -47,7 +47,7 @@ void MenuScene::Update() {
         press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
     }
 
-    if (input.getKeyState(InputEng::MENU_START)) {
+    if (input.getKeyDown(InputEng::MENU_START)) {
 	    nextScene = new GameScene();
     }
 

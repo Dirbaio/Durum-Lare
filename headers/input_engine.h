@@ -42,14 +42,13 @@ public:
 
 private:
 
-	bool KeyState[K_SIZE];
-	bool KeyUp[K_SIZE];
-	bool KeyDown[K_SIZE];
-	sf::Keyboard::Key KeyMap[K_SIZE];
+    bool KeyState[K_SIZE];
+    bool KeyStateOld[K_SIZE];
 
-	bool MouseUp[sf::Mouse::ButtonCount];
-	bool MouseDown[sf::Mouse::ButtonCount];
-	bool MouseState[sf::Mouse::ButtonCount];
+    sf::Keyboard::Key KeyMap[K_SIZE];
+
+    bool MouseStateOld[sf::Mouse::ButtonCount];
+    bool MouseState[sf::Mouse::ButtonCount];
 
 	sf::Vector2i MousePos; //Window coords
 	sf::Vector2f globalMousePos; //World coords

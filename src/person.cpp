@@ -42,7 +42,9 @@ void Person::Init() {
     m_startPanicTime = 10.0f;
     m_state = STATE_WALKING;
 
-    m_knowsPlayer = false;
+    m_knowsPlayer = vector<bool>(scene->players.size(), false);
+    m_lastSawPlayer = vector<sf::Vector2f>(scene->players.size());
+    m_playerActionTime = vector<float>(scene->players.size(), 10000);
 
     m_transHit = NULL;
     m_confuseCooldown = 0.0f;
@@ -72,9 +74,19 @@ void Person::Init() {
 
 float Person::getClosestMenace(sf::Vector2f pos, sf::Vector2f& menacePos)
 {
-    menacePos = m_lastSawPlayer*6.0f;
-    int menaceCount = 6;
-
+    int menaceCount = 1;
+    menacePos.x = 0;
+    menacePos.y = 0;
+    menacePos += m_panicSource;
+    for(int i = 0; i < (int)scene->players.size(); i++)
+    {
+        if(scene->players[i].m_jailed) continue;
+        if(m_knowsPlayer[i] || m_playerActionTime[i] < m_startPanicTime)
+        {
+            menacePos = m_lastSawPlayer[i]*6.0f;
+            menaceCount += 6;
+        }
+    }
     vector<Person*> v = scene->getPeopleSeen(this, SEARCH_DEAD);
     for(int i = 0; i < (int) v.size(); i++) {
         menacePos += v[i]->getPosition();
@@ -91,12 +103,21 @@ void Person::Update() {
 
     float delta = scene->input.getFrameTime().asSeconds();
 
-    //TODO: Multiple player logic.
-    Player* p = &scene->players[0];
-    sf::Vector2f currPlayerPosition = p->getPosition();
-    bool seesPlayerNow = canSee(currPlayerPosition);
-    if(seesPlayerNow)
-        m_lastSawPlayer = currPlayerPosition;
+    //Player* p = &scene->players[0];
+
+    for(int i = 0; i < (int)scene->players.size(); i++)
+    {
+        if(scene->players[i].m_jailed) continue;
+        m_playerActionTime[i] += delta;
+        sf::Vector2f currPlayerPosition = scene->players[i].getPosition();
+        bool seesPlayerNow = canSee(currPlayerPosition);
+        if(seesPlayerNow)
+        {
+            if(scene->players[i].isDoingAction())
+                m_playerActionTime[i] = 0;
+            m_lastSawPlayer[i] = currPlayerPosition;
+        }
+    }
 
     switch(m_state)
     {
@@ -108,19 +129,29 @@ void Person::Update() {
             setGoal(scene->city.getRandomStreet());
         moveTowardsGoal();
 
-        if (m_knowsPlayer && seesPlayerNow)
+        for(int i = 0; i < (int)scene->players.size(); i++)
         {
-            m_state = STATE_PANIC;
-            m_panicTime = m_startPanicTime;
+            if(scene->players[i].m_jailed) continue;
+            if ((m_knowsPlayer[i] || scene->players[i].isDoingAction()) && canSee(scene->players[i].getPosition()))
+            {
+                m_state = STATE_PANIC;
+                m_panicTime = m_startPanicTime;
+                m_panicSource = scene->players[i].getPosition();
+            }
         }
 
         vector<Person*> v = scene->getPeopleSeen(this, SEARCH_DEAD);
-        for(int i = 0; i < (int) v.size(); i++)
+        for(int j = 0; j < (int) v.size(); j++)
         {
             m_state = STATE_PANIC;
             m_panicTime = m_startPanicTime;
+            m_panicSource = v[j]->getPosition();
 
-            if (Utils::distance(v[i]->m_position, m_lastSawPlayer) < 70) m_knowsPlayer = true;
+            for(int i = 0; i < (int)scene->players.size(); i++)
+            {
+                if(scene->players[i].m_jailed) continue;
+                if (Utils::distance(v[j]->m_position, m_lastSawPlayer[i]) < 70) m_knowsPlayer[i] = true;
+            }
         }
 
         v = scene->getPeopleSeen(this, SEARCH_PANIC);
@@ -129,21 +160,15 @@ void Person::Update() {
             for(int i = 0; i < (int) v.size(); i++)
             {
                 m_state              = STATE_CONFUSED;
-                m_confusedTime       = (float) Utils::randomInt(1,2);
+                m_confusedTime       = (float) Utils::randomInt(2,4);
                 m_confusedTimeFacing = (float) Utils::randomInt(1, 3)/4.0;
-                m_confuseCooldown    = (float) Utils::randomInt(12,17);
+                m_confuseCooldown    = (float) Utils::randomInt(6,12);
             }
         }
         else {
             m_confuseCooldown -= delta;
         }
 
-        if(canSee(p->getPosition())) {
-            if (p->isDoingAction()) {
-                m_state = STATE_PANIC;
-                m_panicTime = m_startPanicTime;
-            }
-        }
         break;
     }
     case STATE_PANIC:
@@ -156,8 +181,13 @@ void Person::Update() {
 
         m_mark = MARK_EXCLAMATION;
 
-        if (m_knowsPlayer && seesPlayerNow)
-            m_panicTime = m_startPanicTime;
+        for(int i = 0; i < (int)scene->players.size(); i++)
+        {
+            if(scene->players[i].m_jailed) continue;
+
+            if (m_knowsPlayer[i] && canSee(scene->players[i].getPosition()))
+                m_panicTime = m_startPanicTime;
+        }
 
         sf::Vector2i now = scene->city.absoluteToTilePos(m_position);
         sf::Vector2i best = now;
@@ -167,7 +197,7 @@ void Person::Update() {
         float velbak = m_vel;
         m_vel = 70;
 
-        if(bestd < 30)
+        if(bestd < 50)
             moveInDir(sf::Vector2f(m_position - menacePos));
         else
         {
@@ -210,24 +240,23 @@ void Person::Update() {
         }
 
         vector<Person*> v = scene->getPeopleSeen(this, SEARCH_DEAD);
-        for(int i = 0; i < v.size(); i++) {
+        for(int j = 0; j < v.size(); j++) {
             m_state = STATE_PANIC;
             m_panicTime = m_startPanicTime;
-
-            if (Utils::distance(v[i]->m_position, m_lastSawPlayer) < 70) m_knowsPlayer = true;
+            m_panicSource = v[j]->getPosition();
+            for(int i = 0; i < (int)scene->players.size(); i++)
+                if (Utils::distance(v[j]->m_position, m_lastSawPlayer[i]) < 70) m_knowsPlayer[i] = true;
         }
 
-        if (m_knowsPlayer) {
-            if(canSee(p->getPosition())) {
-                m_state = STATE_PANIC;
-                m_panicTime = m_startPanicTime;
-            }
-        }
 
-        if(canSee(p->getPosition())) {
-            if (p->isDoingAction()) {
+        for(int i = 0; i < (int)scene->players.size(); i++)
+        {
+            if(scene->players[i].m_jailed) continue;
+            if ((m_knowsPlayer[i] || scene->players[i].isDoingAction()) && canSee(scene->players[i].getPosition()))
+            {
                 m_state = STATE_PANIC;
                 m_panicTime = m_startPanicTime;
+                m_panicSource = scene->players[i].getPosition();
             }
         }
 
@@ -324,7 +353,7 @@ bool Person::is_alive() {
     return m_state != STATE_DEAD;
 }
 
-bool Person::knowsPlayer()
+bool Person::knowsPlayer(int i)
 {
-    return m_knowsPlayer;
+    return m_knowsPlayer[i];
 }

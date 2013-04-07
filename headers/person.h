@@ -28,23 +28,26 @@ public:
 	};
 
 	int getState() { return m_state; }
-	bool knowsPlayer();
+    bool knowsPlayer(int i);
 
 private:
 	float getClosestMenace(sf::Vector2f pos, sf::Vector2f& menacePos);
 	void lookAtRandomPlace();
 
 	int ix, iy;
-	bool m_knowsPlayer;
-	float m_dissappearTime;
+    vector<bool> m_knowsPlayer;
+    vector<sf::Vector2f> m_lastSawPlayer;
+    vector<float> m_playerActionTime;
+
+    float m_dissappearTime;
 	float m_deathTimer;
 	float m_panicTime, m_startPanicTime;
+    sf::Vector2f m_panicSource;
 	float m_walkingTime;
 	float m_confuseCooldown;
 	float m_confusedTime;
 	float m_confusedTimeFacing;
 
-	sf::Vector2f m_lastSawPlayer;
 	State m_state;
 
 	TransitionLinear* m_transHit;
