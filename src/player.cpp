@@ -13,7 +13,11 @@ void Player::Init() {
 
 	GraphEng* graphics = GraphEng::getInstance();
 
-	mySpr.setTexture(*graphics->getTexture("img/player.png"));
+    m_jailSpr.setTexture(*graphics->getTexture("img/jail.png"));
+    m_jailSpr.setOrigin((float) m_jailSpr.getTextureRect().width *0.5f,
+                         (float) m_jailSpr.getTextureRect().height*0.5f);
+
+    mySpr.setTexture(*graphics->getTexture("img/player.png"));
 
 	m_position.x = 0;
 	m_position.y = 0;
@@ -68,8 +72,13 @@ void Player::onBuy(Item item) {
 void Player::Update() {
 	updateBBox();
 
+    float delta = playerInput.getFrameTime().asSeconds();
+
     if(m_jailed)
+    {
+        m_jailedTime += delta;
         return;
+    }
 
 	if (m_actionDelay < 0)
 	{
@@ -79,25 +88,25 @@ void Player::Update() {
             bool hasMoved = false;
 
             if (playerInput.getKeyState(InputEng::PLAYER_UP) && !playerInput.getKeyState(InputEng::PLAYER_DOWN)) {
-            posf.y -= myVel.y*playerInput.getFrameTime().asSeconds();
+            posf.y -= myVel.y*delta;
                     ensureAnim("WalkingUp");
                     m_faceDir = FACE_UP;
                     hasMoved = true;
             }
             if (playerInput.getKeyState(InputEng::PLAYER_DOWN) && !playerInput.getKeyState(InputEng::PLAYER_UP)) {
-            posf.y += myVel.y*playerInput.getFrameTime().asSeconds();
+            posf.y += myVel.y*delta;
                     ensureAnim("WalkingDown");
                     m_faceDir = FACE_DOWN;
                     hasMoved = true;
             }
             if (playerInput.getKeyState(InputEng::PLAYER_LEFT) && !playerInput.getKeyState(InputEng::PLAYER_RIGHT)) {
-            posf.x -= myVel.x*playerInput.getFrameTime().asSeconds();
+            posf.x -= myVel.x*delta;
 		    if(!hasMoved) ensureAnim("WalkingLeft");
                     m_faceDir = FACE_LEFT;
                     hasMoved = true;
             }
             if (playerInput.getKeyState(InputEng::PLAYER_RIGHT) && !playerInput.getKeyState(InputEng::PLAYER_LEFT)) {
-            posf.x += myVel.x*playerInput.getFrameTime().asSeconds();
+            posf.x += myVel.x*delta;
 		    if(!hasMoved) ensureAnim("WalkingRight");
                     m_faceDir = FACE_RIGHT;
                     hasMoved = true;
@@ -114,7 +123,7 @@ void Player::Update() {
 	}
 	else
 	{
-        m_actionDelay -= playerInput.getFrameTime().asSeconds();
+        m_actionDelay -= delta;
 
         if (m_faceDir == FACE_UP)    ensureAnim("AttackUp");
         if (m_faceDir == FACE_DOWN)  ensureAnim("AttackDown");
@@ -136,7 +145,7 @@ void Player::Update() {
 	}
 
 
-    m_anim->Update(playerInput.getFrameTime().asSeconds());
+    m_anim->Update(delta);
 
     for (std::list<Item>::iterator it = scene->itemList.begin(); it != scene->itemList.end(); ++it) {
         if (it->isTakeable()) {
@@ -163,9 +172,21 @@ void Player::Draw() {
         //spr->setOrigin(sf::Vector2f(16, 32));
         spr->setPosition(m_position);
         App->draw(*spr);
+
+
+        if(m_jailed)
+        {
+            float lol = 1-m_jailedTime*5;
+            if(lol < 0) lol = 0;
+            m_jailSpr.setScale(1+lol, 1-lol);
+            m_jailSpr.setPosition(m_position);
+            App->draw(m_jailSpr);
+        }
 }
 
 void Player::gotCaught() {
-    //TODO Die but not game over.
+    if(m_jailed) return;
+
     m_jailed = true;
+    m_jailedTime = 0;
 }

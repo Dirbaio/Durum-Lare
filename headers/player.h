@@ -36,7 +36,6 @@ public:
 
     bool m_jailed;
 
-private:
 	sf::Sprite mySpr;
 	sf::Vector2f myVel;
 
@@ -49,6 +48,9 @@ private:
     std::set<int> m_specialItems;
 
     InputEng myInputEng;
+    sf::Sprite m_jailSpr;
+
+    float m_jailedTime;
 };
 
 #endif // PLAYER_H

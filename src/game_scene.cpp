@@ -374,15 +374,18 @@ void GameScene::Update() {
     {
         float speed = 200;
 
-        sf::Vector2f center = camera.getCenter();
-        if(input.getKeyState(InputEng::PLAYER_UP)) center.y -= delta*speed;
-        if(input.getKeyState(InputEng::PLAYER_DOWN)) center.y += delta*speed;
-        if(input.getKeyState(InputEng::PLAYER_LEFT)) center.x -= delta*speed;
-        if(input.getKeyState(InputEng::PLAYER_RIGHT)) center.x += delta*speed;
-        camera.setCenter(center);
+        if(players[playerNum].m_jailedTime > 0.5)
+        {
+            sf::Vector2f center = camera.getCenter();
+            if(input.getKeyState(InputEng::PLAYER_UP)) center.y -= delta*speed;
+            if(input.getKeyState(InputEng::PLAYER_DOWN)) center.y += delta*speed;
+            if(input.getKeyState(InputEng::PLAYER_LEFT)) center.x -= delta*speed;
+            if(input.getKeyState(InputEng::PLAYER_RIGHT)) center.x += delta*speed;
+            camera.setCenter(center);
 
-        if(input.getKeyDown(InputEng::MENU_START))
-            gameOver();
+            if(input.getKeyDown(InputEng::MENU_START))
+                gameOver();
+        }
     }
     else
         camera.setCenter(players[playerNum].getPosition());
