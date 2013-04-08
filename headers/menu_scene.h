@@ -4,7 +4,7 @@
 #include <scene.h>
 #include "utils.h"
 #include "animation.h"
-
+#include "SFML/Network.hpp"
 class MenuScene : public Scene {
 public:
     MenuScene() {}
@@ -23,12 +23,15 @@ private:
     sf::Text press_start;
     sf::Text last_points;
 
+    void setText(const sf::String& s);
 
     Animation anim_takena;
 
     float textTimer;
 
     static int max_points;
+
+    sf::TcpSocket* connSocket;
 };
 
 

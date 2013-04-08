@@ -27,8 +27,8 @@
 
 #include "shop.h"
 
-GameScene::GameScene() {
-
+GameScene::GameScene(sf::TcpSocket* s) {
+    this->connSocket = s;
 }
 
 GameScene::~GameScene() {
@@ -41,13 +41,6 @@ void GameScene::initThread() {
 
 bool GameScene::Init() {
 
-    cout<<"Connecting..."<<endl;
-    connSocket = new sf::TcpSocket();
-    if(connSocket->connect("127.0.0.1", 6174) != sf::Socket::Done)
-    {
-        cerr<<"Can't connect shit"<<endl;
-        exit(1);
-    }
 
     int playerCount = 1;
 

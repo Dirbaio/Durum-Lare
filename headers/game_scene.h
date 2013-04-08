@@ -31,7 +31,7 @@ enum SearchType {
 
 class GameScene : public Scene {
 public:
-    GameScene();
+    GameScene(sf::TcpSocket* s);
     ~GameScene();
 
     bool Init();

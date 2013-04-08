@@ -25,7 +25,9 @@ void ScoreScene::Update() {
 
     float delta = input.getFrameTime().asSeconds();
 
-    if (input.getKeyDown(InputEng::MENU_START)) nextScene = new GameScene();
+    //Wat.
+//    if (input.getKeyDown(InputEng::MENU_START))
+//        nextScene = new MenuScene();
 }
 
 void ScoreScene::Draw() {

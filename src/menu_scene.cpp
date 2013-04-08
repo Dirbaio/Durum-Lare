@@ -21,9 +21,8 @@ bool MenuScene::Init() {
 	last_points.setPosition(App->getSize().x/2 - last_points.getLocalBounds().width/2, App->getSize().y*0.85f);
 
 	press_start.setFont(font);
-	press_start.setString("PRESS INTRO TO START");
 	press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
-	press_start.setPosition(App->getSize().x/2 - press_start.getLocalBounds().width/2, App->getSize().y*0.75f);
+    setText("PRESS INTRO TO START");
 
 	textTimer = 0.25f;
 
@@ -35,6 +34,11 @@ bool MenuScene::Init() {
     return true;
 }
 
+void MenuScene::setText(const sf::String &s)
+{
+    press_start.setString(s);
+    press_start.setPosition(App->getSize().x/2 - press_start.getLocalBounds().width/2, App->getSize().y*0.75f);
+}
 
 
 void MenuScene::Update() {
@@ -47,8 +51,42 @@ void MenuScene::Update() {
         press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
     }
 
-    if (input.getKeyDown(InputEng::MENU_START)) {
-	    nextScene = new GameScene();
+    if (input.getKeyDown(InputEng::MENU_START) && connSocket == NULL) {
+
+        cout<<"Connecting..."<<endl;
+        connSocket = new sf::TcpSocket();
+        if(connSocket->connect("192.168.1.101", 6174) != sf::Socket::Done)
+        {
+            cerr<<"Can't connect shit"<<endl;
+            exit(1);
+        }
+        cerr<<"Connected!"<<endl;
+        connSocket->setBlocking(false);
+        setText("CONNECTING...");
+    }
+
+    if(connSocket != NULL)
+    {
+        sf::Packet p;
+        while(connSocket->receive(p) == sf::Socket::Done)
+        {
+            int x;
+            p>>x;
+            if(x == 1)
+            {
+                connSocket->setBlocking(true);
+                nextScene = new GameScene(connSocket);
+                break;
+            }
+            else
+            {
+                int a, b;
+                p >> a >> b;
+                stringstream ss;
+                ss << "WAITING FOR PLAYERS ("<<a<<" OF "<<b<<")";
+                setText(ss.str().c_str());
+            }
+        }
     }
 
     anim_takena.Update(delta);
