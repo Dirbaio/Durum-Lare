@@ -3,12 +3,15 @@
 
 #include <SFML/Graphics.hpp>
 
+class GameScene;
+
 class Hud {
 public:
 
     Hud() {}
 
-    void Init();
+    GameScene* scene;
+    void Init(GameScene* scene);
     void Draw();
 
 

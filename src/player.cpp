@@ -32,7 +32,7 @@ void Player::Init() {
         ensureAnim("IdleDown");
 	m_actionDelay = 0;
 
-    myMoney = 999;
+    myMoney = 0;
     myKills = 0;
 
     m_jailed = false;

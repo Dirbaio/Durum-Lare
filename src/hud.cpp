@@ -4,9 +4,11 @@
 #include "utils.h"
 #include "shop.h"
 #include "item_factory.h"
+#include "game_scene.h"
 
-void Hud::Init() {
+void Hud::Init(GameScene* scene) {
 
+    this->scene = scene;
     GraphEng* graphics = GraphEng::getInstance();
 
     moneyHud.setTexture( *graphics->getTexture("img/hud/money.png") );
@@ -29,20 +31,24 @@ void Hud::Draw() {
 
     sf::Vector2u scr_size = App->getSize();
 
-/*
     //Draw Money-Score
-    moneyHud.setPosition(scr_size.x*0.05f, scr_size.y*0.05f);
-    App->draw(moneyHud);
-    sf::Text scoreText;
-    scoreText.setFont(hudFont);
-    scoreText.setString(Utils::intToString( gameReg->player->getMoney() ));
-    while (scoreText.getString().getSize() < 5)
-        scoreText.setString("0"+scoreText.getString());
-    scoreText.setColor(sf::Color::White);
-    scoreText.setPosition(moneyHud.getPosition().x + 48, moneyHud.getPosition().y);
-    App->draw(scoreText);
+    for(int i = 0; i < scene->players.size(); i++)
+    {
+        Player& player = scene->players[i];
+        moneyHud.setPosition(scr_size.x*0.05f, scr_size.y*(0.05f+i*0.1f));
+        App->draw(moneyHud);
 
+        sf::Text scoreText;
+        scoreText.setFont(hudFont);
+        scoreText.setString(Utils::intToString( player.getMoney() ));
+        while (scoreText.getString().getSize() < 5)
+            scoreText.setString("0"+scoreText.getString());
+        scoreText.setColor(sf::Color::White);
+        scoreText.setPosition(moneyHud.getPosition().x + 48, moneyHud.getPosition().y);
+        App->draw(scoreText);
+    }
 
+/*
     //Draw Player Special Items
     const std::set<int>& specItems = gameReg->player->getSpecialItems();
     int i = 0;

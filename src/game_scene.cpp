@@ -130,7 +130,7 @@ bool GameScene::Init() {
     //	bg_music.play();
 
     //Init hud
-    hud.Init();
+    hud.Init(this);
 
     //Init statistics
     m_killedPeople = 0;

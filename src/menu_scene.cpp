@@ -31,6 +31,7 @@ bool MenuScene::Init() {
 	anim_takena.setAnimData(ad);
 	anim_takena.SelectAnim("WalkingDown");
 
+    connSocket = NULL;
     return true;
 }
 
@@ -55,7 +56,7 @@ void MenuScene::Update() {
 
         cout<<"Connecting..."<<endl;
         connSocket = new sf::TcpSocket();
-        if(connSocket->connect("192.168.1.101", 6174) != sf::Socket::Done)
+        if(connSocket->connect("vgafib.com", 6174) != sf::Socket::Done)
         {
             cerr<<"Can't connect shit"<<endl;
             exit(1);
