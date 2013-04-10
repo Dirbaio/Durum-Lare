@@ -47,7 +47,7 @@ bool GameScene::Init() {
     sf::Packet packet = receivePacket();
     int mapSize, personCount, policeCount, seed;
     packet >> playerNum >> playerCount >> mapSize >> personCount >> policeCount >> seed;
-    srand(seed); //VERRRY IMPORRRRRTANT
+    Utils::randomSeed(seed); //VERRRY IMPORRRRRTANT
 
     /*
     GraphEng* graphics = graphics->getInstance();
