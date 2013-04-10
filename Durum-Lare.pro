@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
 
-QMAKE_CXXFLAGS += -std=c++11 -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow -g
+QMAKE_CXXFLAGS += -std=gnu++0x -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow -g
 QMAKE_LDFLAGS +=
 
 LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network
