@@ -1,4 +1,5 @@
 #include "generator.h"
+#include "utils.h"
 
 struct Calle {
 	int y1, y2;
@@ -15,20 +16,20 @@ struct Calle {
 vector<vector<bool> > generateMap()
 {
 	int tx, ty;
-	tx = rand()%30 + 30;
-	ty = tx + rand()%11 - 5;
+    tx = Utils::randomInt()%30 + 30;
+    ty = tx + Utils::randomInt()%11 - 5;
     //tx-=(tx%4);
     //ty-=(ty%4);
 	vector<vector<bool> > v (ty+2, vector<bool> (tx+2, true));
 	int ctv = 1;
 	int cth = 1;
-    int hsize = tx/3 + rand()%9 - 4;
-    int vsize = ty/3 + rand()%9 - 4;
+    int hsize = tx/3 + Utils::randomInt()%9 - 4;
+    int vsize = ty/3 + Utils::randomInt()%9 - 4;
 	int midx = tx/2;
     midx-=(midx%4);
 	int midy = ty/2;
     midy-=(midy%4);
-	vector<Calle> callesV (1, Calle(midx, midx, ty/4 + rand()%4, (ty*3)/4 - rand()%4)), callesH (1, Calle(tx/4 + rand()%4, (tx*3)/4 - rand()%4, midy, midy));
+    vector<Calle> callesV (1, Calle(midx, midx, ty/4 + Utils::randomInt()%4, (ty*3)/4 - Utils::randomInt()%4)), callesH (1, Calle(tx/4 + Utils::randomInt()%4, (tx*3)/4 - Utils::randomInt()%4, midy, midy));
 	
 	while (cth <= hsize && ctv <= vsize) {
 		Calle ant;
@@ -38,16 +39,16 @@ vector<vector<bool> > generateMap()
 		l1 = ant.y1;
 		l2 = ant.y2;
 		p = ant.x1;
-		rnd = rand()%(l2-l1) + l1;
+        rnd = Utils::randomInt()%(l2-l1) + l1;
         rnd-=(rnd%4);
 		x = y = p;
-        d = rand()%9 + 9;
+        d = Utils::randomInt()%9 + 9;
         for (int i = 0; i < d; i++) {
             int pos = x-1;
             if (pos < 0) break;
             x = pos;
         }
-        d = rand()%9 + 9;
+        d = Utils::randomInt()%9 + 9;
         for (int i = 0; i < d; i++) {
             int pos = y+1;
             if (pos >= tx) break;
@@ -59,16 +60,16 @@ vector<vector<bool> > generateMap()
 		l1 = ant.x1;
 		l2 = ant.x2;
 		p = ant.y1;
-		rnd = rand()%(l2-l1) + l1;
+        rnd = Utils::randomInt()%(l2-l1) + l1;
         rnd-=(rnd%4);
 		x = y = p;
-        d = rand()%9 + 9;
+        d = Utils::randomInt()%9 + 9;
         for (int i = 0; i < d; i++) {
             int pos = x-1;
             if (pos < 0) break;
             x = pos;
         }
-        d = rand()%9 + 9;
+        d = Utils::randomInt()%9 + 9;
         for (int i = 0; i < d; i++) {
             int pos = y+1;
             if (pos >= ty) break;

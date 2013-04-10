@@ -7,12 +7,26 @@
 #include "defines.h"
 #include <iostream>
 
+#include <random>
+
 struct Utils {
+private:
+
+    static std::mt19937 mersenne;
+public:
+
+    static void randomSeed(int seed) {
+        mersenne = std::mt19937(seed);
+    }
+
+    static int randomInt() {
+        return (int) mersenne();
+    }
 
 	//Returns random between [min, max]
 	static int randomInt(int min, int max) {
-		if (min >= max) return min;
-		return (rand()%((max-min)+1)) + min;
+        std::uniform_int_distribution<int> dis(min, max);
+        return dis(mersenne);
 	}
 
 	static float vec2fToDeg(const sf::Vector2f& vector) {

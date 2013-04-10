@@ -43,8 +43,8 @@ bool City::occupedRect(sf::IntRect rect) {
 
 sf::Vector2f City::getRandomStreet() {
     while(1) {
-        int x = rand()%(map.m[0].size()*64);
-        int y = rand()%(map.m.size()*64);
+        int x = Utils::randomInt()%(map.m[0].size()*64);
+        int y = Utils::randomInt()%(map.m.size()*64);
         int w=16, h=16;
         sf::IntRect rect(x, y, w, h);
         if (!occupedRect(rect)) return sf::Vector2f(x+w/2., y+h/2.);
@@ -55,8 +55,8 @@ sf::Vector2f City::getRandomStreet() {
 //!!! Ahora no lo hace bien !!!!!!!!!!!!
 sf::Vector2f City::getRandomClearing() {
     while(1) {
-        int x = rand()%(map.m[0].size()*64);
-        int y = rand()%(map.m.size()*64);
+        int x = Utils::randomInt()%(map.m[0].size()*64);
+        int y = Utils::randomInt()%(map.m.size()*64);
         int w=64, h=64;
         sf::IntRect rect(x, y, w, h);
         if (!occupedRect(rect)) return sf::Vector2f(x+w/2., y+h/2.);

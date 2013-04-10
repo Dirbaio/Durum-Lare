@@ -1,6 +1,7 @@
 #include "map.h"
 #include "graphics_engine.h"
 #include "defines.h"
+#include "utils.h"
 
 #include <iostream>
 
@@ -60,10 +61,10 @@ void Map::load(vector<vector<bool> > v)
 
 				int idx = left + down*2 + right*4 + up*8;
 				m[x][y] = tiles[idx];
-				if(m[x][y].tileNum == 0 && rand()%30 == 0)
+                if(m[x][y].tileNum == 0 && Utils::randomInt()%30 == 0)
 				{
 					m[x][y].tileNum = 1;
-					if(rand()%2 == 0)
+                    if(Utils::randomInt()%2 == 0)
 						m[x][y].rot += 2;
 				}
 			}
@@ -105,21 +106,21 @@ void Map::load(vector<vector<bool> > v)
 				if(x == 0 || x == tx-1) border = true;
 				if(y == 0 || y == ty-1) border = true;
 
-				if(y != ty-1 && m[x][y+1].tileNum == 4 && rand()%6 == 0)
+                if(y != ty-1 && m[x][y+1].tileNum == 4 && Utils::randomInt()%6 == 0)
 				{
 					t.tileNum = 12;
 					m[x][y+1].tileNum = 16;
 				}
-				else if(x != tx-1 && m[x+1][y].tileNum == 4 && rand()%4 == 0)
+                else if(x != tx-1 && m[x+1][y].tileNum == 4 && Utils::randomInt()%4 == 0)
 				{
 					t.tileNum = 9;
 					m[x+1][y].tileNum = 10;
 				}
-				else if(rand()%3 == 0 || border)
+                else if(Utils::randomInt()%3 == 0 || border)
 					t.tileNum = 8;
-				else if(rand()%4 == 0)
+                else if(Utils::randomInt()%4 == 0)
 					t.tileNum = 11;
-				else if(rand()%3 == 0)
+                else if(Utils::randomInt()%3 == 0)
 					t.tileNum = 5;
 			}
 		}

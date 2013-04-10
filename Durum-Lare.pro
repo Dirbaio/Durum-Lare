@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console
 CONFIG -= qt
 
-QMAKE_CXXFLAGS += -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow -g
+QMAKE_CXXFLAGS += -std=c++11 -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow -g
 QMAKE_LDFLAGS +=
 
 LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network
@@ -29,7 +29,8 @@ SOURCES += src/main.cpp \
     src/item_factory.cpp \
     src/menu_scene.cpp \
     src/score_scene.cpp \
-    src/shop.cpp
+    src/shop.cpp \
+    src/utils.cpp
 
 
 
