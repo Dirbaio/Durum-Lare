@@ -13,11 +13,11 @@
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
 #include <random>
 typedef std::mt19937 mt19937;
-typedef std::uniform_int_distribution<int> uniform_int_distribution;
+typedef std::uniform_int_distribution<int> uniform_dist;
 #else
 #include <boost/random.hpp>
 typedef boost::random::mt19937 mt19937;
-typedef boost::random::uniform_int_distribution<int> uniform_int_distribution;
+typedef boost::random::uniform_int_distribution<int> uniform_dist;
 #endif
 
 
@@ -37,7 +37,7 @@ public:
 
     //Returns random between [min, max]
     static int randomInt(int min, int max) {
-        uniform_int_distribution dis(min, max);
+        uniform_dist dis(min, max);
         return dis(mersenne);
     }
 
