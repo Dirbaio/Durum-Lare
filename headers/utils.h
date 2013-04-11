@@ -3,20 +3,32 @@
 
 #include <stdlib.h>
 #include <sstream>
+
+#define _USE_MATH_DEFINES
 #include <cmath>
+
 #include "defines.h"
 #include <iostream>
 
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
 #include <random>
+typedef std::mt19937 mt19937;
+typedef std::uniform_int_distribution<int> uniform_int_distribution;
+#else
+#include <boost/random.hpp>
+typedef boost::random::mt19937 mt19937;
+typedef boost::random::uniform_int_distribution<int> uniform_int_distribution;
+#endif
+
 
 struct Utils {
 private:
 
-    static std::mt19937 mersenne;
+	static mt19937 mersenne;
 public:
 
     static void randomSeed(int seed) {
-        mersenne = std::mt19937(seed);
+        mersenne = mt19937(seed);
     }
 
     static unsigned int randomInt() {
@@ -25,12 +37,12 @@ public:
 
     //Returns random between [min, max]
     static int randomInt(int min, int max) {
-        std::uniform_int_distribution<int> dis(min, max);
+        uniform_int_distribution dis(min, max);
         return dis(mersenne);
     }
 
     static float vec2fToDeg(const sf::Vector2f& vector) {
-        return ((float)atan(vector.y/vector.x)) * (float) M_PI * 2.0f;
+		return ((float)atan(vector.y/vector.x)) * (float) M_PI * 2.0f;
     }
 
     static float norm(const sf::Vector2f& v) {

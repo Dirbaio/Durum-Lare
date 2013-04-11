@@ -75,9 +75,6 @@ private:
 
                 std::map<int, std::queue<sf::Sprite*> > drawQueue;
                 std::map<int, std::queue<sf::Text> > textQueue;
-
-                sf::Font myFont;
-
 };
 
 #endif // GRAPHICSENGINE_H

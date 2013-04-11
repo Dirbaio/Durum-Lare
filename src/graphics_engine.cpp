@@ -35,31 +35,27 @@ void GraphEng::deleteInstance()
 int window_width = 800;
 int window_height = 480;
 void GraphEng::init() {
+	//sf::Texture* img = getTexture("img/logo.png");
+	//App->SetIcon(img->getWidth(), img->getHeight(), img->GetPixelsPtr());
 
-        //sf::Texture* img = getTexture("img/logo.png");
-        //App->SetIcon(img->getWidth(), img->getHeight(), img->GetPixelsPtr());
+	App->setFramerateLimit(0);
 
-        App->setFramerateLimit(0);
+	m_videoModes = sf::VideoMode::getFullscreenModes();
+	m_currentVideoMode = 0;
 
-        m_videoModes = sf::VideoMode::getFullscreenModes();
-        m_currentVideoMode = 0;
+	//App->Create(m_videoModes[0], "Durum dale");
+	App->create(m_videoModes[0], "Durum dale", sf::Style::Close);
+	//App->create(sf::VideoMode(window_width, window_height, 32), "Durum dale", sf::Style::Close);
 
-        //App->Create(m_videoModes[0], "Durum dale");
-        App->create(m_videoModes[0], "Durum dale", sf::Style::Close);
-//        App->create(sf::VideoMode(window_width, window_height, 32), "Durum dale", sf::Style::Close);
+	//worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
+	// whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
+	// whiteTex.clear(sf::Color::White);
 
-        //worldRendTex.create(m_videoModes[0].width, m_videoModes[0].height);
-       // whiteTex.create(m_videoModes[0].width, m_videoModes[0].height);
-       // whiteTex.clear(sf::Color::White);
+	//Activate separators
+	drawQueue[GRAPH_LAYER_WWSEP].push(NULL);
+	drawQueue[GRAPH_LAYER_WWSEP].pop();
 
-        //Activate separators
-        drawQueue[GRAPH_LAYER_WWSEP].push(NULL);
-        drawQueue[GRAPH_LAYER_WWSEP].pop();
-
-        myFont.loadFromFile("data/256BYTES.ttf");
-
-        return;
-
+	return;
 }
 
 sf::VideoMode GraphEng::getCurrentVideoMode() {
@@ -168,7 +164,6 @@ void GraphEng::DrawAll() {
                         App->setView(App->getDefaultView());
 
                         while (!txtIt->second.empty()) {
-                                //txtIt->second.front().setFont(myFont);
                                 App->draw(txtIt->second.front());
                                 txtIt->second.pop();
                         }
@@ -177,7 +172,6 @@ void GraphEng::DrawAll() {
                 }
 
                 else while (!txtIt->second.empty()) {
-                        //txtIt->second.front().setFont(myFont);
                         App->draw(txtIt->second.front());
                         txtIt->second.pop();
                 }

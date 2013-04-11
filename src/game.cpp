@@ -42,10 +42,12 @@ void Game::Go() {
 	float framerate = 0.0f;
 
 	while (App->isOpen() && scene != NULL && scene != EXIT_SCN) {
-		scene->Init();
+		if (!scene->Init()) {
+			std::cerr << "Scene couldn't init correctly. Game will shut down." << std::endl;
+			App->close();
+		}
 
 		sf::Clock sceneTimeElapsed;
-
 		clock1.restart();
 
 		while(App->isOpen() && scene->nextScene == NULL) {

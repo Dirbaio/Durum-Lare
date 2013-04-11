@@ -4,7 +4,13 @@
 #include "defines.h"
 #include "input_engine.h"
 #include "animation.h"
+
+#if defined (WIN32)
+#include <windows.h>
+#endif
 #include <GL/gl.h>
+
+
 #include "game_scene.h"
 
 AnimationData* s_animData = NULL;

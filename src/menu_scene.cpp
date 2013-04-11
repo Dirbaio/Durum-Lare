@@ -27,7 +27,10 @@ bool MenuScene::Init() {
 	textTimer = 0.25f;
 
 	AnimationData* ad = new AnimationData();
-	ad->Load("anim/takena.anim");
+	if (!ad->Load("anim/takena.anim")) {
+		return false;
+	}
+
 	anim_takena.setAnimData(ad);
 	anim_takena.SelectAnim("WalkingDown");
 
