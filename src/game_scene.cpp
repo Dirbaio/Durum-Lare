@@ -311,6 +311,7 @@ sf::Packet GameScene::receivePacket() {
     sf::Packet packet;
     if (connSocket->receive(packet) != sf::Socket::Done) {
         cout << "[ERROR] PACKET COSAS CHUNGAS" << endl;
+        connSocket->disconnect();
         nextScene = new MenuScene();
     }
     return packet;
@@ -363,6 +364,9 @@ void GameScene::Update() {
         m_camZoom = m_camZoomTrans.getPos();
     }
 
+    if(input.getKeyDown(InputEng::MENU_START))
+        gameOver();
+
     if(players[playerNum].m_jailed)
     {
         float speed = 200;
@@ -376,8 +380,6 @@ void GameScene::Update() {
             if(input.getKeyState(InputEng::PLAYER_RIGHT)) center.x += delta*speed;
             camera.setCenter(center);
 
-            if(input.getKeyDown(InputEng::MENU_START))
-                gameOver();
         }
     }
     else
