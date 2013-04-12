@@ -40,6 +40,8 @@ public:
     std::string encodeToString();
     void decodeFromString(std::string str);
 
+    bool firstUpdate;
+
 private:
 
     bool KeyState[K_SIZE];

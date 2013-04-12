@@ -37,29 +37,33 @@ InputEng::InputEng()
     for (int i = 0; i < K_SIZE; ++i)
         KeyState[i] = KeyStateOld[i] = false;
 
-    Update();
-    Update();
+    firstUpdate = true;
+
 }
 
 
 std::string InputEng::encodeToString() {
 
-    std::string encoded(K_SIZE*2, ' ');
+    std::string encoded(K_SIZE, ' ');
 
-    for (int i = 0; i < K_SIZE; ++i) {
-        encoded[2*i+0] = KeyStateOld[i] ? '1' : '0';
-        encoded[2*i+1] = KeyState[i] ? '1' : '0';
-    }
+    for (int i = 0; i < K_SIZE; ++i)
+        encoded[i] = KeyState[i] ? '1' : '0';
 
     return encoded;
 }
 
 void InputEng::decodeFromString(std::string encoded) {
 
-    for (int i = 0; i < K_SIZE; ++i) {
-        KeyStateOld[i] = encoded[2*i] == '1';
-        KeyState[i] = encoded[2*i+1] == '1';
+    for (int i = 0; i < K_SIZE; ++i)
+    {
+        KeyStateOld[i] = KeyState[i];
+        KeyState[i] = encoded[i] == '1';
     }
+
+    if(firstUpdate)
+        for (int i = 0; i < K_SIZE; ++i)
+            KeyStateOld[i] = KeyState[i];
+    firstUpdate = false;
 }
 
 void InputEng::Update()
@@ -92,6 +96,12 @@ void InputEng::Update()
         KeyStateOld[i] = KeyState[i];
         KeyState[i] = sf::Keyboard::isKeyPressed(KeyMap[i]);
     }
+
+
+    if(firstUpdate)
+        for (int i = 0; i < K_SIZE; ++i)
+            KeyStateOld[i] = KeyState[i];
+    firstUpdate = false;
 }
 
 bool InputEng::getKeyState(int key) {
