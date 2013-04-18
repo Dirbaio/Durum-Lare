@@ -52,21 +52,27 @@ void MenuScene::Update() {
     textTimer -= delta;
     if (textTimer <= 0) {
         textTimer = 0.25f;
+        setText("PRESS INTRO TO START");
         press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
     }
 
-    if (input.getKeyDown(InputEng::MENU_START) && connSocket == NULL) {
-
+    if (input.getKeyDown(InputEng::MENU_START) && connSocket == NULL)
+    {
         cout<<"Connecting..."<<endl;
         connSocket = new sf::TcpSocket();
         if(connSocket->connect("vgafib.com", 6174) != sf::Socket::Done)
         {
-            cerr<<"Can't connect shit"<<endl;
-            exit(1);
+            textTimer = 3.0f;
+            setText("CAN'T CONNECT A SHIT D:");
+            delete connSocket;
+            connSocket = NULL;
         }
-        cerr<<"Connected!"<<endl;
-        connSocket->setBlocking(false);
-        setText("CONNECTING...");
+        else
+        {
+            cerr<<"Connected!"<<endl;
+            connSocket->setBlocking(false);
+            setText("CONNECTING...");
+        }
     }
 
     if(connSocket != NULL)
