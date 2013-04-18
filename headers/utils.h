@@ -13,11 +13,9 @@
 #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
 #include <random>
 typedef std::mt19937 mt19937;
-typedef std::uniform_int_distribution<int> uniform_dist;
 #else
 #include <boost/random.hpp>
 typedef boost::random::mt19937 mt19937;
-typedef boost::random::uniform_int_distribution<int> uniform_dist;
 #endif
 
 
@@ -31,14 +29,14 @@ public:
         mersenne = mt19937(seed);
     }
 
-    static unsigned int randomInt() {
-        return (unsigned int) mersenne();
+    static int randomInt() {
+        return (mersenne() & 0x7FFFFFFF);
     }
 
     //Returns random between [min, max]
-    static int randomInt(int min, int max) {
-        uniform_dist dis(min, max);
-        return dis(mersenne);
+    static int randomInt(int min, int max) {  
+        if (min >= max) return min;
+        return (randomInt()%((max-min)+1)) + min;
     }
 
     static float vec2fToDeg(const sf::Vector2f& vector) {
