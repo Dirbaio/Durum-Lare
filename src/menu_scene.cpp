@@ -25,6 +25,7 @@ bool MenuScene::Init() {
     setText("PRESS INTRO TO START");
 
 	textTimer = 0.25f;
+    cantConnectTimer = -1.0f;
 
 	AnimationData* ad = new AnimationData();
 	if (!ad->Load("anim/takena.anim")) {
@@ -52,8 +53,14 @@ void MenuScene::Update() {
     textTimer -= delta;
     if (textTimer <= 0) {
         textTimer = 0.25f;
-        setText("PRESS INTRO TO START");
         press_start.setColor(sf::Color(Utils::randomInt(0, 255), Utils::randomInt(0, 255), Utils::randomInt(0, 255)));
+    }
+
+    if (cantConnectTimer >= 0.0f) {
+        cantConnectTimer -= delta;
+        if (cantConnectTimer < 0.0f) {
+            setText("PRESS INTRO TO START");
+        }
     }
 
     if (input.getKeyDown(InputEng::MENU_START) && connSocket == NULL)
@@ -62,7 +69,7 @@ void MenuScene::Update() {
         connSocket = new sf::TcpSocket();
         if(connSocket->connect("vgafib.com", 6174) != sf::Socket::Done)
         {
-            textTimer = 3.0f;
+            cantConnectTimer = 3.0f;
             setText("CAN'T CONNECT A SHIT D:");
             delete connSocket;
             connSocket = NULL;

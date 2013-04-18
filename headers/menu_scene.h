@@ -28,6 +28,7 @@ private:
     Animation anim_takena;
 
     float textTimer;
+    float cantConnectTimer;
 
     static int max_points;
 
