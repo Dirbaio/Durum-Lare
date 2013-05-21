@@ -1,5 +1,4 @@
 #include "shop.h"
-#include "defines.h"
 #include "graphics_engine.h"
 #include <iostream>
 #include "utils.h"

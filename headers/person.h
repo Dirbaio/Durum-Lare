@@ -13,8 +13,7 @@ public:
     Person(GameScene* sc) : Npc(sc) {}
 
 	void Init();
-	void Update();
-	void Draw();
+    void Update();
 
 	void doDeath();
 	void onHit();

@@ -13,7 +13,6 @@ public:
 
 	void Init();
 	void Update();
-	void Draw();
 
     void LoadAnims();
     void hitAction();
@@ -47,7 +46,6 @@ public:
 
     std::set<int> m_specialItems;
 
-    InputEng myInputEng;
     sf::Sprite m_jailSpr;
 
     float m_jailedTime;

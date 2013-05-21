@@ -1,5 +1,4 @@
 #include "menu_scene.h"
-#include "defines.h"
 #include "utils.h"
 #include "input_engine.h"
 #include "game_scene.h"
@@ -63,49 +62,58 @@ void MenuScene::Update() {
         }
     }
 
-    if (input.getKeyDown(InputEng::MENU_START) && connSocket == NULL)
-    {
-        cout<<"Connecting..."<<endl;
-        connSocket = new sf::TcpSocket();
-        if(connSocket->connect("vgafib.com", 6174) != sf::Socket::Done)
-        {
-            cantConnectTimer = 3.0f;
-            setText("CAN'T CONNECT A SHIT D:");
-            delete connSocket;
-            connSocket = NULL;
-        }
-        else
-        {
-            cerr<<"Connected!"<<endl;
-            connSocket->setBlocking(false);
-            setText("CONNECTING...");
-        }
-    }
+    bool multiplayer = false;
 
-    if(connSocket != NULL)
+    if(multiplayer)
     {
-        sf::Packet p;
-        while(connSocket->receive(p) == sf::Socket::Done)
+        if (input.getKeyDown(InputEng::MENU_START) && connSocket == NULL)
         {
-            int x;
-            p>>x;
-            if(x == 1)
+            cout<<"Connecting..."<<endl;
+            connSocket = new sf::TcpSocket();
+            if(connSocket->connect("vgafib.com", 6174) != sf::Socket::Done)
             {
-                connSocket->setBlocking(true);
-                nextScene = new GameScene(connSocket);
-                break;
+                cantConnectTimer = 3.0f;
+                setText("CAN'T CONNECT A SHIT D:");
+                delete connSocket;
+                connSocket = NULL;
             }
             else
             {
-                int a, b;
-                p >> a >> b;
-                stringstream ss;
-                ss << "WAITING FOR PLAYERS ("<<a<<" OF "<<b<<")";
-                setText(ss.str().c_str());
+                cerr<<"Connected!"<<endl;
+                connSocket->setBlocking(false);
+                setText("CONNECTING...");
+            }
+        }
+
+        if(connSocket != NULL)
+        {
+            sf::Packet p;
+            while(connSocket->receive(p) == sf::Socket::Done)
+            {
+                int x;
+                p>>x;
+                if(x == 1)
+                {
+                    connSocket->setBlocking(true);
+                    nextScene = new GameScene(connSocket);
+                    break;
+                }
+                else
+                {
+                    int a, b;
+                    p >> a >> b;
+                    stringstream ss;
+                    ss << "WAITING FOR PLAYERS ("<<a<<" OF "<<b<<")";
+                    setText(ss.str().c_str());
+                }
             }
         }
     }
-
+    else
+    {
+        if (input.getKeyDown(InputEng::MENU_START))
+            nextScene = new GameScene(NULL);
+    }
     anim_takena.Update(delta);
 }
 

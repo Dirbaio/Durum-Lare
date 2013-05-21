@@ -1,5 +1,4 @@
 #include "score_scene.h"
-#include "defines.h"
 #include "utils.h"
 #include "input_engine.h"
 #include "graphics_engine.h"

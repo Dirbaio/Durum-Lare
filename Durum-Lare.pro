@@ -5,7 +5,7 @@ CONFIG -= qt
 QMAKE_CXXFLAGS += -std=gnu++0x -Wextra -Wconversion -Wuninitialized -Wmissing-include-dirs -Wshadow -g
 QMAKE_LDFLAGS +=
 
-LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network
+LIBS += -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -lsfml-network -lGL -lGLU
 
 SOURCES += src/main.cpp \
     src/game.cpp \
@@ -40,7 +40,6 @@ HEADERS += headers/game.h \
     headers/input_engine.h \
     headers/graphics_engine.h \
     headers/scene.h \
-    headers/defines.h \
     headers/game_scene.h \
     headers/event.h \
     headers/utils.h \

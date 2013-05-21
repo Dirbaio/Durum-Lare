@@ -31,7 +31,7 @@ enum SearchType {
 
 class GameScene : public Scene {
 public:
-    GameScene(sf::TcpSocket* s);
+    GameScene(sf::TcpSocket* s = NULL);
     ~GameScene();
 
     bool Init();
@@ -68,7 +68,8 @@ public:
     vector<vector<vector<Police*> > > estructuraPepinoPolice;
 
     //Statics
-    sf::View camera;
+    vec3 cameraPos;
+    vec3 cameraLookAt;
 
     City city;
     Hud hud;
@@ -81,10 +82,8 @@ public:
 
     sf::Music bg_music;
 
-    TransitionLinear m_camZoomTrans;
-    float m_camZoom;
-    sf::Vector2f m_camViewportOrg; //Original viewport
-
+    //If it's null -> Singleplayer
+    //If not -> Multiplayer
     sf::TcpSocket* connSocket;
 };
 

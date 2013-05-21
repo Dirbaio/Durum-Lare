@@ -1,7 +1,6 @@
 #include "person.h"
 #include "graphics_engine.h"
 #include "npc.h"
-#include "defines.h"
 #include "input_engine.h"
 #include "utils.h"
 #include "animation.h"
@@ -316,25 +315,6 @@ void Person::onHit() {
     m_transHit->setTime(0.05f);
 }
 
-void Person::Draw() {
-
-    sf::Sprite* spr = m_anim->getCurrentFrame();
-
-    if (m_state == STATE_DEAD) {
-        m_bloodSpr.setPosition(m_position);
-        App->draw(m_bloodSpr);
-    }
-
-    //if (transHit != NULL) spr->setScale( sf::Vector2f(transHit->getPos(), transHit->getPos()) );
-    //else spr->setScale(sf::Vector2f(1.0f, 1.0f));
-
-    // spr->setOrigin(sf::Vector2f(16, 32));
-    spr->setPosition(m_position);
-    spr->setScale(m_scale);
-    App->draw(*spr);
-
-
-}
 
 void Person::lookAtRandomPlace() {
     sf::Vector2i v = scene->city.absoluteToTilePos(m_position);

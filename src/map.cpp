@@ -1,6 +1,5 @@
 #include "map.h"
 #include "graphics_engine.h"
-#include "defines.h"
 #include "utils.h"
 
 #include <iostream>
@@ -191,11 +190,35 @@ void Map::load(vector<vector<bool> > v)
 	}
 }
 
+int dx[4] = {0, 0, 1, 1};
+int dy[4] = {0, 1, 1, 0};
+
 void Map::render()
 {
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+    glScalef(1.0f/tex.getSize().x, 1.0f/tex.getSize().y, 1.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+
+    sf::Texture::bind(&tex);
+
 	for(int x = 0; x < tx; x++) {
 		for(int y = 0; y < ty; y++) {
-			App->draw(m[x][y].s);
+            glColor3f(1, 1, 1);
+
+            Tile& t = m[x][y];
+            int ttx = t.tileNum % 4;
+            int tty = t.tileNum / 4;
+
+            glBegin(GL_QUADS);
+            for(int i = 0; i < 4; i++)
+            {
+                int j = (i+t.rot)%4;
+                glTexCoord2f((ttx+dx[j])*TILESIZE, (tty+dy[j])*TILESIZE);
+                glVertex3f((x+dx[i])*TILESIZE, 0, (y+dy[i])*TILESIZE);
+            }
+            glEnd();
 		}
 	}
 }

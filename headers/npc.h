@@ -10,7 +10,6 @@ class Npc : public Character {
 
     virtual void Init();
     virtual void Update();
-    virtual void Draw();
 
     virtual void onHit() {}
 
@@ -20,7 +19,6 @@ class Npc : public Character {
 
   protected:
 
-    sf::Sprite mySpr;
     int life;
 
 };

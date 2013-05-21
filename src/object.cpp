@@ -44,6 +44,51 @@ Object::Object(GameScene* sc) :
 }
 
 
+void Object::Draw() {
+    sf::Sprite* spr = m_anim->getCurrentFrame();
+
+    if (spr == NULL) return;
+
+    //spr->setOrigin(sf::Vector2f(16, 32));
+    spr->setPosition(m_position);
+    sf::Texture::bind(spr->getTexture());
+    //sf::Texture::bind(NULL);
+    vec3 pos = Utils::to3(m_position);
+    float tx = spr->getTextureRect().width;
+    float ty = spr->getTextureRect().height;
+//    tx = ty = 500;
+    glColor3f(1, 1, 1);
+
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+    glScalef(1.0f/spr->getTexture()->getSize().x, 1.0f/spr->getTexture()->getSize().y, 1.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+
+    glBegin(GL_QUADS);
+    sf::IntRect r = spr->getTextureRect();
+    glTexCoord2f(r.left, r.top+r.height);
+    glVertex3f(pos.x-tx/2, pos.y, pos.z);
+    glTexCoord2f(r.left, r.top);
+    glVertex3f(pos.x-tx/2, pos.y+ty, pos.z);
+    glTexCoord2f(r.left+r.width, r.top);
+    glVertex3f(pos.x+tx/2, pos.y+ty, pos.z);
+    glTexCoord2f(r.left+r.width, r.top+r.height);
+    glVertex3f(pos.x+tx/2, pos.y, pos.z);
+    glEnd();
+//    App->draw(*spr);
+
+/*
+    if(m_jailed)
+    {
+        float lol = 1-m_jailedTime*5;
+        if(lol < 0) lol = 0;
+        m_jailSpr.setScale(1+lol, 1-lol);
+        m_jailSpr.setPosition(m_position);
+        App->draw(m_jailSpr);
+    }*/
+}
+
 /*
 void Object::setDrawTransition(Transition* tx, Transition* ty) {
         cancelTransition();

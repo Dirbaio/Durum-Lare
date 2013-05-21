@@ -4,7 +4,7 @@
 
 #include <iostream>
 
-#include "defines.h"
+#include "utils.h"
 #include "game.h"
 
 InputEng::InputEng()
@@ -68,21 +68,6 @@ void InputEng::decodeFromString(std::string encoded) {
 
 void InputEng::Update()
 {
-    sf::Event Event;
-    while (App->pollEvent(Event)) {
-
-        switch(Event.type) {
-        //Window Closed
-        case sf::Event::Closed:
-            App->close();
-            break;
-
-        default:
-            //Nothing
-            break;
-        }
-    }
-
     MousePos = sf::Mouse::getPosition(*App);
 
     for (int i = 0; i < sf::Mouse::ButtonCount; ++i)
@@ -125,7 +110,7 @@ bool InputEng::getMouseUp(sf::Mouse::Button button) {
 }
 
 sf::Vector2f InputEng::getMousePos() {
-    return App->convertCoords(MousePos);
+    //return App->convertCoords(MousePos);
 }
 
 sf::Vector2f InputEng::getGlobalMousePos() {

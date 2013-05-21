@@ -1,8 +1,7 @@
 #ifndef INPUTENGINE_H
 #define INPUTENGINE_H
 
-#include <SFML/Graphics.hpp>
-#include "defines.h"
+#include "utils.h"
 
 class InputEng
 {

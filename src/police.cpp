@@ -3,7 +3,6 @@
 
 #include "input_engine.h"
 #include "game_scene.h"
-#include "defines.h"
 #include "game_scene.h"
 
 AnimationData* s_police_data = NULL;
@@ -380,13 +379,6 @@ void Police::lookAtRandomPlace()
     }
 }
 
-void Police::Draw() {
-
-    sf::Sprite* spr = m_anim->getCurrentFrame();
-    spr->setPosition(m_position);
-    App->draw(*spr);
-
-}
 
 bool Police::onLeftCollision(int x, int j)
 {

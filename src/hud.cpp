@@ -1,6 +1,5 @@
 #include "hud.h"
 #include "graphics_engine.h"
-#include "defines.h"
 #include "utils.h"
 #include "shop.h"
 #include "item_factory.h"

@@ -1,15 +1,5 @@
 #include "game_scene.h"
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <SFML/Network.hpp>
 
-
-#include <iostream>
-#include <vector>
-#include <list>
-#include <sstream>
-
-#include "defines.h"
 #include "utils.h"
 #include "input_engine.h"
 #include "graphics_engine.h"
@@ -24,7 +14,6 @@
 #include "item.h"
 #include "item_factory.h"
 #include "menu_scene.h"
-
 #include "shop.h"
 
 GameScene::GameScene(sf::TcpSocket* s) {
@@ -41,55 +30,21 @@ void GameScene::initThread() {
 
 bool GameScene::Init() {
 
-
+    playerNum = 0;
     int playerCount = 1;
+    int mapSize = 10;
+    int personCount = 300;
+    int policeCount = 50;
+    int seed = time(NULL);
 
-    sf::Packet packet = receivePacket();
-    int mapSize, personCount, policeCount, seed;
-    packet >> playerNum >> playerCount >> mapSize >> personCount >> policeCount >> seed;
+    if(connSocket != NULL)
+    {
+        sf::Packet packet = receivePacket();
+        packet >> playerNum >> playerCount >> mapSize >> personCount >> policeCount >> seed;
+    }
+
     Utils::randomSeed(seed); //VERRRY IMPORRRRRTANT
 
-    /*
-    GraphEng* graphics = graphics->getInstance();
-
-    sf::Sprite loadScene;
-    loadScene.setTexture(*graphics->getTexture("img/loading.png"));
-    loadScene.setPosition(App->getView().getSize().x*0.5f - loadScene.getTexture()->getSize().x*0.5f,
-                  App->getView().getSize().y*0.5f - loadScene.getTexture()->getSize().y*0.5f);
-    loadingText = sf::Text("Loading...");*/
-
-    sf::Text titleText;
-    titleText.setColor(sf::Color::Yellow);
-    titleText.setStyle(sf::Text::Bold);
-    titleText.setString("GiTA");
-    titleText.setScale(3, 3);
-    titleText.setPosition(
-                (float) App->getSize().x*0.25f,
-                (float) App->getSize().y*0.1f);
-
-    sf::Clock timer;
-    timer.restart();
-
-    /*
-    sf::Thread thr_init(&GameScene::initThread, this);
-    thr_init.launch();
-    while (!initThreadDone) {
-        loadingText.setPosition(App->getSize().x*0.35f, App->getSize().y*0.75f);
-        loadingText.setColor(sf::Color::Red);
-        if (timer.getElapsedTime().asSeconds() > 2) {
-            loadingText.setString(loadingText.getString()+".");
-            timer.restart();
-        }
-
-        App->clear(sf::Color(255,255,255));
-        graphics->Draw(&loadScene, GraphEng::GRAPH_LAYER_HUD);
-        graphics->Draw(titleText);
-        graphics->Draw(loadingText);
-        graphics->DrawAll();
-        App->display();
-    }*/
-
-    
     GraphEng* graphics = GraphEng::getInstance();
 
     //Init map
@@ -105,14 +60,14 @@ bool GameScene::Init() {
 
 
     //Init camera
-    camera.reset(sf::FloatRect(0, 0,
+    /*camera.reset(sf::FloatRect(0, 0,
                                (float) graphics->getCurrentVideoMode().width,
                                (float) graphics->getCurrentVideoMode().height));
 
 
     m_camViewportOrg.x =  (float) graphics->getCurrentVideoMode().width;
     m_camViewportOrg.y = (float) graphics->getCurrentVideoMode().height;
-
+*/
     //Init NPCS
     for (int i = 0; i < personCount; ++i) spawnNewPerson();
     for (int i = 0; i < policeCount; ++i) spawnNewPolice();
@@ -120,9 +75,6 @@ bool GameScene::Init() {
     //Init Shops
 //    for (int i = 0; i < 5; ++i) spawnNewShop();
 
-    //Init Camera
-    camera.setCenter(sf::Vector2f(0, 0));
-    m_camZoom = 0.5f;
 
     //Init background music
     bg_music.openFromFile("audio/surrounding.ogg");
@@ -342,12 +294,12 @@ void GameScene::Update() {
 
     //	if (input.getKeyDown(InputEng::NEW_SCENE))
     //		this->nextScene = new GameScene();
-    input.setGlobalMousePos(
+    /*input.setGlobalMousePos(
                 App->convertCoords(sf::Vector2i(
                                        (int) input.getMousePos().x,
                                        (int) input.getMousePos().y), camera));
-
-
+*/
+/*
     //Camera Zoom
     if (input.getKeyDown(InputEng::CAM_ZOOM_IN)) {
         m_camZoomTrans.setPos(m_camZoom);
@@ -363,10 +315,11 @@ void GameScene::Update() {
         m_camZoomTrans.update(delta);
         m_camZoom = m_camZoomTrans.getPos();
     }
+*/
 
     if(input.getKeyDown(InputEng::MENU_START))
         gameOver();
-
+/*
     if(players[playerNum].m_jailed)
     {
         float speed = 200;
@@ -382,9 +335,7 @@ void GameScene::Update() {
 
         }
     }
-    else
-        camera.setCenter(players[playerNum].getPosition());
-
+    else*/
 
     estructuraPepinoPeople = vector<vector<vector<Person*> > > (TILESIZE, vector<vector<Person*> >(TILESIZE));
     estructuraPepinoPolice = vector<vector<vector<Police*> > > (TILESIZE, vector<vector<Police*> >(TILESIZE));
@@ -394,6 +345,7 @@ void GameScene::Update() {
         if(!city.validTile(p.x, p.y)) continue;
         estructuraPepinoPeople[p.x][p.y].push_back(&*it);
     }
+
     for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it) {
         sf::Vector2i p = city.absoluteToTilePos(it->m_position);
         if(!city.validTile(p.x, p.y)) continue;
@@ -402,8 +354,15 @@ void GameScene::Update() {
 
     //Player update
 
-    sendInputToServer();
-    receiveServerInfo();
+    if(connSocket == NULL)
+    {
+        players[0].playerInput.Update();
+    }
+    else
+    {
+        sendInputToServer();
+        receiveServerInfo();
+    }
 
     for(int i = 0; i < (int) players.size(); i++)
        players[i].Update();
@@ -477,52 +436,77 @@ bool comp(Object* a, Object* b)
 }
 
 void GameScene::Draw() {
-    GraphEng* graphics = GraphEng::getInstance();
 
-    camera.setSize(m_camViewportOrg.x*m_camZoom, m_camViewportOrg.y*m_camZoom);
+    cameraLookAt = Utils::to3(players[playerNum].getPosition());
+    cameraPos = cameraLookAt + vec3(0, 200, 200);
 
-    App->setView(camera);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(60.f, float(App->getSize().x)/float(App->getSize().y), 0.1f, 5000.f);
+
+    //glMatrixMode(GL_TEXTURE);
+    //glLoadIdentity();
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(  cameraPos.x, cameraPos.y, cameraPos.z,
+                cameraLookAt.x, cameraLookAt.y, cameraLookAt.z,
+                0, 1, 0);
+
+    glDisable(GL_LIGHTING);
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_ALPHA_TEST);
+    glAlphaFunc(GL_GREATER, 0.5f);
+    glClearDepth(1.0f);
+    glClearColor(0.f, 0.f, 1.0f, 0.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  //  GraphEng* graphics = GraphEng::getInstance();
+
+    //camera.setSize(m_camViewportOrg.x*m_camZoom, m_camViewportOrg.y*m_camZoom);
+
+    //App->setView(camera);
 
     //Map draw
     city.render();
 
     vector<Object*> v;
     for(int i = 0; i < (int)players.size(); i++)
-        v.push_back(&players[i]);
+        players[i].Draw();
 
     bool seeAll = true; //Sino, es una mierda como una casa.
 
     Player& player = players[playerNum];
     for (std::list<Person>::iterator it = personList.begin(); it != personList.end(); ++it)
         if(seeAll || player.canSee(it->getPosition()))
-            v.push_back(&*it);
+            it->Draw();
     for (std::list<Police>::iterator it = policeList.begin(); it != policeList.end(); ++it)
         if(seeAll || player.canSee(it->getPosition()))
-            v.push_back(&*it);
+            it->Draw();
     for (std::list<Item>::iterator it = itemList.begin(); it != itemList.end(); ++it)
         if(seeAll || player.canSee(it->getPosition()))
-            v.push_back(&*it);
+            it->Draw();
     for (std::list<Shop>::iterator it = shopList.begin(); it != shopList.end(); ++it)
         if(seeAll || player.canSee(it->getPosition()))
-            v.push_back(&*it);
+            it->Draw();
 
-    sort(v.begin(), v.end(), comp);
-    for(int i = 0; i < (int) v.size(); i++)
-    {
-        v[i]->Draw();
-        v[i]->DrawMark();
-    }
+    //        v[i]->DrawMark();
 
     //Map draw
-    city.renderTop();
-    graphics->DrawAll();
-    App->setView(App->getDefaultView());
+//    city.renderTop();
+//    graphics->DrawAll();
+//    App->setView(App->getDefaultView());
+    App->resetGLStates();
     hud.Draw();
 }
 
 void GameScene::Destroy() {
-    cout<<"Disconnecting..."<<endl;
-    connSocket->disconnect();
+    if(connSocket != NULL)
+    {
+        cout<<"Disconnecting..."<<endl;
+        connSocket->disconnect();
+    }
 }
 
 void GameScene::gameOver() {

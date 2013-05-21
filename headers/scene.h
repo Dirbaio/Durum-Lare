@@ -11,7 +11,6 @@ public:
     Scene();
     virtual ~Scene() {}
 
-
     virtual bool Init() = 0;
     virtual void Destroy() = 0;
 
